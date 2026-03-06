@@ -1,7 +1,7 @@
-function addCourse(){
+function addCourse() {
 
 var row = document.createElement("div");
-row.className="course-row";
+row.className = "course-row";
 
 row.innerHTML =
 
@@ -24,26 +24,26 @@ row.innerHTML =
 '<button type="button" onclick="this.parentNode.remove()">Remove</button>';
 
 document.getElementById("courses").appendChild(row);
-
 }
+
 
 function validateForm(){
 
 var courses = document.querySelectorAll('[name="course[]"]');
 var credits = document.querySelectorAll('[name="credits[]"]');
 
-for(var i=0;i<courses.length;i++){
+for (var i = 0; i < courses.length; i++){
 
-if(courses[i].value==""){
+if(courses[i].value == ""){
 alert("Course name required");
 return false;
 }
 
 }
 
-for(var j=0;j<credits.length;j++){
+for (var j = 0; j < credits.length; j++){
 
-if(isNaN(credits[j].value) || credits[j].value<=0){
+if(isNaN(credits[j].value) || credits[j].value <= 0){
 
 alert("Credits must be positive number");
 return false;
