@@ -1,53 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Dev: Lab 1</title>
-    <style>
-        .style1 {
-            color: red;
-        }
+<meta charset="UTF-8">
+<title>GPA Calculator</title>
 
-        .style2 {
-            color: green;
-            font-size: 16px;
-            font-weight: bold;
-            font-family: 'Cambria', serif;
-        }
+<link rel="stylesheet" href="style.css">
+<script src="script.js"></script>
 
-        .style3 {
-            font-size: 14px;
-        }
-
-        .style4 {
-            width: 250px;
-            height: 250px;
-            float: right;
-            margin-right: 20px;
-            
-        }
-
-        header {
-            text-align: center;
-        }
-    </style>
 </head>
+
 <body>
 
-    <header>
-        <h1>Welcome to my Web Site</h1>
-        <h3 class="style1"><u>Web Development (Lab1)</u></h3>
-    </header>
+<h1>GPA Calculator</h1>
 
-    <hr>
+<form action="calculate.php" method="post" onsubmit="return validateForm();">
 
-    <img src="https://images.wallpapersden.com/image/ws-rails-railroad-winter_16016.jpg" ; class="style4">
+<div id="courses">
 
-    <p><span class="style2">Full name:</span> <span class="style3">ADAMOU MOHAMMED AL AMINE</span></p>
-    <p><span class="style2">Age:</span> <span class="style3">21 years old</span></p>
-    <p><span class="style2">Class:</span> <span class="style3">2<sup>nd</sup> LMD Computer Science</span></p>
-    <p><span class="style2">University:</span> <span class="style3">University of El Oued</span></p>
+<div class="course-row">
+
+<label>Course:</label>
+<input type="text" name="course[]" placeholder="Mathematics" required>
+
+<label>Credits:</label>
+<input type="number" name="credits[]" placeholder="3" min="1" required>
+
+<label>Grade:</label>
+
+<select name="grade[]">
+<option value="4.0">A</option>
+<option value="3.0">B</option>
+<option value="2.0">C</option>
+<option value="1.0">D</option>
+<option value="0.0">F</option>
+</select>
+
+</div>
+
+</div>
+
+<button type="button" onclick="addCourse()">+ Add Course</button>
+
+<br><br>
+
+<input type="submit" value="Calculate GPA">
+
+</form>
 
 </body>
 </html>
