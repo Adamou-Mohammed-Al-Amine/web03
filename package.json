@@ -1,0 +1,12 @@
+{
+  "name": "amine-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Amine portfolio site with a Vercel Serverless Function contact form (Resend).",
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "dependencies": {
+    "resend": "^6.17.2"
+  }
+}

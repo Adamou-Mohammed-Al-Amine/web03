@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amine Visuals — Video Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="shortcut icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="l-num" id="lnum">0</div>
+  <div class="l-tag">Loading Portfolio</div>
+  <div class="l-bar"><div class="l-fill" id="lfill"></div></div>
+</div>
+
+<!-- SCROLL INDICATOR -->
+<div id="si"><div class="si-l"></div><div class="si-d"></div></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo"><img src="logo.png" alt="Amine Visuals" width="660" height="660"></a>
+  <ul class="nav-links">
+    <li><a href="#longform">Long Form</a></li>
+    <li><a href="#short-form-showcase">Short Form</a></li>
+    <li><a href="#saasSection">SaaS &amp; Commercials</a></li>
+    <li><a href="#collab">Collaborations</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta"><div class="nav-avail"></div>Contact Me</a>
+</nav>
+
+<!-- ══════════════════════
+     §1 HERO
+══════════════════════ -->
+<section id="hero">
+  <div class="o1 orb"></div><div class="o2 orb"></div><div class="o3 orb"></div>
+
+  <div class="h-inner">
+    <!-- LEFT -->
+    <div class="h-left">
+      <div class="h-eye fu">
+        <div class="h-eye-line"></div>
+        <div class="nav-avail"></div>
+        Amine Visuals &nbsp;·&nbsp; Freelance
+      </div>
+
+      <h1 class="h-name fu d1">
+        <span class="ln1">Amine</span>
+        <span class="ln2">Visuals.</span>
+      </h1>
+
+      <div class="tw c-y fu d2" id="hW">
+        <div class="tw-bar" id="hL"><div class="tw-knob t"></div><div class="tw-knob b"></div></div>
+        <div class="tw-word"><span id="hT">Storyteller</span><span class="tw-cur"></span></div>
+        <div class="tw-bar" id="hR"><div class="tw-knob t"></div><div class="tw-knob b"></div></div>
+      </div>
+
+      <p class="h-desc fu d3">I craft cinematic long-form edits, scroll-stopping short-form content, and clean motion graphics that turn raw footage into stories worth watching.</p>
+
+      <div class="h-btns fu d4">
+        <a href="#longform" class="btn-p">
+          <span>View Portfolio</span>
+          <span class="bt-arr">→</span>
+        </a>
+        <a href="#contact" class="btn-s">Contact Me</a>
+      </div>
+
+      <div class="h-stats fu d5">
+        <div><div class="hs-n" data-cnt="120" data-suf="+">0+</div><div class="hs-l">Projects Done</div></div>
+        <div><div class="hs-n" data-cnt="5" data-suf="+">0+</div><div class="hs-l">Years Exp.</div></div>
+        <div><div class="hs-n" data-cnt="100" data-suf="%">0%</div><div class="hs-l">Satisfaction</div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT — portrait -->
+    <div class="h-right fu d2">
+      <div class="ftag ft1"><span class="fl">Specialty</span><span class="fv">Editing</span></div>
+      <div class="ftag ft2"><span class="fl">Style</span><span class="fv">Cinematic</span></div>
+      <div class="ftag ft3"><span class="fl">Projects</span><span class="fv">120+ ✦</span></div>
+      <div class="portrait" id="pc">
+        <img src="assets/images/me.png" alt="Amine Visuals portrait">
+        <div class="portrait-glow"></div>
+        <div class="portrait-badge"><div class="nav-avail"></div>Available</div>
+        <div class="portrait-info">
+          <p class="pn">Amine Visuals</p>
+          <p class="pr">Video Editor</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq"><div class="mq-t" id="mqt"></div></div>
+
+<!-- ══════════════════════
+     §2 LONG FORM PORTFOLIO
+══════════════════════ -->
+<section id="longform">
+  <p class="lf-eye fu">Selected Work</p>
+  <h2 class="lf-tt fu d1">Long Form <em>Intro</em></h2>
+  <p class="lf-sub fu d2">A curated selection of YouTube edits, podcasts, and documentary-style storytelling.</p>
+
+  <div class="lf2-layout fu d3">
+
+    <!-- LEFT — large featured player card -->
+    <div class="lf2-player-card">
+      <div class="lf2-player-top">
+        <span class="lf2-player-title" id="lf2Title">Loading…</span>
+        <div class="lf2-avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.4c-3.3 0-9.8 1.6-9.8 4.9v2.5h19.6v-2.5c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
+        </div>
+      </div>
+
+      <div class="lf2-stage" id="lf2Stage">
+        <img class="lf2-poster" id="lf2Poster" src="" alt="Video preview">
+        <button class="lf2-play-big" id="lf2PlayBig" aria-label="Play video">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+      </div>
+
+      <div class="lf2-controls">
+        <div class="lf2-controls-group">
+          <button class="lf2-btn" id="lf2Play" aria-label="Play or pause">
+            <svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="ic-pause" viewBox="0 0 24 24" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+          </button>
+          <button class="lf2-btn" id="lf2Sound" aria-label="Toggle sound">
+            <svg class="ic-on" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>
+            <svg class="ic-off" viewBox="0 0 24 24" style="display:none"><path d="M4 9v6h4l5 5V4L8 9H4zm14.7-3.3l-1.4-1.4L15 6.6l-2.3-2.3-1.4 1.4L13.6 8l-2.3 2.3 1.4 1.4L15 9.4l2.3 2.3 1.4-1.4L16.4 8l2.3-2.3z"/></svg>
+          </button>
+        </div>
+
+        <div class="lf2-controls-group lf2-controls-center">
+          <button class="lf2-btn lf2-btn-text" id="lf2Prev" aria-label="Previous video">Prev</button>
+          <button class="lf2-btn lf2-btn-text" id="lf2Next" aria-label="Next video">Next</button>
+        </div>
+
+        <div class="lf2-controls-group">
+          <button class="lf2-btn lf2-btn-text lf2-toggle" id="lf2Autoplay" aria-pressed="false">Autoplay</button>
+          <button class="lf2-btn" id="lf2Fullscreen" aria-label="Fullscreen">
+            <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — scrollable playlist -->
+    <div class="lf2-playlist-card">
+      <div class="lf2-playlist-scroll" id="lf2List"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════
+     §3 SHORT FORM SHOWCASE
+══════════════════════ -->
+<section id="short-form-showcase">
+
+  <!-- ============================= HEADER ============================= -->
+  <div class="sfs-header">
+    <span class="sfs-eyebrow">SHORT FORM</span>
+    <h2 class="sfs-title">Short Form <em>Editing</em></h2>
+    <p class="sfs-subtitle">
+      High-retention vertical content designed for YouTube Shorts,
+      Instagram Reels and TikTok.
+    </p>
+  </div>
+
+  <!-- ============================ SHOWCASE ============================= -->
+  <div class="sfs2-layout fu d3" id="sfs2Layout">
+
+    <!-- LEFT — large featured player card -->
+    <div class="sfs2-player-card">
+      <div class="sfs2-player-top">
+        <span class="sfs2-player-title" id="sfs2Title">Loading…</span>
+        <div class="sfs2-avatar" id="sfs2Avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.4c-3.3 0-9.8 1.6-9.8 4.9v2.5h19.6v-2.5c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
+        </div>
+      </div>
+
+      <div class="sfs2-stage" id="sfs2Stage">
+        <img class="sfs2-poster" id="sfs2Poster" src="" alt="Video preview">
+        <button class="sfs2-play-big" id="sfs2PlayBig" aria-label="Play video">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+      </div>
+
+      <div class="sfs2-controls">
+        <div class="sfs2-controls-group">
+          <button class="sfs2-btn" id="sfs2Play" aria-label="Play or pause">
+            <svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="ic-pause" viewBox="0 0 24 24" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+          </button>
+          <button class="sfs2-btn" id="sfs2Sound" aria-label="Toggle sound">
+            <svg class="ic-on" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>
+            <svg class="ic-off" viewBox="0 0 24 24" style="display:none"><path d="M4 9v6h4l5 5V4L8 9H4zm14.7-3.3l-1.4-1.4L15 6.6l-2.3-2.3-1.4 1.4L13.6 8l-2.3 2.3 1.4 1.4L15 9.4l2.3 2.3 1.4-1.4L16.4 8l2.3-2.3z"/></svg>
+          </button>
+        </div>
+
+        <div class="sfs2-controls-group sfs2-controls-center">
+          <button class="sfs2-btn sfs2-btn-text" id="sfs2Prev" aria-label="Previous video">Prev</button>
+          <button class="sfs2-btn sfs2-btn-text" id="sfs2Next" aria-label="Next video">Next</button>
+        </div>
+
+        <div class="sfs2-controls-group">
+          <button class="sfs2-btn sfs2-btn-text sfs2-toggle" id="sfs2Autoplay" aria-pressed="false">Autoplay</button>
+          <button class="sfs2-btn" id="sfs2Fullscreen" aria-label="Fullscreen">
+            <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — scrollable playlist -->
+    <div class="sfs2-playlist-card">
+      <div class="sfs2-playlist-scroll" id="sfs2List"></div>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ══════════════════════
+     §3.5 SAAS & COMMERCIALS
+     Independent duplicate of the Long Form section pattern.
+     Unique IDs/classes (saas*) — does not share state with #longform.
+     Replace the placeholder items in the `saasVideos` array in
+     js/main.js with your own SaaS/commercial YouTube video IDs.
+══════════════════════ -->
+<section id="saasSection">
+  <p class="saas-eye fu">Selected Work</p>
+  <h2 class="saas-tt fu d1">SaaS &amp; <em>Commercials</em></h2>
+  <p class="saas-sub fu d2">Performance ads, SaaS marketing videos, product launches, and commercial campaigns designed to convert.</p>
+
+  <div class="saas-layout fu d3">
+
+    <!-- LEFT — large featured player card -->
+    <div class="saas-player-card">
+      <div class="saas-player-top">
+        <span class="saas-player-title" id="saasTitle">Loading…</span>
+        <div class="saas-avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.4c-3.3 0-9.8 1.6-9.8 4.9v2.5h19.6v-2.5c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
+        </div>
+      </div>
+
+      <div class="saas-stage" id="saasStage">
+        <img class="saas-poster" id="saasPoster" src="" alt="Video preview">
+        <button class="saas-play-big" id="saasPlayBig" aria-label="Play video">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+      </div>
+
+      <div class="saas-controls">
+        <div class="saas-controls-group">
+          <button class="saas-btn" id="saasPlay" aria-label="Play or pause">
+            <svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="ic-pause" viewBox="0 0 24 24" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+          </button>
+          <button class="saas-btn" id="saasSound" aria-label="Toggle sound">
+            <svg class="ic-on" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>
+            <svg class="ic-off" viewBox="0 0 24 24" style="display:none"><path d="M4 9v6h4l5 5V4L8 9H4zm14.7-3.3l-1.4-1.4L15 6.6l-2.3-2.3-1.4 1.4L13.6 8l-2.3 2.3 1.4 1.4L15 9.4l2.3 2.3 1.4-1.4L16.4 8l2.3-2.3z"/></svg>
+          </button>
+        </div>
+
+        <div class="saas-controls-group saas-controls-center">
+          <button class="saas-btn saas-btn-text" id="saasPrev" aria-label="Previous video">Prev</button>
+          <button class="saas-btn saas-btn-text" id="saasNext" aria-label="Next video">Next</button>
+        </div>
+
+        <div class="saas-controls-group">
+          <button class="saas-btn saas-btn-text saas-toggle" id="saasAutoplay" aria-pressed="false">Autoplay</button>
+          <button class="saas-btn" id="saasFullscreen" aria-label="Fullscreen">
+            <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — scrollable playlist -->
+    <div class="saas-playlist-card">
+      <div class="saas-playlist-scroll" id="saasPlaylist"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Category divider — reuses the site's marquee component (gold variant) -->
+<div class="mq mq-gold" aria-hidden="true"><div class="mq-t" id="mqtSaas"></div></div>
+
+<!-- ══════════════════════
+     §4 COLLABORATIONS
+══════════════════════ -->
+<section id="collab">
+  <div class="collab-canvas" id="collabCanvas"></div>
+  <div class="collab-content">
+    <p class="co-eye fu">Collaborations</p>
+    <h2 class="co-tt fu d1">People I've <em>Worked With</em></h2>
+    <p class="co-sub fu d2">A selection of creators and brands I've had the pleasure of editing content for.</p>
+
+    <div class="co-orbits-wrap fu d3" id="coWrap">
+      <div class="co-orbits" id="coOrbits">
+        <div class="co-ring co-ring-1"></div>
+        <div class="co-ring co-ring-2"></div>
+        <div class="co-ring co-ring-3"></div>
+
+        <div class="co-center">
+          <div class="co-center-name">Amine</div>
+          <div class="co-center-role">Editor</div>
+        </div>
+
+        <!-- Inner ring -->
+        <div class="co-node" style="--angle:0deg;--radius:clamp(85px,20vw,155px);">
+          <a class="co-avatar-link" href="https://www.youtube.com/@mjrmgames909" target="_blank" rel="noopener">
+            <img class="co-avatar" src="https://unavatar.io/youtube/mjrmgames909" alt="mjrmgames909" loading="lazy">
+          </a>
+          <div class="co-tooltip">mjrmgames909</div>
+        </div>
+        <div class="co-node" style="--angle:90deg;--radius:clamp(85px,20vw,155px);">
+          <a class="co-avatar-link" href="https://www.youtube.com/@AnasAction" target="_blank" rel="noopener">
+            <img class="co-avatar" src="https://unavatar.io/youtube/AnasAction" alt="AnasAction" loading="lazy">
+          </a>
+          <div class="co-tooltip">AnasAction</div>
+        </div>
+        <div class="co-node" style="--angle:180deg;--radius:clamp(85px,20vw,155px);">
+          <a class="co-avatar-link" href="https://www.youtube.com/@Abunoo7" target="_blank" rel="noopener">
+            <img class="co-avatar" src="https://unavatar.io/youtube/Abunoo7" alt="Abunoo7" loading="lazy">
+          </a>
+          <div class="co-tooltip">Abunoo7</div>
+        </div>
+        <div class="co-node" style="--angle:270deg;--radius:clamp(85px,20vw,155px);">
+          <a class="co-avatar-link" href="https://www.youtube.com/@POWR.Kmstka" target="_blank" rel="noopener">
+            <img class="co-avatar" src="https://unavatar.io/youtube/POWR.Kmstka" alt="POWR.Kmstka" loading="lazy">
+          </a>
+          <div class="co-tooltip">POWR.Kmstka</div>
+        </div>
+
+        <!-- Outer ring -->
+        <div class="co-node co-sm" style="--angle:45deg;--radius:clamp(135px,32vw,255px);">
+          <a class="co-avatar-link" href="https://www.instagram.com/muaazmarwah/" target="_blank" rel="noopener">
+            <img class="co-avatar" src="https://unavatar.io/instagram/muaazmarwah" alt="muaazmarwah" loading="lazy">
+          </a>
+          <div class="co-tooltip">@muaazmarwah</div>
+        </div>
+        <div class="co-node co-sm" style="--angle:165deg;--radius:clamp(135px,32vw,255px);">
+          <a class="co-avatar-link" href="https://www.instagram.com/h4hbm/" target="_blank" rel="noopener">
+            <img class="co-avatar" src="https://unavatar.io/instagram/h4hbm" alt="h4hbm" loading="lazy">
+          </a>
+          <div class="co-tooltip">@h4hbm</div>
+        </div>
+        <div class="co-node co-sm" style="--angle:285deg;--radius:clamp(135px,32vw,255px);">
+          <a class="co-avatar-link" href="https://www.youtube.com/@CaptainSanshiroX" target="_blank" rel="noopener">
+            <img class="co-avatar" src="https://unavatar.io/youtube/CaptainSanshiroX" alt="CaptainSanshiroX" loading="lazy">
+          </a>
+          <div class="co-tooltip">CaptainSanshiroX</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     §5 CONTACT
+══════════════════════ -->
+<section id="contact">
+  <div class="av-badge"><div class="nav-avail"></div>Available to hire</div>
+
+  <div class="fu">
+    <h2 class="con-tt">Let's<br><em>Connect</em></h2>
+    <p class="con-sb">Got a project in mind? Drop a message — replies within 12–24 hours.</p>
+  </div>
+
+  <!--
+    CONTACT FORM — submits via fetch('/api/contact') to a Vercel
+    Serverless Function (api/contact.js), which sends the email
+    through Resend to: mohalaminadamou@gmail.com
+
+    Requires the RESEND_API_KEY environment variable to be set
+    in the Vercel project settings. See api/contact.js.
+  -->
+  <form class="con-card fu d2" id="contactForm" novalidate>
+    <div class="cg2">
+      <div class="cf"><label>Name</label><input type="text" name="name" placeholder="Your name" autocomplete="off" required></div>
+      <div class="cf"><label>Email</label><input type="email" name="email" placeholder="your@email.com" autocomplete="off" required></div>
+    </div>
+    <div class="cg2" style="margin-bottom:30px">
+      <div class="cf"><label>Social Handle</label><input type="text" name="social" placeholder="Instagram / X URL"></div>
+      <div class="cf"><label>Media <em>(optional)</em></label><input type="text" name="media" placeholder="Drive / Frame.io link"></div>
+    </div>
+
+    <p class="svc-l">Pick a service</p>
+    <div class="svc-r" id="svcR">
+      <div class="svc-o" data-s="Shorts/Reels"><span>Shorts / Reels</span><div class="svc-rb"></div></div>
+      <div class="svc-o sel" data-s="Long Form"><span>Long Form</span><div class="svc-rb"></div></div>
+      <div class="svc-o" data-s="Motion"><span>Motion Graphics</span><div class="svc-rb"></div></div>
+      <div class="svc-o" data-s="Other"><span>Other</span><div class="svc-rb"></div></div>
+    </div>
+
+    <p class="bud-l">Estimated budget</p>
+    <div class="bud-r" id="budR">
+      <div class="bud-o" data-b="<500"><span class="bud-v">&lt;$500</span><span class="bud-t">Starter</span></div>
+      <div class="bud-o" data-b="500-1k"><span class="bud-v">$500–1k</span><span class="bud-t">Basic</span></div>
+      <div class="bud-o sel" data-b="1k-2k"><span class="bud-v">$1k–2k</span><span class="bud-t">Standard</span></div>
+      <div class="bud-o" data-b="2k-5k"><span class="bud-v">$2k–5k</span><span class="bud-t">Premium</span></div>
+      <div class="bud-o" data-b="5k+"><span class="bud-v">$5k+</span><span class="bud-t">Enterprise</span></div>
+    </div>
+    <input type="hidden" name="service" id="serviceInput" value="Long Form">
+    <input type="hidden" name="budget" id="budgetInput" value="1k-2k">
+
+    <div class="cf" style="margin-bottom:28px">
+      <label>Message</label>
+      <textarea name="message" rows="5" placeholder="Briefly describe your project and goals…" required></textarea>
+    </div>
+
+    <div class="con-status" id="conStatus" role="status" aria-live="polite"></div>
+
+    <div class="con-send-w">
+      <button type="submit" class="con-send" id="sendBtn">
+        <span class="con-send-label">Send Message →</span>
+        <span class="con-send-spinner" aria-hidden="true"></span>
+      </button>
+    </div>
+    <p class="con-rep">Replies under 12–24 hrs &nbsp;·&nbsp; WhatsApp: +213 799 831 049</p>
+    <p class="con-disc">* Projects related to crypto, gambling, betting, dating platforms or morally problematic content are declined.</p>
+  </form>
+
+  <!-- SOCIALS -->
+  <div class="soc-r fu d3">
+    <a href="https://www.instagram.com/adamou_moh_al_amine/" target="_blank" class="soc-a" title="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+    </a>
+    <a href="https://www.youtube.com/@Adamou_Amine_Mohammed_Al_Amine" target="_blank" class="soc-a" title="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+    </a>
+    <a href="https://www.facebook.com/mehalamine.adamou" target="_blank" class="soc-a" title="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+    <a href="https://x.com/Amine_art777" target="_blank" class="soc-a" title="X / Twitter">
+      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#hero" class="fl"><img src="logo.png" alt="Amine Visuals" width="660" height="660"></a>
+  <p class="fm">© 2026 Amine Visuals &nbsp;·&nbsp; Video Editor</p>
+  <div class="fls">
+    <a href="https://www.instagram.com/adamou_moh_al_amine/" target="_blank">Instagram</a>
+    <a href="mailto:mohalaminadamou@gmail.com">Email</a>
+    <a href="https://wa.me/213799831049" target="_blank">WhatsApp</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
