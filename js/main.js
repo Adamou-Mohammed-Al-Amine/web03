@@ -748,9 +748,9 @@ document.getElementById('budR').addEventListener('click',e=>{
    Until all three IDs below are filled in, submissions will show a
    clear configuration error instead of silently failing.
 ═══════════════════════════ */
-const EMAILJS_PUBLIC_KEY='';   // ← paste your EmailJS Public Key here
-const EMAILJS_SERVICE_ID='';   // ← paste your EmailJS Service ID here
-const EMAILJS_TEMPLATE_ID='';  // ← paste your EmailJS Template ID here
+const EMAILJS_PUBLIC_KEY = 'qWBvxDgg1i7DpcgR1';
+const EMAILJS_SERVICE_ID = 'service_60nfyws';
+const EMAILJS_TEMPLATE_ID = 'template_potpmy7';
 
 if(EMAILJS_PUBLIC_KEY&&window.emailjs)emailjs.init(EMAILJS_PUBLIC_KEY);
 
