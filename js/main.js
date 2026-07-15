@@ -725,11 +725,34 @@ document.getElementById('budR').addEventListener('click',e=>{
 });
 
 /* ═══════════════════════════
-   CONTACT FORM — Vercel Serverless Function (Resend)
-   Submits to /api/contact, which sends the email via Resend
-   to mohalaminadamou@gmail.com. See /api/contact.js.
+   CONTACT FORM — EmailJS (client-side, no backend)
+   Uses the official EmailJS SDK (script tag in index.html) to send
+   the form directly from the browser via emailjs.sendForm(), which
+   reads each field by its `name` attribute — no manual field mapping
+   needed. Fill in the three values below from your EmailJS account:
+
+     EMAILJS_PUBLIC_KEY   → Account → General → Public Key
+     EMAILJS_SERVICE_ID   → Email Services → your connected inbox
+     EMAILJS_TEMPLATE_ID  → Email Templates → your template
+
+   In your EmailJS template, map these variables (they match the
+   form field names exactly, via sendForm):
+     {{name}}    — Name
+     {{email}}   — Email (also set as the template's Reply-To)
+     {{social}}  — Social Handle
+     {{media}}   — Media
+     {{service}} — Selected Service
+     {{budget}}  — Budget
+     {{message}} — Message
+
+   Until all three IDs below are filled in, submissions will show a
+   clear configuration error instead of silently failing.
 ═══════════════════════════ */
-const CONTACT_ENDPOINT = '/api/contact';
+const EMAILJS_PUBLIC_KEY='';   // ← paste your EmailJS Public Key here
+const EMAILJS_SERVICE_ID='';   // ← paste your EmailJS Service ID here
+const EMAILJS_TEMPLATE_ID='';  // ← paste your EmailJS Template ID here
+
+if(EMAILJS_PUBLIC_KEY&&window.emailjs)emailjs.init(EMAILJS_PUBLIC_KEY);
 
 const contactForm=document.getElementById('contactForm');
 const sendBtn=document.getElementById('sendBtn');
@@ -772,32 +795,18 @@ contactForm.addEventListener('submit',async function(e){
     firstInvalid.focus();
     return;
   }
+  if(!EMAILJS_PUBLIC_KEY||!EMAILJS_SERVICE_ID||!EMAILJS_TEMPLATE_ID){
+    setStatus('error','Contact form isn\'t configured yet — missing EmailJS keys in js/main.js.');
+    console.warn('EmailJS is not configured. Fill in EMAILJS_PUBLIC_KEY / EMAILJS_SERVICE_ID / EMAILJS_TEMPLATE_ID in js/main.js.');
+    return;
+  }
 
   isSubmitting=true;
   sendBtn.classList.add('loading');
   sendBtn.disabled=true;
 
   try{
-    const fd=new FormData(this);
-    const payload={
-      name:(fd.get('name')||'').toString().trim(),
-      email:(fd.get('email')||'').toString().trim(),
-      social:(fd.get('social')||'').toString().trim(),
-      media:(fd.get('media')||'').toString().trim(),
-      service:(fd.get('service')||'').toString().trim(),
-      budget:(fd.get('budget')||'').toString().trim(),
-      message:(fd.get('message')||'').toString().trim(),
-    };
-
-    const res=await fetch(CONTACT_ENDPOINT,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(payload),
-    });
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok||!data.success){
-      throw new Error(data.error||'Something went wrong sending your message.');
-    }
+    await emailjs.sendForm(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,this);
 
     setStatus('success','Message sent — thank you! I\'ll reply within 12–24 hours.');
     this.reset();
@@ -808,8 +817,11 @@ contactForm.addEventListener('submit',async function(e){
     document.querySelectorAll('.bud-o').forEach(x=>x.classList.remove('sel'));
     document.querySelector('.bud-o[data-b="1k-2k"]').classList.add('sel');
   }catch(err){
-    console.error('Contact form submission failed:',err);
-    setStatus('error',err.message||'Something went wrong sending your message — please try WhatsApp instead.');
+    console.error('EmailJS submission failed:',err);
+    // Surface EmailJS's own error text (e.g. invalid service/template ID,
+    // rate limit, etc.) instead of a generic message.
+    const reason=(err&&(err.text||err.message))||'Unknown error.';
+    setStatus('error',`Failed to send: ${reason}`);
   }finally{
     isSubmitting=false;
     sendBtn.classList.remove('loading');

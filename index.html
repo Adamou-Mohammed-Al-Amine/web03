@@ -379,12 +379,17 @@
   </div>
 
   <!--
-    CONTACT FORM — submits via fetch('/api/contact') to a Vercel
-    Serverless Function (api/contact.js), which sends the email
-    through Resend to: mohalaminadamou@gmail.com
+    CONTACT FORM — wired to EmailJS (client-side, no backend needed).
+    Submissions are delivered to whichever inbox your EmailJS Service
+    is connected to.
 
-    Requires the RESEND_API_KEY environment variable to be set
-    in the Vercel project settings. See api/contact.js.
+    To activate, in js/main.js set:
+      EMAILJS_PUBLIC_KEY, EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID
+    (create these for free at emailjs.com). Your EmailJS template
+    should map {{name}}, {{email}}, {{social}}, {{media}},
+    {{service}}, {{budget}}, {{message}} — these match the form
+    field `name` attributes exactly, since emailjs.sendForm() reads
+    them automatically.
   -->
   <form class="con-card fu d2" id="contactForm" novalidate>
     <div class="cg2">
@@ -460,6 +465,8 @@
   </div>
 </footer>
 
+<!-- EmailJS SDK — powers the contact form (see js/main.js) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
