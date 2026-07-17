@@ -388,8 +388,7 @@
     (create these for free at emailjs.com). Your EmailJS template
     should map {{name}}, {{email}}, {{social}}, {{media}},
     {{service}}, {{budget}}, {{message}} — these match the form
-    field `name` attributes exactly, since emailjs.sendForm() reads
-    them automatically.
+    field `name` attributes exactly.
   -->
   <form class="con-card fu d2" id="contactForm" novalidate>
     <div class="cg2">
@@ -402,20 +401,20 @@
     </div>
 
     <p class="svc-l">Pick a service</p>
-    <div class="svc-r" id="svcR">
-      <div class="svc-o" data-s="Shorts/Reels"><span>Shorts / Reels</span><div class="svc-rb"></div></div>
-      <div class="svc-o sel" data-s="Long Form"><span>Long Form</span><div class="svc-rb"></div></div>
-      <div class="svc-o" data-s="Motion"><span>Motion Graphics</span><div class="svc-rb"></div></div>
-      <div class="svc-o" data-s="Other"><span>Other</span><div class="svc-rb"></div></div>
+    <div class="svc-r" id="svcR" role="radiogroup" aria-label="Pick a service">
+      <div class="svc-o" data-s="Shorts/Reels" role="radio" aria-checked="false" tabindex="0"><span>Shorts / Reels</span><div class="svc-rb"></div></div>
+      <div class="svc-o sel" data-s="Long Form" role="radio" aria-checked="true" tabindex="0"><span>Long Form</span><div class="svc-rb"></div></div>
+      <div class="svc-o" data-s="Motion" role="radio" aria-checked="false" tabindex="0"><span>Motion Graphics</span><div class="svc-rb"></div></div>
+      <div class="svc-o" data-s="Other" role="radio" aria-checked="false" tabindex="0"><span>Other</span><div class="svc-rb"></div></div>
     </div>
 
     <p class="bud-l">Estimated budget</p>
-    <div class="bud-r" id="budR">
-      <div class="bud-o" data-b="<500"><span class="bud-v">&lt;$500</span><span class="bud-t">Starter</span></div>
-      <div class="bud-o" data-b="500-1k"><span class="bud-v">$500–1k</span><span class="bud-t">Basic</span></div>
-      <div class="bud-o sel" data-b="1k-2k"><span class="bud-v">$1k–2k</span><span class="bud-t">Standard</span></div>
-      <div class="bud-o" data-b="2k-5k"><span class="bud-v">$2k–5k</span><span class="bud-t">Premium</span></div>
-      <div class="bud-o" data-b="5k+"><span class="bud-v">$5k+</span><span class="bud-t">Enterprise</span></div>
+    <div class="bud-r" id="budR" role="radiogroup" aria-label="Estimated budget">
+      <div class="bud-o" data-b="<500" role="radio" aria-checked="false" tabindex="0"><span class="bud-v">&lt;$500</span><span class="bud-t">Starter</span></div>
+      <div class="bud-o" data-b="500-1k" role="radio" aria-checked="false" tabindex="0"><span class="bud-v">$500–1k</span><span class="bud-t">Basic</span></div>
+      <div class="bud-o sel" data-b="1k-2k" role="radio" aria-checked="true" tabindex="0"><span class="bud-v">$1k–2k</span><span class="bud-t">Standard</span></div>
+      <div class="bud-o" data-b="2k-5k" role="radio" aria-checked="false" tabindex="0"><span class="bud-v">$2k–5k</span><span class="bud-t">Premium</span></div>
+      <div class="bud-o" data-b="5k+" role="radio" aria-checked="false" tabindex="0"><span class="bud-v">$5k+</span><span class="bud-t">Enterprise</span></div>
     </div>
     <input type="hidden" name="service" id="serviceInput" value="Long Form">
     <input type="hidden" name="budget" id="budgetInput" value="1k-2k">
