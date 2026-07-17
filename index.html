@@ -4,6 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Amine Visuals — Video Editor</title>
+<meta name="description" content="Amine Visuals — freelance video editor specializing in cinematic long-form edits, scroll-stopping short-form content, SaaS/commercial videos, and motion graphics.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Amine Visuals">
+<meta name="theme-color" content="#050505">
+<!-- TODO: replace with your real deployed URL before launch -->
+<link rel="canonical" href="https://your-domain.com/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Amine Visuals">
+<meta property="og:title" content="Amine Visuals — Video Editor">
+<meta property="og:description" content="Cinematic long-form edits, scroll-stopping short-form content, SaaS/commercial videos, and motion graphics.">
+<meta property="og:image" content="https://your-domain.com/logo.png">
+<meta property="og:url" content="https://your-domain.com/">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Amine Visuals — Video Editor">
+<meta name="twitter:description" content="Cinematic long-form edits, scroll-stopping short-form content, SaaS/commercial videos, and motion graphics.">
+<meta name="twitter:image" content="https://your-domain.com/logo.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
@@ -14,17 +35,17 @@
 </head>
 
 <!-- LOADER -->
-<div id="loader">
+<div id="loader" aria-hidden="true">
   <div class="l-num" id="lnum">0</div>
   <div class="l-tag">Loading Portfolio</div>
   <div class="l-bar"><div class="l-fill" id="lfill"></div></div>
 </div>
 
 <!-- SCROLL INDICATOR -->
-<div id="si"><div class="si-l"></div><div class="si-d"></div></div>
+<div id="si" aria-hidden="true"><div class="si-l"></div><div class="si-d"></div></div>
 
 <!-- NAV -->
-<nav id="nav">
+<nav id="nav" aria-label="Primary">
   <a href="#hero" class="nav-logo"><img src="logo.png" alt="Amine Visuals" width="660" height="660"></a>
   <ul class="nav-links">
     <li><a href="#longform">Long Form</a></li>
@@ -36,11 +57,12 @@
   <a href="#contact" class="nav-cta"><div class="nav-avail"></div>Contact Me</a>
 </nav>
 
+<main>
 <!-- ══════════════════════
      §1 HERO
 ══════════════════════ -->
 <section id="hero">
-  <div class="o1 orb"></div><div class="o2 orb"></div><div class="o3 orb"></div>
+  <div class="o1 orb" aria-hidden="true"></div><div class="o2 orb" aria-hidden="true"></div><div class="o3 orb" aria-hidden="true"></div>
 
   <div class="h-inner">
     <!-- LEFT -->
@@ -120,7 +142,7 @@
       </div>
 
       <div class="lf2-stage" id="lf2Stage">
-        <img class="lf2-poster" id="lf2Poster" src="" alt="Video preview">
+        <img class="lf2-poster" id="lf2Poster" src="" alt="Video preview" loading="lazy">
         <button class="lf2-play-big" id="lf2PlayBig" aria-label="Play video">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
@@ -188,7 +210,7 @@
       </div>
 
       <div class="sfs2-stage" id="sfs2Stage">
-        <img class="sfs2-poster" id="sfs2Poster" src="" alt="Video preview">
+        <img class="sfs2-poster" id="sfs2Poster" src="" alt="Video preview" loading="lazy">
         <button class="sfs2-play-big" id="sfs2PlayBig" aria-label="Play video">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
@@ -253,7 +275,7 @@
       </div>
 
       <div class="saas-stage" id="saasStage">
-        <img class="saas-poster" id="saasPoster" src="" alt="Video preview">
+        <img class="saas-poster" id="saasPoster" src="" alt="Video preview" loading="lazy">
         <button class="saas-play-big" id="saasPlayBig" aria-label="Play video">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
@@ -300,7 +322,7 @@
      §4 COLLABORATIONS
 ══════════════════════ -->
 <section id="collab">
-  <div class="collab-canvas" id="collabCanvas"></div>
+  <div class="collab-canvas" id="collabCanvas" aria-hidden="true"></div>
   <div class="collab-content">
     <p class="co-eye fu">Collaborations</p>
     <h2 class="co-tt fu d1">People I've <em>Worked With</em></h2>
@@ -308,9 +330,9 @@
 
     <div class="co-orbits-wrap fu d3" id="coWrap">
       <div class="co-orbits" id="coOrbits">
-        <div class="co-ring co-ring-1"></div>
-        <div class="co-ring co-ring-2"></div>
-        <div class="co-ring co-ring-3"></div>
+        <div class="co-ring co-ring-1" aria-hidden="true"></div>
+        <div class="co-ring co-ring-2" aria-hidden="true"></div>
+        <div class="co-ring co-ring-3" aria-hidden="true"></div>
 
         <div class="co-center">
           <div class="co-center-name">Amine</div>
@@ -453,9 +475,11 @@
   </div>
 </section>
 
+</main>
+
 <!-- FOOTER -->
 <footer>
-  <a href="#hero" class="fl"><img src="logo.png" alt="Amine Visuals" width="660" height="660"></a>
+  <a href="#hero" class="fl"><img src="logo.png" alt="Amine Visuals" width="660" height="660" loading="lazy"></a>
   <p class="fm">© 2026 Amine Visuals &nbsp;·&nbsp; Video Editor</p>
   <div class="fls">
     <a href="https://www.instagram.com/adamou_moh_al_amine/" target="_blank">Instagram</a>
