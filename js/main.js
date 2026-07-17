@@ -1,4 +1,16 @@
 /* ═══════════════════════════
+   ALWAYS START AT THE TOP
+   Browsers restore the previous scroll position on reload/back-
+   navigation by default (history.scrollRestoration:'auto') — that's
+   why the page could reopen mid-scroll (e.g. at Long Form) instead
+   of the hero. Disabling that and forcing scroll to 0 runs here,
+   before the loader overlay (full-screen, opaque) finishes its
+   reveal, so the reset is never visible to the user.
+═══════════════════════════ */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+window.scrollTo(0,0);
+
+/* ═══════════════════════════
    LOADER
 ═══════════════════════════ */
 (function(){
