@@ -726,17 +726,19 @@ document.getElementById('budR').addEventListener('click',e=>{
 
 /* ═══════════════════════════
    CONTACT FORM — EmailJS (client-side, no backend)
-   Uses the official EmailJS SDK (script tag in index.html) to send
-   the form directly from the browser via emailjs.sendForm(), which
-   reads each field by its `name` attribute — no manual field mapping
-   needed. Fill in the three values below from your EmailJS account:
+   Uses the official EmailJS SDK (script tag in index.html) via
+   emailjs.send() with an explicitly-built params object (rather than
+   sendForm's automatic DOM scrape), and passes the public key locally
+   on every call as well as globally via init() — this guarantees the
+   correct account/service context on every request. Fill in the
+   three values below from your EmailJS account:
 
      EMAILJS_PUBLIC_KEY   → Account → General → Public Key
      EMAILJS_SERVICE_ID   → Email Services → your connected inbox
      EMAILJS_TEMPLATE_ID  → Email Templates → your template
 
    In your EmailJS template, map these variables (they match the
-   form field names exactly, via sendForm):
+   form field names exactly):
      {{name}}    — Name
      {{email}}   — Email (also set as the template's Reply-To)
      {{social}}  — Social Handle
@@ -752,7 +754,7 @@ const EMAILJS_PUBLIC_KEY='qWBvxDgg1i7DpcgR1';
 const EMAILJS_SERVICE_ID='service_zi1kopc';
 const EMAILJS_TEMPLATE_ID='template_icoycp5';
 
-if(EMAILJS_PUBLIC_KEY&&window.emailjs)emailjs.init(EMAILJS_PUBLIC_KEY);
+if(EMAILJS_PUBLIC_KEY&&window.emailjs)emailjs.init({publicKey:EMAILJS_PUBLIC_KEY});
 
 const contactForm=document.getElementById('contactForm');
 const sendBtn=document.getElementById('sendBtn');
@@ -806,7 +808,35 @@ contactForm.addEventListener('submit',async function(e){
   sendBtn.disabled=true;
 
   try{
-    await emailjs.sendForm(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,this);
+    // Built explicitly (instead of sendForm's automatic DOM scrape) so the
+    // exact keys sent to EmailJS are guaranteed to match the template
+    // variables one-to-one, and so the public key is passed locally on
+    // this call (options 4th arg) rather than relying solely on init()'s
+    // internal state — the local value takes priority per EmailJS's docs.
+    const fd=new FormData(this);
+    const templateParams={
+      name:(fd.get('name')||'').toString().trim(),
+      email:(fd.get('email')||'').toString().trim(),
+      social:(fd.get('social')||'').toString().trim(),
+      media:(fd.get('media')||'').toString().trim(),
+      service:(fd.get('service')||'').toString().trim(),
+      budget:(fd.get('budget')||'').toString().trim(),
+      message:(fd.get('message')||'').toString().trim(),
+    };
+
+    // ── TEMPORARY DEBUG — remove once the send succeeds ──
+    console.log('[EmailJS debug] PUBLIC_KEY:',EMAILJS_PUBLIC_KEY);
+    console.log('[EmailJS debug] SERVICE_ID:',EMAILJS_SERVICE_ID);
+    console.log('[EmailJS debug] TEMPLATE_ID:',EMAILJS_TEMPLATE_ID);
+    console.log('[EmailJS debug] templateParams:',templateParams);
+    // ───────────────────────────────────────────────────────
+
+    await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      templateParams,
+      {publicKey:EMAILJS_PUBLIC_KEY}
+    );
 
     setStatus('success','Message sent — thank you! I\'ll reply within 12–24 hours.');
     this.reset();
@@ -817,6 +847,10 @@ contactForm.addEventListener('submit',async function(e){
     document.querySelectorAll('.bud-o').forEach(x=>x.classList.remove('sel'));
     document.querySelector('.bud-o[data-b="1k-2k"]').classList.add('sel');
   }catch(err){
+    // ── TEMPORARY DEBUG — remove once the send succeeds ──
+    console.log('[EmailJS debug] full error object:',err);
+    console.log('[EmailJS debug] JSON.stringify(err):',JSON.stringify(err,Object.getOwnPropertyNames(err||{})));
+    // ───────────────────────────────────────────────────────
     console.error('EmailJS submission failed:',err);
     // Surface EmailJS's own error text (e.g. invalid service/template ID,
     // rate limit, etc.) instead of a generic message.
