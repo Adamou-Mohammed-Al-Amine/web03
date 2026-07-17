@@ -710,18 +710,42 @@ const saasVideos=[
    SERVICE / BUDGET PICKERS
    Selecting an option also syncs the hidden form fields
    (#serviceInput / #budgetInput) that get submitted with the form.
+   Keyboard-accessible: each option is a role="radio" with
+   tabindex="0", so Enter/Space selects it same as a click.
 ═══════════════════════════ */
+function selectSvc(o){
+  document.querySelectorAll('.svc-o').forEach(x=>{
+    x.classList.remove('sel');
+    x.setAttribute('aria-checked','false');
+  });
+  o.classList.add('sel');
+  o.setAttribute('aria-checked','true');
+  document.getElementById('serviceInput').value=o.dataset.s;
+}
+function selectBud(o){
+  document.querySelectorAll('.bud-o').forEach(x=>{
+    x.classList.remove('sel');
+    x.setAttribute('aria-checked','false');
+  });
+  o.classList.add('sel');
+  o.setAttribute('aria-checked','true');
+  document.getElementById('budgetInput').value=o.dataset.b;
+}
 document.getElementById('svcR').addEventListener('click',e=>{
   const o=e.target.closest('.svc-o');if(!o)return;
-  document.querySelectorAll('.svc-o').forEach(x=>x.classList.remove('sel'));
-  o.classList.add('sel');
-  document.getElementById('serviceInput').value=o.dataset.s;
+  selectSvc(o);
+});
+document.getElementById('svcR').addEventListener('keydown',e=>{
+  const o=e.target.closest('.svc-o');if(!o)return;
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();selectSvc(o)}
 });
 document.getElementById('budR').addEventListener('click',e=>{
   const o=e.target.closest('.bud-o');if(!o)return;
-  document.querySelectorAll('.bud-o').forEach(x=>x.classList.remove('sel'));
-  o.classList.add('sel');
-  document.getElementById('budgetInput').value=o.dataset.b;
+  selectBud(o);
+});
+document.getElementById('budR').addEventListener('keydown',e=>{
+  const o=e.target.closest('.bud-o');if(!o)return;
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();selectBud(o)}
 });
 
 /* ═══════════════════════════
@@ -842,10 +866,8 @@ contactForm.addEventListener('submit',async function(e){
     this.reset();
     document.getElementById('serviceInput').value='Long Form';
     document.getElementById('budgetInput').value='1k-2k';
-    document.querySelectorAll('.svc-o').forEach(x=>x.classList.remove('sel'));
-    document.querySelector('.svc-o[data-s="Long Form"]').classList.add('sel');
-    document.querySelectorAll('.bud-o').forEach(x=>x.classList.remove('sel'));
-    document.querySelector('.bud-o[data-b="1k-2k"]').classList.add('sel');
+    selectSvc(document.querySelector('.svc-o[data-s="Long Form"]'));
+    selectBud(document.querySelector('.bud-o[data-b="1k-2k"]'));
   }catch(err){
     // ── TEMPORARY DEBUG — remove once the send succeeds ──
     console.log('[EmailJS debug] full error object:',err);
