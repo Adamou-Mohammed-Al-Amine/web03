@@ -750,7 +750,7 @@ document.getElementById('budR').addEventListener('click',e=>{
 ═══════════════════════════ */
 const EMAILJS_PUBLIC_KEY='qWBvxDgg1i7DpcgR1';
 const EMAILJS_SERVICE_ID='service_60nfyws';
-const EMAILJS_TEMPLATE_ID = 'template_j2j61d9';
+const EMAILJS_TEMPLATE_ID = 'template_potpmy7';
 
 if(EMAILJS_PUBLIC_KEY&&window.emailjs)emailjs.init(EMAILJS_PUBLIC_KEY);
 
