@@ -79,7 +79,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;
   transition:padding .5s var(--ease)}
 nav.sc{padding:16px 56px}
 .nav-logo{display:flex;align-items:center;text-decoration:none;transition:opacity .3s}
-.nav-logo em{font-style:italic;color:var(--gold)}
 .nav-logo:hover{opacity:.7}
 .nav-logo img{height:40px;width:auto;display:block}
 .nav-links{display:flex;gap:38px;list-style:none}
@@ -946,7 +945,8 @@ nav.sc{padding:16px 56px}
 .svc-l,.bud-l{font-size:11px;font-weight:700;letter-spacing:.24em;color:#fff;
   margin-bottom:20px;font-family:var(--bf);text-align:center;text-transform:uppercase}
 .svc-r{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;margin-bottom:28px}
-.svc-o{display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer}
+.svc-o{display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;border-radius:12px}
+.svc-o:focus-visible,.bud-o:focus-visible{outline:2px solid rgba(212,175,55,.6);outline-offset:3px}
 .svc-o span{font-size:11.5px;color:#666;font-family:var(--bf);white-space:nowrap;transition:color .3s;letter-spacing:.02em}
 .svc-rb{width:18px;height:18px;border:2px solid #2a2a2a;border-radius:50%;
   background:#111;position:relative;cursor:pointer;transition:all .38s}
@@ -1014,9 +1014,8 @@ nav.sc{padding:16px 56px}
 ══════════════════════════════════ */
 footer{background:var(--dark);padding:44px 56px;
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:22px}
-.fl{display:flex;align-items:center;text-decoration:none}
-.fl em{font-style:italic;color:var(--gold)}
-.fl img{height:36px;width:auto;display:block}
+footer .fl{display:flex;align-items:center;text-decoration:none}
+footer .fl img{height:36px;width:auto;display:block}
 .fm{font-size:12px;color:#333;letter-spacing:.04em}
 .fls{display:flex;gap:28px}
 .fls a{font-size:11px;color:#3a3a3a;text-decoration:none;letter-spacing:.07em;
@@ -1035,6 +1034,7 @@ footer{background:var(--dark);padding:44px 56px;
   .portrait{width:250px}
   .ft1{left:-70px}.ft2{left:-80px}.ft3{right:-70px}
   #longform{padding:90px 26px}
+  #saasSection{padding:90px 26px}
   #collab{padding:90px 26px 100px;min-height:0}
   .co-orbits-wrap{max-width:420px;margin-top:44px}
   .co-center{width:84px;height:84px}
