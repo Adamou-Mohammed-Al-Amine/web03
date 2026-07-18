@@ -1,13 +1,27 @@
 /* ═══════════════════════════
    ALWAYS START AT THE TOP
-   Browsers restore the previous scroll position on reload/back-
-   navigation by default (history.scrollRestoration:'auto') — that's
-   why the page could reopen mid-scroll (e.g. at Long Form) instead
-   of the hero. Disabling that and forcing scroll to 0 runs here,
-   before the loader overlay (full-screen, opaque) finishes its
-   reveal, so the reset is never visible to the user.
+   Two independent browser mechanisms can land the page mid-scroll,
+   and both are handled here:
+
+   1) history.scrollRestoration defaults to 'auto', so the browser
+      can replay a remembered scrollY on reload/back-navigation.
+      Disabled below.
+
+   2) A URL fragment (e.g. "#longform") makes the browser natively
+      jump to that element on ANY load — reload, reopen, back-nav —
+      entirely independent of (1). This was the actual bug: three
+      buttons (.btn-p, .btn-s, .nav-cta) weren't covered by the old
+      hash-interception click handler, so clicking them let the
+      browser's default anchor navigation write e.g. "#longform"
+      into the URL, where it then persisted across visits. Stripped
+      below via replaceState, and the click handler further down now
+      covers every in-page link site-wide so it can't recur.
+
+   Both run here, before the loader overlay (full-screen, opaque)
+   finishes its reveal, so neither is ever visible to the user.
 ═══════════════════════════ */
 if('scrollRestoration' in history)history.scrollRestoration='manual';
+if(location.hash)history.replaceState(null,'',location.pathname+location.search);
 window.scrollTo(0,0);
 
 /* ═══════════════════════════
@@ -897,14 +911,20 @@ contactForm.addEventListener('submit',async function(e){
   }
 });
 
-/* Nav links — smooth hash scroll */
-document.querySelectorAll('.nav-links a, .nav-logo, footer .fl').forEach(a=>{
+/* Nav / in-page links — smooth hash scroll.
+   Selector is `a[href^="#"]` (every in-page anchor site-wide) rather
+   than a hand-picked class list — the previous list missed .btn-p,
+   .btn-s and .nav-cta, so clicking those fell through to the browser's
+   native anchor navigation, which permanently writes e.g. "#longform"
+   into the URL. That leftover hash is what caused the page to reopen
+   mid-scroll on reload/back-navigation/reopen — the browser jumps to
+   that element on its own, independent of scroll-restoration entirely. */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click',e=>{
     const h=a.getAttribute('href');
-    if(h && h.startsWith('#')){
+    if(h && h.length>1 && document.querySelector(h)){
       e.preventDefault();
-      const el=document.querySelector(h);
-      if(el)el.scrollIntoView({behavior:'smooth'});
+      document.querySelector(h).scrollIntoView({behavior:'smooth'});
     }
   });
 });
