@@ -90,6 +90,14 @@ if(saasMqEl){
     .map(t=>`<span class="mq-i">${t}<span class="mq-d"></span></span>`).join('');
 }
 
+/* Gold marquee divider — Collaborations / Process section break. */
+const processMqItems=['Brief the Project','Edit & Refine','Review & Revise','Deliver Final Files'];
+const processMqEl=document.getElementById('mqtProcess');
+if(processMqEl){
+  processMqEl.innerHTML=[...processMqItems,...processMqItems,...processMqItems,...processMqItems]
+    .map(t=>`<span class="mq-i">${t}<span class="mq-d"></span></span>`).join('');
+}
+
 /* ═══════════════════════════
    HERO TYPEWRITER
 ═══════════════════════════ */
