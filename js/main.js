@@ -928,3 +928,24 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     }
   });
 });
+
+/* Active nav-link highlight — marks whichever section is currently
+   in view. Uses the middle band of the viewport (rootMargin) so
+   exactly one section is "active" at a time as the user scrolls,
+   rather than flickering between two adjacent sections. */
+const navLinks=Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
+if(navLinks.length){
+  const navSections=navLinks
+    .map(a=>document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+  const navSpy=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting)return;
+      const link=navLinks.find(a=>a.getAttribute('href')==='#'+entry.target.id);
+      if(!link)return;
+      navLinks.forEach(a=>a.classList.remove('active'));
+      link.classList.add('active');
+    });
+  },{rootMargin:'-45% 0px -50% 0px',threshold:0});
+  navSections.forEach(s=>navSpy.observe(s));
+}
