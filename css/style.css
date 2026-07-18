@@ -911,6 +911,35 @@ nav.sc{padding:16px 56px}
 .co-node:hover .co-tooltip{opacity:1}
 
 /* ══════════════════════════════════
+   §4.5 PROCESS — trust-building step-by-step section, placed right
+   before Contact to reduce perceived friction at the point of
+   conversion. Typography reuses the exact eyebrow/title/subtitle
+   tokens already established by Long Form / SaaS (.saas-eye/-tt/-sub)
+   and the step numbers reuse the hero stat-block pattern (.hs-n) —
+   no new visual language, just the existing one applied to new copy.
+══════════════════════════════════ */
+#process{padding:130px 56px 150px;text-align:center;
+  background:linear-gradient(180deg,var(--bg) 0%,#f3ead8 100%)}
+.proc-eye{font-size:11px;letter-spacing:.4em;color:var(--muted);margin-bottom:20px;
+  font-weight:500;text-transform:uppercase}
+.proc-tt{font-family:var(--tf);font-size:clamp(36px,5vw,64px);font-weight:900;
+  letter-spacing:-.03em;line-height:.95;margin-bottom:18px;color:var(--dark)}
+.proc-tt em{font-style:italic;color:var(--gold)}
+.proc-sub{color:var(--mid);font-size:15px;font-weight:300;max-width:480px;margin:0 auto 72px;line-height:1.7}
+
+.proc-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;position:relative}
+.proc-step{padding:0 28px;text-align:left;position:relative}
+.proc-step::before{content:'';position:absolute;top:8px;left:0;right:28px;height:1px;
+  background:var(--border)}
+.proc-step:first-child{padding-left:0}
+.proc-num{font-family:var(--tf);font-size:15px;font-weight:900;color:var(--gold);
+  letter-spacing:-.02em;margin-bottom:22px}
+.proc-step-tt{font-family:var(--tf);font-size:21px;font-weight:900;color:var(--dark);
+  letter-spacing:-.02em;margin-bottom:10px}
+.proc-step-desc{font-size:13.5px;color:var(--mid);line-height:1.7;font-weight:300}
+
+/* ══════════════════════════════════
    §5 CONTACT — reused almost exactly from source
 ══════════════════════════════════ */
 #contact{background:linear-gradient(155deg,#fdf8f0,#f8f2e6 40%,#f3ead8);
@@ -1037,6 +1066,12 @@ footer .fl img{height:36px;width:auto;display:block}
   #longform{padding:90px 26px}
   #saasSection{padding:90px 26px}
   #collab{padding:90px 26px 100px;min-height:0}
+  #process{padding:80px 26px 100px}
+  .proc-sub{margin-bottom:48px}
+  .proc-grid{grid-template-columns:1fr;gap:36px}
+  .proc-step{padding:0}
+  .proc-step::before{right:0}
+  .proc-step:first-child{padding-left:0}
   .co-orbits-wrap{max-width:420px;margin-top:44px}
   .co-center{width:84px;height:84px}
   .co-center-name{font-size:12px}
