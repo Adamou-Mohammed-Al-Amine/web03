@@ -14,7 +14,7 @@
   --ease:cubic-bezier(.22,1,.36,1);
   --ease2:cubic-bezier(.175,.885,.32,1.275)
 }
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;scroll-padding-top:100px;-webkit-font-smoothing:antialiased}
 body{font-family:var(--bf);background:var(--bg);color:var(--dark);overflow-x:hidden}
 ::selection{background:#050505;color:#fff}
 ::-webkit-scrollbar{width:4px}
@@ -87,7 +87,8 @@ nav.sc{padding:16px 56px}
 .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
   background:#fff;transition:width .4s var(--ease)}
 .nav-links a:hover{color:#fff}
-.nav-links a:hover::after{width:100%}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a.active{color:#fff}
 .nav-cta{display:inline-flex;align-items:center;gap:9px;padding:12px 28px;
   background:var(--bg);color:var(--dark);border-radius:100px;
   font-size:12px;font-weight:600;letter-spacing:.06em;text-decoration:none;text-transform:uppercase;
