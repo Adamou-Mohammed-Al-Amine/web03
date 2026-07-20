@@ -245,6 +245,11 @@ const videos=[
   let autoplay=false;
   let muted=false;
   let iframeEl=null;
+  // Set to true only by goTo() (real prev/next/list-click navigation) so
+  // the initial automatic render() below never yanks the whole page down
+  // to this section on load — scrollIntoView bubbles up to the document,
+  // not just the inner playlist, when the target isn't fully in view yet.
+  let hasInteracted=false;
 
   function ytEmbedSrc(id,opts={}){
     const params=new URLSearchParams({enablejsapi:'1',rel:'0',playsinline:'1',origin:window.location.origin});
@@ -287,7 +292,7 @@ const videos=[
 
     Array.from(list.children).forEach((item,i)=>item.classList.toggle('is-active',i===active));
     const activeItem=list.children[active];
-    if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    if(activeItem&&hasInteracted)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
 
     fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
       titleEl.textContent=meta?meta.title:'Featured video';
@@ -295,6 +300,7 @@ const videos=[
   }
 
   function goTo(index,withAutoplay){
+    hasInteracted=true;
     active=((index%videos.length)+videos.length)%videos.length;
     destroyPlayer();
     render();
@@ -417,6 +423,10 @@ const saasVideos=[
 
   let saasCurrentVideo=0;
   let saasAutoplay=false;
+  // See initLongFormPlayer's hasInteracted for why this exists: without
+  // it, the initial render() below scrolls the whole page into this
+  // section on load, not just the inner playlist.
+  let saasHasInteracted=false;
   let saasMuted=false;
   let saasPlayer=null; // the mounted YouTube iframe
 
@@ -461,7 +471,7 @@ const saasVideos=[
 
     Array.from(saasPlaylist.children).forEach((item,i)=>item.classList.toggle('is-active',i===saasCurrentVideo));
     const activeItem=saasPlaylist.children[saasCurrentVideo];
-    if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    if(activeItem&&saasHasInteracted)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
 
     fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
       saasTitleEl.textContent=meta?meta.title:'Featured video';
@@ -469,6 +479,7 @@ const saasVideos=[
   }
 
   function saasGoTo(index,withAutoplay){
+    saasHasInteracted=true;
     saasCurrentVideo=((index%saasVideos.length)+saasVideos.length)%saasVideos.length;
     saasDestroyPlayer();
     saasRender();
@@ -601,6 +612,10 @@ const saasVideos=[
   let autoplay=false;
   let muted=false;
   let iframeEl=null;
+  // See initLongFormPlayer's hasInteracted for why this exists: without
+  // it, the initial render() below scrolls the whole page into this
+  // section on load, not just the inner playlist.
+  let hasInteracted=false;
 
   function ytEmbedSrc(id,opts={}){
     const params=new URLSearchParams({enablejsapi:'1',rel:'0',playsinline:'1',origin:window.location.origin});
@@ -643,7 +658,7 @@ const saasVideos=[
 
     Array.from(list.children).forEach((item,i)=>item.classList.toggle('is-active',i===active));
     const activeItem=list.children[active];
-    if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    if(activeItem&&hasInteracted)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
 
     fetchYTMeta(`https://youtube.com/shorts/${s.id}`).then(meta=>{
       titleEl.textContent=meta?meta.title:'Short form video';
@@ -651,6 +666,7 @@ const saasVideos=[
   }
 
   function goTo(index,withAutoplay){
+    hasInteracted=true;
     active=((index%SHORTS.length)+SHORTS.length)%SHORTS.length;
     destroyPlayer();
     render();
