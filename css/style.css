@@ -303,36 +303,36 @@ nav.sc{padding:16px 56px}
    Same explicit height as the player card, so they always align
    exactly. Internal list scrolls independently within that fixed
    height — it never grows the page. */
-.lf2-playlist-card{flex:25 1 0%;min-width:250px;max-width:420px;
-  height:clamp(520px,34vw,760px);
-  display:flex;padding:16px;border-radius:26px;
+.lf2-playlist-card{flex:25 1 0%;min-width:280px;max-width:460px;
+  height:clamp(560px,36vw,800px);
+  display:flex;padding:18px;border-radius:26px;
   background:linear-gradient(135deg,#0e0e0e 0%,#050505 100%);
   box-shadow:0 40px 100px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05) inset}
-.lf2-playlist-scroll{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;
+.lf2-playlist-scroll{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px;
   overflow-y:auto;overflow-x:hidden;padding-right:8px}
 .lf2-playlist-scroll::-webkit-scrollbar{width:5px}
 .lf2-playlist-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.03);border-radius:4px}
 .lf2-playlist-scroll::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:4px}
 .lf2-playlist-scroll::-webkit-scrollbar-thumb:hover{background:var(--gold)}
 
-.lf2-item{display:flex;gap:14px;cursor:pointer;padding:13px;border-radius:16px;
+.lf2-item{display:flex;gap:16px;cursor:pointer;padding:15px;border-radius:16px;
   align-items:center;border:1px solid transparent;transition:all .4s var(--ease)}
 .lf2-item:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08);transform:translateX(4px)}
 .lf2-item.is-active{background:rgba(212,175,55,.1);border-color:rgba(212,175,55,.5);
   transform:scale(1.02);
   box-shadow:0 0 0 1px rgba(212,175,55,.2),0 10px 28px rgba(212,175,55,.16),0 6px 18px rgba(0,0,0,.4)}
 .lf2-item.is-active:hover{transform:scale(1.02)}
-.lf2-item-thumb{flex:0 0 128px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative}
+.lf2-item-thumb{flex:0 0 152px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative}
 .lf2-item-thumb::after{content:'▶';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:rgba(0,0,0,.4);color:#fff;font-size:14px;opacity:0;transition:opacity .3s}
 .lf2-item:hover .lf2-item-thumb::after{opacity:1}
 .lf2-item-thumb img{width:100%;height:100%;object-fit:cover}
 .lf2-item-body{text-align:left;color:#fff;min-width:0}
-.lf2-item-title{font-weight:600;font-size:13.5px;margin-bottom:4px;font-family:var(--bf);
+.lf2-item-title{font-weight:600;font-size:14.5px;margin-bottom:5px;font-family:var(--bf);
   overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.35}
 .lf2-item.is-active .lf2-item-title{color:var(--gold)}
-.lf2-item-sub{color:#888;font-size:11.5px}
-.lf2-item-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:7px}
+.lf2-item-sub{color:#888;font-size:12.5px}
+.lf2-item-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:8px}
 .lf2-meta-tag{font-family:var(--bf);font-size:9.5px;font-weight:600;letter-spacing:.05em;
   text-transform:uppercase;color:var(--gold);background:rgba(212,175,55,.1);
   border:1px solid rgba(212,175,55,.25);border-radius:100px;padding:2px 8px}
@@ -340,7 +340,7 @@ nav.sc{padding:16px 56px}
 .lf2-meta-text{color:#777;font-size:10.5px}
 
 @media(max-width:1050px){
-  .lf2-playlist-card{max-width:310px}
+  .lf2-playlist-card{max-width:340px}
 }
 @media(max-width:820px){
   .lf2-layout{flex-direction:column-reverse;gap:18px}
@@ -423,36 +423,36 @@ nav.sc{padding:16px 56px}
    Same explicit height as the player card, so they always align
    exactly. Internal list scrolls independently within that fixed
    height — it never grows the page. */
-.saas-playlist-card{flex:25 1 0%;min-width:250px;max-width:420px;
-  height:clamp(520px,34vw,760px);
-  display:flex;padding:16px;border-radius:26px;
+.saas-playlist-card{flex:25 1 0%;min-width:280px;max-width:460px;
+  height:clamp(560px,36vw,800px);
+  display:flex;padding:18px;border-radius:26px;
   background:linear-gradient(135deg,#0e0e0e 0%,#050505 100%);
   box-shadow:0 40px 100px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05) inset}
-.saas-playlist-scroll{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;
+.saas-playlist-scroll{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px;
   overflow-y:auto;overflow-x:hidden;padding-right:8px}
 .saas-playlist-scroll::-webkit-scrollbar{width:5px}
 .saas-playlist-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.03);border-radius:4px}
 .saas-playlist-scroll::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:4px}
 .saas-playlist-scroll::-webkit-scrollbar-thumb:hover{background:var(--gold)}
 
-.saas-item{display:flex;gap:14px;cursor:pointer;padding:13px;border-radius:16px;
+.saas-item{display:flex;gap:16px;cursor:pointer;padding:15px;border-radius:16px;
   align-items:center;border:1px solid transparent;transition:all .4s var(--ease)}
 .saas-item:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08);transform:translateX(4px)}
 .saas-item.is-active{background:rgba(212,175,55,.1);border-color:rgba(212,175,55,.5);
   transform:scale(1.02);
   box-shadow:0 0 0 1px rgba(212,175,55,.2),0 10px 28px rgba(212,175,55,.16),0 6px 18px rgba(0,0,0,.4)}
 .saas-item.is-active:hover{transform:scale(1.02)}
-.saas-item-thumb{flex:0 0 128px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative}
+.saas-item-thumb{flex:0 0 152px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative}
 .saas-item-thumb::after{content:'▶';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:rgba(0,0,0,.4);color:#fff;font-size:14px;opacity:0;transition:opacity .3s}
 .saas-item:hover .saas-item-thumb::after{opacity:1}
 .saas-item-thumb img{width:100%;height:100%;object-fit:cover}
 .saas-item-body{text-align:left;color:#fff;min-width:0}
-.saas-item-title{font-weight:600;font-size:13.5px;margin-bottom:4px;font-family:var(--bf);
+.saas-item-title{font-weight:600;font-size:14.5px;margin-bottom:5px;font-family:var(--bf);
   overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.35}
 .saas-item.is-active .saas-item-title{color:var(--gold)}
-.saas-item-sub{color:#888;font-size:11.5px}
-.saas-item-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:7px}
+.saas-item-sub{color:#888;font-size:12.5px}
+.saas-item-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:8px}
 .saas-meta-tag{font-family:var(--bf);font-size:9.5px;font-weight:600;letter-spacing:.05em;
   text-transform:uppercase;color:var(--gold);background:rgba(212,175,55,.1);
   border:1px solid rgba(212,175,55,.25);border-radius:100px;padding:2px 8px}
@@ -460,7 +460,7 @@ nav.sc{padding:16px 56px}
 .saas-meta-text{color:#777;font-size:10.5px}
 
 @media(max-width:1050px){
-  .saas-playlist-card{max-width:310px}
+  .saas-playlist-card{max-width:340px}
 }
 @media(max-width:820px){
   .saas-layout{flex-direction:column-reverse;gap:18px}
@@ -600,7 +600,7 @@ nav.sc{padding:16px 56px}
     display: flex;
     align-items: stretch;
     gap: 28px;
-    zoom: 0.8; /* scales the whole showcase down ~20% while preserving every internal proportion exactly */
+    zoom: 0.68; /* was 0.8 (~20% down); reduced another 15% per request, still preserving every internal proportion exactly */
   }
 
   /* ---------- LEFT: featured player (≈75%) ---------- */
@@ -889,6 +889,16 @@ nav.sc{padding:16px 56px}
   box-shadow:0 0 40px rgba(212,175,55,.18),0 0 90px rgba(212,175,55,.08);z-index:3}
 .co-center-name{font-family:var(--tf);font-size:15px;font-weight:700;color:#fff;letter-spacing:-.01em}
 .co-center-role{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+
+/* Radial lines from center to each avatar — see HTML comment above
+   .co-spokes for why the --angle/--radius values mirror the nodes. */
+.co-spokes{position:absolute;inset:0;z-index:1;pointer-events:none}
+.co-spoke{position:absolute;top:50%;left:50%;height:1px;width:var(--radius);
+  background:linear-gradient(90deg,rgba(212,175,55,.4) 0%,rgba(212,175,55,.08) 80%,transparent 100%);
+  transform-origin:0 50%;
+  transform:translateY(-50%) rotate(var(--angle));
+  animation:coSpokePulse 6s ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes coSpokePulse{0%,100%{opacity:.45}50%{opacity:1}}
 
 .co-node{position:absolute;top:50%;left:50%;z-index:4;
   transform:translate(-50%,-50%) rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle)));
