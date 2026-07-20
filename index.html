@@ -72,6 +72,7 @@
     <li><a href="#short-form-showcase">Short Form</a></li>
     <li><a href="#saasSection">SaaS &amp; Commercials</a></li>
     <li><a href="#collab">Collaborations</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <a href="#contact" class="nav-cta"><div class="nav-avail"></div>Contact Me</a>
@@ -409,6 +410,63 @@
   </div>
 </section>
 
+<!-- ══════════════════════
+     §4.5 TESTIMONIALS
+     New trust-building section: direct client praise, placed right
+     after Collaborations so social proof reads as one continuous
+     beat (who I've worked with → what they say about it). Dark
+     aesthetic matches #collab exactly for a seamless section join;
+     typography reuses the same eyebrow/title/subtitle tokens as
+     every other section (.co-eye/-tt/-sub pattern → .test-*).
+
+     TODO: swap the three placeholder quotes below for real client
+     testimonials (DM/email screenshots turned into quotes, or ask
+     past clients directly) before launch.
+══════════════════════ -->
+<section id="testimonials">
+  <p class="test-eye fu">Client Feedback</p>
+  <h2 class="test-tt fu d1">What They <em>Say</em></h2>
+  <p class="test-sub fu d2">A few words from creators and brands after we wrapped a project together.</p>
+
+  <div class="test-grid fu d3">
+    <div class="test-card">
+      <div class="test-mark" aria-hidden="true">&ldquo;</div>
+      <p class="test-quote">Turnaround was fast and the pacing made the whole video feel twice as engaging. Our watch time jumped the week it went up.</p>
+      <div class="test-who">
+        <div class="test-avatar" aria-hidden="true">YT</div>
+        <div>
+          <p class="test-name">YouTube Creator</p>
+          <p class="test-role">Long Form Client</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-card">
+      <div class="test-mark" aria-hidden="true">&ldquo;</div>
+      <p class="test-quote">Gave us three cuts a week without ever feeling repetitive. Easily the most reliable editor we've worked with for Shorts.</p>
+      <div class="test-who">
+        <div class="test-avatar" aria-hidden="true">SF</div>
+        <div>
+          <p class="test-name">Content Creator</p>
+          <p class="test-role">Short Form Client</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-card">
+      <div class="test-mark" aria-hidden="true">&ldquo;</div>
+      <p class="test-quote">Understood our brand voice from the first brief. The commercial cut converted better than any version we'd made in-house.</p>
+      <div class="test-who">
+        <div class="test-avatar" aria-hidden="true">CO</div>
+        <div>
+          <p class="test-name">SaaS Founder</p>
+          <p class="test-role">Commercial Client</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Category divider — reuses the site's marquee component (gold variant) -->
 <div class="mq mq-gold" aria-hidden="true"><div class="mq-t" id="mqtProcess"></div></div>
 
@@ -444,6 +502,66 @@
       <div class="proc-num">04</div>
       <h3 class="proc-step-tt">Deliver</h3>
       <p class="proc-step-desc">Final files in every format and aspect ratio you need, ready to publish.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     §4.7 FAQ
+     Second trust-building section, right before Contact — answers
+     the questions that otherwise get asked (and slow things down)
+     mid-brief. Light background continues the gradient handoff from
+     #process straight into #contact so the three sections read as
+     one uninterrupted close. Typography reuses .proc-eye/-tt/-sub
+     tokens (.faq-*); accordion behavior lives in js/main.js.
+══════════════════════ -->
+<section id="faq">
+  <p class="faq-eye fu">Good to Know</p>
+  <h2 class="faq-tt fu d1">Frequently Asked <em>Questions</em></h2>
+  <p class="faq-sub fu d2">Still deciding? Here's what most clients ask before their first project.</p>
+
+  <div class="faq-list fu d3" id="faqList">
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span>How long does a typical edit take?</span>
+        <span class="faq-icon" aria-hidden="true"></span>
+      </button>
+      <div class="faq-a"><p>Short-form turnaround is usually 2–4 days per video. Long-form edits run 5–10 days depending on footage length and complexity. Rush delivery can be arranged on request.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span>What footage or files do you need from me?</span>
+        <span class="faq-icon" aria-hidden="true"></span>
+      </button>
+      <div class="faq-a"><p>Raw footage via Drive or Frame.io, plus any brand assets — logo, fonts, brand colors — and reference links for the style you're after. The more context up front, the fewer revision rounds later.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span>How many revisions are included?</span>
+        <span class="faq-icon" aria-hidden="true"></span>
+      </button>
+      <div class="faq-a"><p>Two rounds of revisions are included in every package. Additional rounds are available at a small added cost — most projects wrap well within the included two.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span>What formats and aspect ratios do you deliver?</span>
+        <span class="faq-icon" aria-hidden="true"></span>
+      </button>
+      <div class="faq-a"><p>Final files are delivered as MP4 (H.264) by default, in whichever aspect ratios you need — 16:9, 9:16, 1:1 — ready to publish across YouTube, Instagram, and TikTok.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span>Do you write scripts or just edit?</span>
+        <span class="faq-icon" aria-hidden="true"></span>
+      </button>
+      <div class="faq-a"><p>Editing is the core service, but light script structuring and pacing notes are included for SaaS/commercial projects. Full scriptwriting can be added as a separate service — just mention it in the brief.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" aria-expanded="false">
+        <span>How does payment work?</span>
+        <span class="faq-icon" aria-hidden="true"></span>
+      </button>
+      <div class="faq-a"><p>A 50% deposit secures the project start, with the remaining balance due on final delivery. Ongoing/retainer clients are billed monthly instead.</p></div>
     </div>
   </div>
 </section>
