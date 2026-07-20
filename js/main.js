@@ -957,3 +957,23 @@ if(navLinks.length){
   },{rootMargin:'-45% 0px -50% 0px',threshold:0});
   navSections.forEach(s=>navSpy.observe(s));
 }
+
+/* ═══════════════════════════
+   FAQ ACCORDION
+   Single-open accordion: expanding one item collapses whichever
+   was open before it, keeping the list compact. aria-expanded
+   drives both the CSS (max-height reveal + icon rotation) and
+   screen-reader state, so no separate "open" class is needed.
+═══════════════════════════ */
+(function(){
+  const faqList=document.getElementById('faqList');
+  if(!faqList)return;
+  const items=Array.from(faqList.querySelectorAll('.faq-q'));
+  items.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const open=btn.getAttribute('aria-expanded')==='true';
+      items.forEach(b=>b.setAttribute('aria-expanded','false'));
+      btn.setAttribute('aria-expanded',open?'false':'true');
+    });
+  });
+})();
