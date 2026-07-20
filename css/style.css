@@ -911,7 +911,44 @@ nav.sc{padding:16px 56px}
 .co-node:hover .co-tooltip{opacity:1}
 
 /* ══════════════════════════════════
-   §4.5 PROCESS — trust-building step-by-step section, placed right
+   §4.5 TESTIMONIALS — dark, matches #collab so the two trust
+   sections read as one continuous beat. Card pattern is new but
+   built entirely from existing tokens (gold accent, Playfair
+   headline, DM Sans body, .border-radius/shadow language already
+   used by .con-card and .bud-o elsewhere on the page).
+══════════════════════════════════ */
+#testimonials{background:radial-gradient(ellipse at 50% 20%,#0d0d0d 0%,var(--dark) 70%);
+  padding:130px 56px 140px;text-align:center}
+.test-eye{font-size:11px;letter-spacing:.4em;color:rgba(255,255,255,.35);margin-bottom:18px;
+  font-weight:500;text-transform:uppercase}
+.test-tt{font-family:var(--tf);font-size:clamp(38px,5vw,64px);font-weight:900;
+  letter-spacing:-.03em;line-height:.98;color:#fff;margin-bottom:16px}
+.test-tt em{font-style:italic;color:var(--gold)}
+.test-sub{font-size:14px;color:rgba(255,255,255,.4);max-width:460px;margin:0 auto;
+  line-height:1.7;font-weight:300}
+
+.test-grid{max-width:1180px;margin:64px auto 0;display:grid;
+  grid-template-columns:repeat(3,1fr);gap:24px;text-align:left}
+.test-card{background:linear-gradient(158deg,#141414,#0d0d0d 60%,#0a0a0a);
+  border:1px solid rgba(255,255,255,.07);border-radius:22px;padding:32px 28px 28px;
+  box-shadow:0 30px 70px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.03) inset;
+  transition:transform .5s var(--ease),border-color .5s var(--ease)}
+.test-card:hover{transform:translateY(-6px);border-color:rgba(212,175,55,.24)}
+.test-mark{font-family:var(--tf);font-size:52px;font-weight:900;color:var(--gold);
+  line-height:.4;margin-bottom:18px;opacity:.85}
+.test-quote{font-size:14px;color:rgba(255,255,255,.72);line-height:1.75;
+  font-weight:300;margin-bottom:26px;min-height:96px}
+.test-who{display:flex;align-items:center;gap:12px}
+.test-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,rgba(212,175,55,.22) 0%,rgba(212,175,55,.06) 70%);
+  border:1px solid rgba(212,175,55,.3);color:var(--gold);
+  font-family:var(--tf);font-size:11px;font-weight:900;letter-spacing:.02em}
+.test-name{font-size:13px;color:#fff;font-weight:600;letter-spacing:-.01em}
+.test-role{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+
+/* ══════════════════════════════════
+   §4.6 PROCESS — trust-building step-by-step section, placed right
    before Contact to reduce perceived friction at the point of
    conversion. Typography reuses the exact eyebrow/title/subtitle
    tokens already established by Long Form / SaaS (.saas-eye/-tt/-sub)
@@ -938,6 +975,40 @@ nav.sc{padding:16px 56px}
 .proc-step-tt{font-family:var(--tf);font-size:21px;font-weight:900;color:var(--dark);
   letter-spacing:-.02em;margin-bottom:10px}
 .proc-step-desc{font-size:13.5px;color:var(--mid);line-height:1.7;font-weight:300}
+
+/* ══════════════════════════════════
+   §4.7 FAQ — accordion, light bg continues the #process→#contact
+   gradient handoff so the three closing sections read as one piece.
+   Eyebrow/title/subtitle reuse .proc-* tokens; accordion open/close
+   logic lives in js/main.js (mirrors the .fu reveal pattern already
+   used site-wide — no new animation system introduced).
+══════════════════════════════════ */
+#faq{padding:120px 56px 140px;text-align:center;
+  background:linear-gradient(180deg,#f3ead8 0%,#f8f2e6 100%)}
+.faq-eye{font-size:11px;letter-spacing:.4em;color:var(--muted);margin-bottom:20px;
+  font-weight:500;text-transform:uppercase}
+.faq-tt{font-family:var(--tf);font-size:clamp(36px,5vw,64px);font-weight:900;
+  letter-spacing:-.03em;line-height:.95;margin-bottom:18px;color:var(--dark)}
+.faq-tt em{font-style:italic;color:var(--gold)}
+.faq-sub{color:var(--mid);font-size:15px;font-weight:300;max-width:480px;margin:0 auto 56px;line-height:1.7}
+
+.faq-list{max-width:760px;margin:0 auto;text-align:left}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-item:first-child{border-top:1px solid var(--border)}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  background:none;border:none;cursor:pointer;padding:24px 4px;text-align:left;
+  font-family:var(--bf);font-size:15.5px;font-weight:500;color:var(--dark);
+  transition:color .3s}
+.faq-q:hover{color:#000}
+.faq-icon{position:relative;width:18px;height:18px;flex-shrink:0}
+.faq-icon::before,.faq-icon::after{content:'';position:absolute;top:50%;left:50%;
+  background:var(--gold);transition:transform .38s var(--ease)}
+.faq-icon::before{width:18px;height:2px;transform:translate(-50%,-50%)}
+.faq-icon::after{width:2px;height:18px;transform:translate(-50%,-50%)}
+.faq-q[aria-expanded="true"] .faq-icon::after{transform:translate(-50%,-50%) rotate(90deg);opacity:0}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .45s var(--ease),padding .45s var(--ease)}
+.faq-q[aria-expanded="true"]+.faq-a{max-height:200px;padding-bottom:24px}
+.faq-a p{font-size:13.5px;color:var(--mid);line-height:1.75;font-weight:300;max-width:640px}
 
 /* ══════════════════════════════════
    §5 CONTACT — reused almost exactly from source
@@ -1066,7 +1137,12 @@ footer .fl img{height:36px;width:auto;display:block}
   #longform{padding:90px 26px}
   #saasSection{padding:90px 26px}
   #collab{padding:90px 26px 100px;min-height:0}
+  #testimonials{padding:80px 26px 100px}
+  .test-grid{grid-template-columns:1fr;gap:18px;margin-top:44px}
   #process{padding:80px 26px 100px}
+  #faq{padding:80px 26px 100px}
+  .faq-sub{margin-bottom:40px}
+  .faq-q{font-size:14.5px;padding:20px 4px}
   .proc-sub{margin-bottom:48px}
   .proc-grid{grid-template-columns:1fr;gap:36px}
   .proc-step{padding:0}
