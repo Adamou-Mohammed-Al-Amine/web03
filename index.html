@@ -360,6 +360,20 @@
           <div class="co-center-role">Editor</div>
         </div>
 
+        <!-- Connector spokes — same --angle/--radius math as the nodes below,
+             so each line lands exactly on its avatar. Turns the floating
+             avatars into an actual "network" reading: everyone visibly
+             links back to the center instead of just orbiting near it. -->
+        <div class="co-spokes" aria-hidden="true">
+          <div class="co-spoke" style="--angle:0deg;--radius:clamp(85px,20vw,155px);--d:0s"></div>
+          <div class="co-spoke" style="--angle:90deg;--radius:clamp(85px,20vw,155px);--d:.6s"></div>
+          <div class="co-spoke" style="--angle:180deg;--radius:clamp(85px,20vw,155px);--d:1.2s"></div>
+          <div class="co-spoke" style="--angle:270deg;--radius:clamp(85px,20vw,155px);--d:1.8s"></div>
+          <div class="co-spoke" style="--angle:45deg;--radius:clamp(135px,32vw,255px);--d:2.4s"></div>
+          <div class="co-spoke" style="--angle:165deg;--radius:clamp(135px,32vw,255px);--d:3s"></div>
+          <div class="co-spoke" style="--angle:285deg;--radius:clamp(135px,32vw,255px);--d:3.6s"></div>
+        </div>
+
         <!-- Inner ring -->
         <div class="co-node" style="--angle:0deg;--radius:clamp(85px,20vw,155px);">
           <a class="co-avatar-link" href="https://www.youtube.com/@mjrmgames909" target="_blank" rel="noopener">
