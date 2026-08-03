@@ -3,50 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Amine Visuals — Video Editor</title>
-<meta name="description" content="Amine Visuals — freelance video editor specializing in cinematic long-form edits, scroll-stopping short-form content, SaaS/commercial videos, and motion graphics.">
-<meta name="robots" content="index, follow">
-<meta name="author" content="Amine Visuals">
-<meta name="theme-color" content="#050505">
-<!-- TODO: replace with your real deployed URL before launch -->
-<link rel="canonical" href="https://your-domain.com/">
-
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Amine Visuals">
-<meta property="og:title" content="Amine Visuals — Video Editor">
-<meta property="og:description" content="Cinematic long-form edits, scroll-stopping short-form content, SaaS/commercial videos, and motion graphics.">
-<meta property="og:image" content="https://your-domain.com/logo.png">
-<meta property="og:url" content="https://your-domain.com/">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Amine Visuals — Video Editor">
-<meta name="twitter:description" content="Cinematic long-form edits, scroll-stopping short-form content, SaaS/commercial videos, and motion graphics.">
-<meta name="twitter:image" content="https://your-domain.com/logo.png">
-
-<!-- Structured data — TODO: update the url/sameAs values once the real domain is live -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Amine",
-  "alternateName": "Amine Visuals",
-  "jobTitle": "Video Editor",
-  "description": "Freelance video editor specializing in cinematic long-form edits, scroll-stopping short-form content, SaaS/commercial videos, and motion graphics.",
-  "url": "https://your-domain.com/",
-  "image": "https://your-domain.com/logo.png",
-  "email": "mailto:mohalaminadamou@gmail.com",
-  "sameAs": [
-    "https://www.instagram.com/adamou_moh_al_amine/"
-  ]
-}
-</script>
-
+<title>Editedbyamine — Video Editor</title>
+<meta name="description" content="Editedbyamine — freelance video editor crafting cinematic long-form edits, short-form content, and motion graphics.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://img.youtube.com">
-<link rel="preconnect" href="https://www.youtube.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="shortcut icon" type="image/png" href="logo.png">
@@ -55,35 +15,49 @@
 </head>
 
 <!-- LOADER -->
-<div id="loader" aria-hidden="true">
+<div id="loader">
   <div class="l-num" id="lnum">0</div>
   <div class="l-tag">Loading Portfolio</div>
   <div class="l-bar"><div class="l-fill" id="lfill"></div></div>
 </div>
 
 <!-- SCROLL INDICATOR -->
-<div id="si" aria-hidden="true"><div class="si-l"></div><div class="si-d"></div></div>
+<div id="si"><div class="si-l"></div><div class="si-d"></div></div>
 
 <!-- NAV -->
-<nav id="nav" aria-label="Primary">
-  <a href="#hero" class="nav-logo"><img src="logo.png" alt="Amine Visuals" width="660" height="660"></a>
+<nav id="nav">
+  <a href="#hero" class="nav-logo"><img src="logo.png" alt="Editedbyamine" width="660" height="660"></a>
   <ul class="nav-links">
     <li><a href="#longform">Long Form</a></li>
     <li><a href="#short-form-showcase">Short Form</a></li>
     <li><a href="#saasSection">SaaS &amp; Commercials</a></li>
     <li><a href="#collab">Collaborations</a></li>
-    <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <a href="#contact" class="nav-cta"><div class="nav-avail"></div>Contact Me</a>
+  <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="navMobile">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<main>
+<!-- MOBILE NAV PANEL -->
+<div class="nav-mobile" id="navMobile">
+  <ul class="nav-mobile-links">
+    <li><a href="#longform">Long Form</a></li>
+    <li><a href="#short-form-showcase">Short Form</a></li>
+    <li><a href="#saasSection">SaaS &amp; Commercials</a></li>
+    <li><a href="#collab">Collaborations</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta nav-mobile-cta"><div class="nav-avail"></div>Contact Me</a>
+</div>
+<div class="nav-mobile-scrim" id="navScrim"></div>
+
 <!-- ══════════════════════
      §1 HERO
 ══════════════════════ -->
 <section id="hero">
-  <div class="o1 orb" aria-hidden="true"></div><div class="o2 orb" aria-hidden="true"></div><div class="o3 orb" aria-hidden="true"></div>
+  <div class="o1 orb"></div><div class="o2 orb"></div><div class="o3 orb"></div>
 
   <div class="h-inner">
     <!-- LEFT -->
@@ -91,12 +65,12 @@
       <div class="h-eye fu">
         <div class="h-eye-line"></div>
         <div class="nav-avail"></div>
-        Amine Visuals &nbsp;·&nbsp; Freelance
+        Editedbyamine &nbsp;·&nbsp; Freelance
       </div>
 
       <h1 class="h-name fu d1">
-        <span class="ln1">Amine</span>
-        <span class="ln2">Visuals.</span>
+        <span class="ln1">Edited by</span>
+        <span class="ln2">Amine.</span>
       </h1>
 
       <div class="tw c-y fu d2" id="hW">
@@ -105,7 +79,7 @@
         <div class="tw-bar" id="hR"><div class="tw-knob t"></div><div class="tw-knob b"></div></div>
       </div>
 
-      <p class="h-desc fu d3">I craft cinematic long-form edits, scroll-stopping short-form content, and high-converting SaaS &amp; commercial videos — turning raw footage into stories worth watching.</p>
+      <p class="h-desc fu d3">Cinematic long-form edits, scroll-stopping shorts, clean motion graphics — I turn raw footage into content people actually watch.</p>
 
       <div class="h-btns fu d4">
         <a href="#longform" class="btn-p">
@@ -128,11 +102,11 @@
       <div class="ftag ft2"><span class="fl">Style</span><span class="fv">Cinematic</span></div>
       <div class="ftag ft3"><span class="fl">Projects</span><span class="fv">120+ ✦</span></div>
       <div class="portrait" id="pc">
-        <img src="assets/images/me.png" alt="Amine Visuals portrait">
+        <img src="assets/images/me.png" alt="Editedbyamine portrait">
         <div class="portrait-glow"></div>
         <div class="portrait-badge"><div class="nav-avail"></div>Available</div>
         <div class="portrait-info">
-          <p class="pn">Amine Visuals</p>
+          <p class="pn">Editedbyamine</p>
           <p class="pr">Video Editor</p>
         </div>
       </div>
@@ -148,8 +122,8 @@
 ══════════════════════ -->
 <section id="longform">
   <p class="lf-eye fu">Selected Work</p>
-  <h2 class="lf-tt fu d1">Long Form <em>Intro</em></h2>
-  <p class="lf-sub fu d2">A curated selection of YouTube edits, podcasts, and documentary-style storytelling.</p>
+  <h2 class="lf-tt fu d1">Long Form <em>Editing</em></h2>
+  <p class="lf-sub fu d2">YouTube edits, podcasts, and documentary-style stories — picked from recent work.</p>
 
   <div class="lf2-layout fu d3">
 
@@ -163,7 +137,7 @@
       </div>
 
       <div class="lf2-stage" id="lf2Stage">
-        <img class="lf2-poster" id="lf2Poster" src="" alt="Video preview" loading="lazy">
+        <img class="lf2-poster" id="lf2Poster" src="" alt="Video preview">
         <button class="lf2-play-big" id="lf2PlayBig" aria-label="Play video">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
@@ -213,7 +187,7 @@
     <span class="sfs-eyebrow">SHORT FORM</span>
     <h2 class="sfs-title">Short Form <em>Editing</em></h2>
     <p class="sfs-subtitle">
-      High-retention vertical content designed for YouTube Shorts,
+      Fast-paced vertical edits built for YouTube Shorts,
       Instagram Reels and TikTok.
     </p>
   </div>
@@ -231,7 +205,8 @@
       </div>
 
       <div class="sfs2-stage" id="sfs2Stage">
-        <img class="sfs2-poster" id="sfs2Poster" src="" alt="Video preview" loading="lazy">
+        <img class="sfs2-poster" id="sfs2Poster" src="" alt="Video preview">
+        <div class="sfs2-featured-badge" id="sfs2FeaturedBadge">★ Featured</div>
         <button class="sfs2-play-big" id="sfs2PlayBig" aria-label="Play video">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
@@ -282,7 +257,7 @@
 <section id="saasSection">
   <p class="saas-eye fu">Selected Work</p>
   <h2 class="saas-tt fu d1">SaaS &amp; <em>Commercials</em></h2>
-  <p class="saas-sub fu d2">Performance ads, SaaS marketing videos, product launches, and commercial campaigns designed to convert.</p>
+  <p class="saas-sub fu d2">Product launches, SaaS marketing videos, and performance ads — built to sell, not just look good.</p>
 
   <div class="saas-layout fu d3">
 
@@ -296,7 +271,7 @@
       </div>
 
       <div class="saas-stage" id="saasStage">
-        <img class="saas-poster" id="saasPoster" src="" alt="Video preview" loading="lazy">
+        <img class="saas-poster" id="saasPoster" src="" alt="Video preview">
         <button class="saas-play-big" id="saasPlayBig" aria-label="Play video">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
@@ -343,35 +318,21 @@
      §4 COLLABORATIONS
 ══════════════════════ -->
 <section id="collab">
-  <div class="collab-canvas" id="collabCanvas" aria-hidden="true"></div>
+  <div class="collab-canvas" id="collabCanvas"></div>
   <div class="collab-content">
     <p class="co-eye fu">Collaborations</p>
     <h2 class="co-tt fu d1">People I've <em>Worked With</em></h2>
-    <p class="co-sub fu d2">A selection of creators and brands I've had the pleasure of editing content for.</p>
+    <p class="co-sub fu d2">Creators and brands I've edited for — and would work with again.</p>
 
     <div class="co-orbits-wrap fu d3" id="coWrap">
       <div class="co-orbits" id="coOrbits">
-        <div class="co-ring co-ring-1" aria-hidden="true"></div>
-        <div class="co-ring co-ring-2" aria-hidden="true"></div>
-        <div class="co-ring co-ring-3" aria-hidden="true"></div>
+        <div class="co-ring co-ring-1"></div>
+        <div class="co-ring co-ring-2"></div>
+        <div class="co-ring co-ring-3"></div>
 
         <div class="co-center">
           <div class="co-center-name">Amine</div>
           <div class="co-center-role">Editor</div>
-        </div>
-
-        <!-- Connector spokes — same --angle/--radius math as the nodes below,
-             so each line lands exactly on its avatar. Turns the floating
-             avatars into an actual "network" reading: everyone visibly
-             links back to the center instead of just orbiting near it. -->
-        <div class="co-spokes" aria-hidden="true">
-          <div class="co-spoke" style="--angle:0deg;--radius:clamp(85px,20vw,155px);--d:0s"></div>
-          <div class="co-spoke" style="--angle:90deg;--radius:clamp(85px,20vw,155px);--d:.6s"></div>
-          <div class="co-spoke" style="--angle:180deg;--radius:clamp(85px,20vw,155px);--d:1.2s"></div>
-          <div class="co-spoke" style="--angle:270deg;--radius:clamp(85px,20vw,155px);--d:1.8s"></div>
-          <div class="co-spoke" style="--angle:45deg;--radius:clamp(135px,32vw,255px);--d:2.4s"></div>
-          <div class="co-spoke" style="--angle:165deg;--radius:clamp(135px,32vw,255px);--d:3s"></div>
-          <div class="co-spoke" style="--angle:285deg;--radius:clamp(135px,32vw,255px);--d:3.6s"></div>
         </div>
 
         <!-- Inner ring -->
@@ -425,162 +386,6 @@
 </section>
 
 <!-- ══════════════════════
-     §4.5 TESTIMONIALS
-     New trust-building section: direct client praise, placed right
-     after Collaborations so social proof reads as one continuous
-     beat (who I've worked with → what they say about it). Dark
-     aesthetic matches #collab exactly for a seamless section join;
-     typography reuses the same eyebrow/title/subtitle tokens as
-     every other section (.co-eye/-tt/-sub pattern → .test-*).
-
-     TODO: swap the three placeholder quotes below for real client
-     testimonials (DM/email screenshots turned into quotes, or ask
-     past clients directly) before launch.
-══════════════════════ -->
-<section id="testimonials">
-  <p class="test-eye fu">Client Feedback</p>
-  <h2 class="test-tt fu d1">What They <em>Say</em></h2>
-  <p class="test-sub fu d2">A few words from creators and brands after we wrapped a project together.</p>
-
-  <div class="test-grid fu d3">
-    <div class="test-card">
-      <div class="test-mark" aria-hidden="true">&ldquo;</div>
-      <p class="test-quote">Turnaround was fast and the pacing made the whole video feel twice as engaging. Our watch time jumped the week it went up.</p>
-      <div class="test-who">
-        <div class="test-avatar" aria-hidden="true">YT</div>
-        <div>
-          <p class="test-name">YouTube Creator</p>
-          <p class="test-role">Long Form Client</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="test-card">
-      <div class="test-mark" aria-hidden="true">&ldquo;</div>
-      <p class="test-quote">Gave us three cuts a week without ever feeling repetitive. Easily the most reliable editor we've worked with for Shorts.</p>
-      <div class="test-who">
-        <div class="test-avatar" aria-hidden="true">SF</div>
-        <div>
-          <p class="test-name">Content Creator</p>
-          <p class="test-role">Short Form Client</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="test-card">
-      <div class="test-mark" aria-hidden="true">&ldquo;</div>
-      <p class="test-quote">Understood our brand voice from the first brief. The commercial cut converted better than any version we'd made in-house.</p>
-      <div class="test-who">
-        <div class="test-avatar" aria-hidden="true">CO</div>
-        <div>
-          <p class="test-name">SaaS Founder</p>
-          <p class="test-role">Commercial Client</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Category divider — reuses the site's marquee component (gold variant) -->
-<div class="mq mq-gold" aria-hidden="true"><div class="mq-t" id="mqtProcess"></div></div>
-
-<!-- ══════════════════════
-     §4.5 PROCESS
-     New trust-building section: reduces perceived friction/risk right
-     before the contact form. Background gradient continues directly
-     into #contact's tone, so the two read as one narrative beat —
-     "here's how it works" → "here's where to start."
-══════════════════════ -->
-<section id="process">
-  <p class="proc-eye fu">The Process</p>
-  <h2 class="proc-tt fu d1">How We'll <em>Work Together</em></h2>
-  <p class="proc-sub fu d2">A simple, four-step process built for speed — from first message to final delivery.</p>
-
-  <div class="proc-grid fu d3">
-    <div class="proc-step">
-      <div class="proc-num">01</div>
-      <h3 class="proc-step-tt">Brief</h3>
-      <p class="proc-step-desc">Tell me about the project — goals, footage, references. A short message is all it takes to start.</p>
-    </div>
-    <div class="proc-step">
-      <div class="proc-num">02</div>
-      <h3 class="proc-step-tt">Edit</h3>
-      <p class="proc-step-desc">I turn raw footage into a paced, story-first edit — no filler, no wasted seconds.</p>
-    </div>
-    <div class="proc-step">
-      <div class="proc-num">03</div>
-      <h3 class="proc-step-tt">Review</h3>
-      <p class="proc-step-desc">You get a private preview link to watch, comment, and request changes.</p>
-    </div>
-    <div class="proc-step">
-      <div class="proc-num">04</div>
-      <h3 class="proc-step-tt">Deliver</h3>
-      <p class="proc-step-desc">Final files in every format and aspect ratio you need, ready to publish.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════
-     §4.7 FAQ
-     Second trust-building section, right before Contact — answers
-     the questions that otherwise get asked (and slow things down)
-     mid-brief. Light background continues the gradient handoff from
-     #process straight into #contact so the three sections read as
-     one uninterrupted close. Typography reuses .proc-eye/-tt/-sub
-     tokens (.faq-*); accordion behavior lives in js/main.js.
-══════════════════════ -->
-<section id="faq">
-  <p class="faq-eye fu">Good to Know</p>
-  <h2 class="faq-tt fu d1">Frequently Asked <em>Questions</em></h2>
-  <p class="faq-sub fu d2">Still deciding? Here's what most clients ask before their first project.</p>
-
-  <div class="faq-list fu d3" id="faqList">
-    <div class="faq-item">
-      <button class="faq-q" aria-expanded="false">
-        <span>How long does a typical edit take?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-a"><p>Short-form turnaround is usually 2–4 days per video. Long-form edits run 5–10 days depending on footage length and complexity. Rush delivery can be arranged on request.</p></div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" aria-expanded="false">
-        <span>What footage or files do you need from me?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-a"><p>Raw footage via Drive or Frame.io, plus any brand assets — logo, fonts, brand colors — and reference links for the style you're after. The more context up front, the fewer revision rounds later.</p></div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" aria-expanded="false">
-        <span>How many revisions are included?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-a"><p>Two rounds of revisions are included in every package. Additional rounds are available at a small added cost — most projects wrap well within the included two.</p></div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" aria-expanded="false">
-        <span>What formats and aspect ratios do you deliver?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-a"><p>Final files are delivered as MP4 (H.264) by default, in whichever aspect ratios you need — 16:9, 9:16, 1:1 — ready to publish across YouTube, Instagram, and TikTok.</p></div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" aria-expanded="false">
-        <span>Do you write scripts or just edit?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-a"><p>Editing is the core service, but light script structuring and pacing notes are included for SaaS/commercial projects. Full scriptwriting can be added as a separate service — just mention it in the brief.</p></div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" aria-expanded="false">
-        <span>How does payment work?</span>
-        <span class="faq-icon" aria-hidden="true"></span>
-      </button>
-      <div class="faq-a"><p>A 50% deposit secures the project start, with the remaining balance due on final delivery. Ongoing/retainer clients are billed monthly instead.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════
      §5 CONTACT
 ══════════════════════ -->
 <section id="contact">
@@ -601,7 +406,8 @@
     (create these for free at emailjs.com). Your EmailJS template
     should map {{name}}, {{email}}, {{social}}, {{media}},
     {{service}}, {{budget}}, {{message}} — these match the form
-    field `name` attributes exactly.
+    field `name` attributes exactly, since emailjs.sendForm() reads
+    them automatically.
   -->
   <form class="con-card fu d2" id="contactForm" novalidate>
     <div class="cg2">
@@ -609,25 +415,25 @@
       <div class="cf"><label>Email</label><input type="email" name="email" placeholder="your@email.com" autocomplete="off" required></div>
     </div>
     <div class="cg2" style="margin-bottom:30px">
-      <div class="cf"><label>Social Handle <em>(optional)</em></label><input type="text" name="social" placeholder="Instagram / X URL"></div>
+      <div class="cf"><label>Social Handle</label><input type="text" name="social" placeholder="Instagram / X URL"></div>
       <div class="cf"><label>Media <em>(optional)</em></label><input type="text" name="media" placeholder="Drive / Frame.io link"></div>
     </div>
 
     <p class="svc-l">Pick a service</p>
-    <div class="svc-r" id="svcR" role="radiogroup" aria-label="Pick a service">
-      <div class="svc-o" data-s="Shorts/Reels" role="radio" aria-checked="false" tabindex="0"><span>Shorts / Reels</span><div class="svc-rb"></div></div>
-      <div class="svc-o sel" data-s="Long Form" role="radio" aria-checked="true" tabindex="0"><span>Long Form</span><div class="svc-rb"></div></div>
-      <div class="svc-o" data-s="Motion" role="radio" aria-checked="false" tabindex="0"><span>Motion Graphics</span><div class="svc-rb"></div></div>
-      <div class="svc-o" data-s="Other" role="radio" aria-checked="false" tabindex="0"><span>Other</span><div class="svc-rb"></div></div>
+    <div class="svc-r" id="svcR">
+      <div class="svc-o" data-s="Shorts/Reels"><span>Shorts / Reels</span><div class="svc-rb"></div></div>
+      <div class="svc-o sel" data-s="Long Form"><span>Long Form</span><div class="svc-rb"></div></div>
+      <div class="svc-o" data-s="Motion"><span>Motion Graphics</span><div class="svc-rb"></div></div>
+      <div class="svc-o" data-s="Other"><span>Other</span><div class="svc-rb"></div></div>
     </div>
 
     <p class="bud-l">Estimated budget</p>
-    <div class="bud-r" id="budR" role="radiogroup" aria-label="Estimated budget">
-      <div class="bud-o" data-b="<500" role="radio" aria-checked="false" tabindex="0"><span class="bud-v">&lt;$500</span><span class="bud-t">Starter</span></div>
-      <div class="bud-o" data-b="500-1k" role="radio" aria-checked="false" tabindex="0"><span class="bud-v">$500–1k</span><span class="bud-t">Basic</span></div>
-      <div class="bud-o sel" data-b="1k-2k" role="radio" aria-checked="true" tabindex="0"><span class="bud-v">$1k–2k</span><span class="bud-t">Standard</span></div>
-      <div class="bud-o" data-b="2k-5k" role="radio" aria-checked="false" tabindex="0"><span class="bud-v">$2k–5k</span><span class="bud-t">Premium</span></div>
-      <div class="bud-o" data-b="5k+" role="radio" aria-checked="false" tabindex="0"><span class="bud-v">$5k+</span><span class="bud-t">Enterprise</span></div>
+    <div class="bud-r" id="budR">
+      <div class="bud-o" data-b="<500"><span class="bud-v">&lt;$500</span><span class="bud-t">Starter</span></div>
+      <div class="bud-o" data-b="500-1k"><span class="bud-v">$500–1k</span><span class="bud-t">Basic</span></div>
+      <div class="bud-o sel" data-b="1k-2k"><span class="bud-v">$1k–2k</span><span class="bud-t">Standard</span></div>
+      <div class="bud-o" data-b="2k-5k"><span class="bud-v">$2k–5k</span><span class="bud-t">Premium</span></div>
+      <div class="bud-o" data-b="5k+"><span class="bud-v">$5k+</span><span class="bud-t">Enterprise</span></div>
     </div>
     <input type="hidden" name="service" id="serviceInput" value="Long Form">
     <input type="hidden" name="budget" id="budgetInput" value="1k-2k">
@@ -666,12 +472,10 @@
   </div>
 </section>
 
-</main>
-
 <!-- FOOTER -->
 <footer>
-  <a href="#hero" class="fl"><img src="logo.png" alt="Amine Visuals" width="660" height="660" loading="lazy"></a>
-  <p class="fm">© 2026 Amine Visuals &nbsp;·&nbsp; Video Editor</p>
+  <a href="#hero" class="fl"><img src="logo.png" alt="Editedbyamine" width="660" height="660"></a>
+  <p class="fm">© 2026 Editedbyamine &nbsp;·&nbsp; Video Editor</p>
   <div class="fls">
     <a href="https://www.instagram.com/adamou_moh_al_amine/" target="_blank">Instagram</a>
     <a href="mailto:mohalaminadamou@gmail.com">Email</a>
