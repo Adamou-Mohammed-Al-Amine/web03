@@ -1,30 +1,4 @@
 /* ═══════════════════════════
-   ALWAYS START AT THE TOP
-   Two independent browser mechanisms can land the page mid-scroll,
-   and both are handled here:
-
-   1) history.scrollRestoration defaults to 'auto', so the browser
-      can replay a remembered scrollY on reload/back-navigation.
-      Disabled below.
-
-   2) A URL fragment (e.g. "#longform") makes the browser natively
-      jump to that element on ANY load — reload, reopen, back-nav —
-      entirely independent of (1). This was the actual bug: three
-      buttons (.btn-p, .btn-s, .nav-cta) weren't covered by the old
-      hash-interception click handler, so clicking them let the
-      browser's default anchor navigation write e.g. "#longform"
-      into the URL, where it then persisted across visits. Stripped
-      below via replaceState, and the click handler further down now
-      covers every in-page link site-wide so it can't recur.
-
-   Both run here, before the loader overlay (full-screen, opaque)
-   finishes its reveal, so neither is ever visible to the user.
-═══════════════════════════ */
-if('scrollRestoration' in history)history.scrollRestoration='manual';
-if(location.hash)history.replaceState(null,'',location.pathname+location.search);
-window.scrollTo(0,0);
-
-/* ═══════════════════════════
    LOADER
 ═══════════════════════════ */
 (function(){
@@ -48,6 +22,35 @@ window.addEventListener('scroll',()=>{
   nav.classList.toggle('sc',scrollY>55);
   si.classList.toggle('h',scrollY>220);
 },{passive:true});
+
+/* ═══════════════════════════
+   MOBILE NAV
+═══════════════════════════ */
+(function(){
+  const burger=document.getElementById('navBurger');
+  const panel=document.getElementById('navMobile');
+  const scrim=document.getElementById('navScrim');
+  if(!burger||!panel||!scrim)return;
+  function closeMenu(){
+    burger.setAttribute('aria-expanded','false');
+    panel.classList.remove('open');
+    scrim.classList.remove('open');
+    document.body.style.overflow='';
+  }
+  function openMenu(){
+    burger.setAttribute('aria-expanded','true');
+    panel.classList.add('open');
+    scrim.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  burger.addEventListener('click',()=>{
+    burger.getAttribute('aria-expanded')==='true'?closeMenu():openMenu();
+  });
+  scrim.addEventListener('click',closeMenu);
+  panel.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});
+  window.addEventListener('resize',()=>{if(window.innerWidth>820)closeMenu()});
+})();
 
 /* ═══════════════════════════
    FADE / BLUR REVEAL ON SCROLL
@@ -87,14 +90,6 @@ const saasMqItems=['Performance Ads','SaaS Marketing','Product Launches','Commer
 const saasMqEl=document.getElementById('mqtSaas');
 if(saasMqEl){
   saasMqEl.innerHTML=[...saasMqItems,...saasMqItems]
-    .map(t=>`<span class="mq-i">${t}<span class="mq-d"></span></span>`).join('');
-}
-
-/* Gold marquee divider — Collaborations / Process section break. */
-const processMqItems=['Brief the Project','Edit & Refine','Review & Revise','Deliver Final Files'];
-const processMqEl=document.getElementById('mqtProcess');
-if(processMqEl){
-  processMqEl.innerHTML=[...processMqItems,...processMqItems,...processMqItems,...processMqItems]
     .map(t=>`<span class="mq-i">${t}<span class="mq-d"></span></span>`).join('');
 }
 
@@ -245,11 +240,6 @@ const videos=[
   let autoplay=false;
   let muted=false;
   let iframeEl=null;
-  // Set to true only by goTo() (real prev/next/list-click navigation) so
-  // the initial automatic render() below never yanks the whole page down
-  // to this section on load — scrollIntoView bubbles up to the document,
-  // not just the inner playlist, when the target isn't fully in view yet.
-  let hasInteracted=false;
 
   function ytEmbedSrc(id,opts={}){
     const params=new URLSearchParams({enablejsapi:'1',rel:'0',playsinline:'1',origin:window.location.origin});
@@ -292,7 +282,7 @@ const videos=[
 
     Array.from(list.children).forEach((item,i)=>item.classList.toggle('is-active',i===active));
     const activeItem=list.children[active];
-    if(activeItem&&hasInteracted)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
 
     fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
       titleEl.textContent=meta?meta.title:'Featured video';
@@ -300,7 +290,6 @@ const videos=[
   }
 
   function goTo(index,withAutoplay){
-    hasInteracted=true;
     active=((index%videos.length)+videos.length)%videos.length;
     destroyPlayer();
     render();
@@ -423,10 +412,6 @@ const saasVideos=[
 
   let saasCurrentVideo=0;
   let saasAutoplay=false;
-  // See initLongFormPlayer's hasInteracted for why this exists: without
-  // it, the initial render() below scrolls the whole page into this
-  // section on load, not just the inner playlist.
-  let saasHasInteracted=false;
   let saasMuted=false;
   let saasPlayer=null; // the mounted YouTube iframe
 
@@ -471,7 +456,7 @@ const saasVideos=[
 
     Array.from(saasPlaylist.children).forEach((item,i)=>item.classList.toggle('is-active',i===saasCurrentVideo));
     const activeItem=saasPlaylist.children[saasCurrentVideo];
-    if(activeItem&&saasHasInteracted)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
 
     fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
       saasTitleEl.textContent=meta?meta.title:'Featured video';
@@ -479,7 +464,6 @@ const saasVideos=[
   }
 
   function saasGoTo(index,withAutoplay){
-    saasHasInteracted=true;
     saasCurrentVideo=((index%saasVideos.length)+saasVideos.length)%saasVideos.length;
     saasDestroyPlayer();
     saasRender();
@@ -596,6 +580,7 @@ const saasVideos=[
   // Placeholder dates — YouTube's oEmbed API doesn't expose publish
   // dates, so these are illustrative. Edit freely.
   const SHORTS=[
+    {id:'NXQTS1J31Tg',date:'2026',featured:true},
     {id:'RHbh1ggzc5w',date:'2026'},
     {id:'DpmTiegTgSg',date:'2026'},
     {id:'9UYD9wNuOrE',date:'2026'},
@@ -612,10 +597,6 @@ const saasVideos=[
   let autoplay=false;
   let muted=false;
   let iframeEl=null;
-  // See initLongFormPlayer's hasInteracted for why this exists: without
-  // it, the initial render() below scrolls the whole page into this
-  // section on load, not just the inner playlist.
-  let hasInteracted=false;
 
   function ytEmbedSrc(id,opts={}){
     const params=new URLSearchParams({enablejsapi:'1',rel:'0',playsinline:'1',origin:window.location.origin});
@@ -649,16 +630,19 @@ const saasVideos=[
     updatePlayIcon(!!withAutoplay);
   }
 
+  const featuredBadge=document.getElementById('sfs2FeaturedBadge');
+
   function render(){
     const s=SHORTS[active];
     stage.classList.add('is-loading');
     poster.onload=()=>{stage.classList.remove('is-loading')};
     poster.src=`https://img.youtube.com/vi/${s.id}/hqdefault.jpg`;
     titleEl.textContent='Loading…';
+    if(featuredBadge)featuredBadge.style.display=s.featured?'flex':'none';
 
     Array.from(list.children).forEach((item,i)=>item.classList.toggle('is-active',i===active));
     const activeItem=list.children[active];
-    if(activeItem&&hasInteracted)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
 
     fetchYTMeta(`https://youtube.com/shorts/${s.id}`).then(meta=>{
       titleEl.textContent=meta?meta.title:'Short form video';
@@ -666,7 +650,6 @@ const saasVideos=[
   }
 
   function goTo(index,withAutoplay){
-    hasInteracted=true;
     active=((index%SHORTS.length)+SHORTS.length)%SHORTS.length;
     destroyPlayer();
     render();
@@ -676,8 +659,8 @@ const saasVideos=[
 
   // Build playlist
   list.innerHTML=SHORTS.map((s,i)=>`
-    <div class="sfs2-item${i===0?' is-active':''}" data-index="${i}" role="option" tabindex="0">
-      <div class="sfs2-item-thumb"><img src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg" alt="" loading="lazy"></div>
+    <div class="sfs2-item${i===0?' is-active':''}${s.featured?' is-featured':''}" data-index="${i}" role="option" tabindex="0">
+      <div class="sfs2-item-thumb">${s.featured?'<span class="sfs2-featured-tag">★ Featured</span>':''}<img src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg" alt="" loading="lazy"></div>
       <div class="sfs2-item-body">
         <div class="sfs2-item-title" id="sfs2it-${i}">Loading…</div>
         <div class="sfs2-item-sub" id="sfs2is-${i}">YouTube Shorts</div>
@@ -760,59 +743,33 @@ const saasVideos=[
    SERVICE / BUDGET PICKERS
    Selecting an option also syncs the hidden form fields
    (#serviceInput / #budgetInput) that get submitted with the form.
-   Keyboard-accessible: each option is a role="radio" with
-   tabindex="0", so Enter/Space selects it same as a click.
 ═══════════════════════════ */
-function selectSvc(o){
-  document.querySelectorAll('.svc-o').forEach(x=>{
-    x.classList.remove('sel');
-    x.setAttribute('aria-checked','false');
-  });
-  o.classList.add('sel');
-  o.setAttribute('aria-checked','true');
-  document.getElementById('serviceInput').value=o.dataset.s;
-}
-function selectBud(o){
-  document.querySelectorAll('.bud-o').forEach(x=>{
-    x.classList.remove('sel');
-    x.setAttribute('aria-checked','false');
-  });
-  o.classList.add('sel');
-  o.setAttribute('aria-checked','true');
-  document.getElementById('budgetInput').value=o.dataset.b;
-}
 document.getElementById('svcR').addEventListener('click',e=>{
   const o=e.target.closest('.svc-o');if(!o)return;
-  selectSvc(o);
-});
-document.getElementById('svcR').addEventListener('keydown',e=>{
-  const o=e.target.closest('.svc-o');if(!o)return;
-  if(e.key==='Enter'||e.key===' '){e.preventDefault();selectSvc(o)}
+  document.querySelectorAll('.svc-o').forEach(x=>x.classList.remove('sel'));
+  o.classList.add('sel');
+  document.getElementById('serviceInput').value=o.dataset.s;
 });
 document.getElementById('budR').addEventListener('click',e=>{
   const o=e.target.closest('.bud-o');if(!o)return;
-  selectBud(o);
-});
-document.getElementById('budR').addEventListener('keydown',e=>{
-  const o=e.target.closest('.bud-o');if(!o)return;
-  if(e.key==='Enter'||e.key===' '){e.preventDefault();selectBud(o)}
+  document.querySelectorAll('.bud-o').forEach(x=>x.classList.remove('sel'));
+  o.classList.add('sel');
+  document.getElementById('budgetInput').value=o.dataset.b;
 });
 
 /* ═══════════════════════════
    CONTACT FORM — EmailJS (client-side, no backend)
-   Uses the official EmailJS SDK (script tag in index.html) via
-   emailjs.send() with an explicitly-built params object (rather than
-   sendForm's automatic DOM scrape), and passes the public key locally
-   on every call as well as globally via init() — this guarantees the
-   correct account/service context on every request. Fill in the
-   three values below from your EmailJS account:
+   Uses the official EmailJS SDK (script tag in index.html) to send
+   the form directly from the browser via emailjs.sendForm(), which
+   reads each field by its `name` attribute — no manual field mapping
+   needed. Fill in the three values below from your EmailJS account:
 
      EMAILJS_PUBLIC_KEY   → Account → General → Public Key
      EMAILJS_SERVICE_ID   → Email Services → your connected inbox
      EMAILJS_TEMPLATE_ID  → Email Templates → your template
 
    In your EmailJS template, map these variables (they match the
-   form field names exactly):
+   form field names exactly, via sendForm):
      {{name}}    — Name
      {{email}}   — Email (also set as the template's Reply-To)
      {{social}}  — Social Handle
@@ -824,11 +781,11 @@ document.getElementById('budR').addEventListener('keydown',e=>{
    Until all three IDs below are filled in, submissions will show a
    clear configuration error instead of silently failing.
 ═══════════════════════════ */
-const EMAILJS_PUBLIC_KEY='qWBvxDgg1i7DpcgR1';
-const EMAILJS_SERVICE_ID='service_zi1kopc';
-const EMAILJS_TEMPLATE_ID='template_icoycp5';
+const EMAILJS_PUBLIC_KEY='';   // ← paste your EmailJS Public Key here
+const EMAILJS_SERVICE_ID='';   // ← paste your EmailJS Service ID here
+const EMAILJS_TEMPLATE_ID='';  // ← paste your EmailJS Template ID here
 
-if(EMAILJS_PUBLIC_KEY&&window.emailjs)emailjs.init({publicKey:EMAILJS_PUBLIC_KEY});
+if(EMAILJS_PUBLIC_KEY&&window.emailjs)emailjs.init(EMAILJS_PUBLIC_KEY);
 
 const contactForm=document.getElementById('contactForm');
 const sendBtn=document.getElementById('sendBtn');
@@ -882,47 +839,17 @@ contactForm.addEventListener('submit',async function(e){
   sendBtn.disabled=true;
 
   try{
-    // Built explicitly (instead of sendForm's automatic DOM scrape) so the
-    // exact keys sent to EmailJS are guaranteed to match the template
-    // variables one-to-one, and so the public key is passed locally on
-    // this call (options 4th arg) rather than relying solely on init()'s
-    // internal state — the local value takes priority per EmailJS's docs.
-    const fd=new FormData(this);
-    const templateParams={
-      name:(fd.get('name')||'').toString().trim(),
-      email:(fd.get('email')||'').toString().trim(),
-      social:(fd.get('social')||'').toString().trim(),
-      media:(fd.get('media')||'').toString().trim(),
-      service:(fd.get('service')||'').toString().trim(),
-      budget:(fd.get('budget')||'').toString().trim(),
-      message:(fd.get('message')||'').toString().trim(),
-    };
-
-    // ── TEMPORARY DEBUG — remove once the send succeeds ──
-    console.log('[EmailJS debug] PUBLIC_KEY:',EMAILJS_PUBLIC_KEY);
-    console.log('[EmailJS debug] SERVICE_ID:',EMAILJS_SERVICE_ID);
-    console.log('[EmailJS debug] TEMPLATE_ID:',EMAILJS_TEMPLATE_ID);
-    console.log('[EmailJS debug] templateParams:',templateParams);
-    // ───────────────────────────────────────────────────────
-
-    await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      templateParams,
-      {publicKey:EMAILJS_PUBLIC_KEY}
-    );
+    await emailjs.sendForm(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,this);
 
     setStatus('success','Message sent — thank you! I\'ll reply within 12–24 hours.');
     this.reset();
     document.getElementById('serviceInput').value='Long Form';
     document.getElementById('budgetInput').value='1k-2k';
-    selectSvc(document.querySelector('.svc-o[data-s="Long Form"]'));
-    selectBud(document.querySelector('.bud-o[data-b="1k-2k"]'));
+    document.querySelectorAll('.svc-o').forEach(x=>x.classList.remove('sel'));
+    document.querySelector('.svc-o[data-s="Long Form"]').classList.add('sel');
+    document.querySelectorAll('.bud-o').forEach(x=>x.classList.remove('sel'));
+    document.querySelector('.bud-o[data-b="1k-2k"]').classList.add('sel');
   }catch(err){
-    // ── TEMPORARY DEBUG — remove once the send succeeds ──
-    console.log('[EmailJS debug] full error object:',err);
-    console.log('[EmailJS debug] JSON.stringify(err):',JSON.stringify(err,Object.getOwnPropertyNames(err||{})));
-    // ───────────────────────────────────────────────────────
     console.error('EmailJS submission failed:',err);
     // Surface EmailJS's own error text (e.g. invalid service/template ID,
     // rate limit, etc.) instead of a generic message.
@@ -935,61 +862,14 @@ contactForm.addEventListener('submit',async function(e){
   }
 });
 
-/* Nav / in-page links — smooth hash scroll.
-   Selector is `a[href^="#"]` (every in-page anchor site-wide) rather
-   than a hand-picked class list — the previous list missed .btn-p,
-   .btn-s and .nav-cta, so clicking those fell through to the browser's
-   native anchor navigation, which permanently writes e.g. "#longform"
-   into the URL. That leftover hash is what caused the page to reopen
-   mid-scroll on reload/back-navigation/reopen — the browser jumps to
-   that element on its own, independent of scroll-restoration entirely. */
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
+/* Nav links — smooth hash scroll */
+document.querySelectorAll('.nav-links a, .nav-logo, footer .fl').forEach(a=>{
   a.addEventListener('click',e=>{
     const h=a.getAttribute('href');
-    if(h && h.length>1 && document.querySelector(h)){
+    if(h && h.startsWith('#')){
       e.preventDefault();
-      document.querySelector(h).scrollIntoView({behavior:'smooth'});
+      const el=document.querySelector(h);
+      if(el)el.scrollIntoView({behavior:'smooth'});
     }
   });
 });
-
-/* Active nav-link highlight — marks whichever section is currently
-   in view. Uses the middle band of the viewport (rootMargin) so
-   exactly one section is "active" at a time as the user scrolls,
-   rather than flickering between two adjacent sections. */
-const navLinks=Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
-if(navLinks.length){
-  const navSections=navLinks
-    .map(a=>document.querySelector(a.getAttribute('href')))
-    .filter(Boolean);
-  const navSpy=new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(!entry.isIntersecting)return;
-      const link=navLinks.find(a=>a.getAttribute('href')==='#'+entry.target.id);
-      if(!link)return;
-      navLinks.forEach(a=>a.classList.remove('active'));
-      link.classList.add('active');
-    });
-  },{rootMargin:'-45% 0px -50% 0px',threshold:0});
-  navSections.forEach(s=>navSpy.observe(s));
-}
-
-/* ═══════════════════════════
-   FAQ ACCORDION
-   Single-open accordion: expanding one item collapses whichever
-   was open before it, keeping the list compact. aria-expanded
-   drives both the CSS (max-height reveal + icon rotation) and
-   screen-reader state, so no separate "open" class is needed.
-═══════════════════════════ */
-(function(){
-  const faqList=document.getElementById('faqList');
-  if(!faqList)return;
-  const items=Array.from(faqList.querySelectorAll('.faq-q'));
-  items.forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const open=btn.getAttribute('aria-expanded')==='true';
-      items.forEach(b=>b.setAttribute('aria-expanded','false'));
-      btn.setAttribute('aria-expanded',open?'false':'true');
-    });
-  });
-})();
