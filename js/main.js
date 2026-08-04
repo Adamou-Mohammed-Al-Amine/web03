@@ -1,4 +1,13 @@
 /* ═══════════════════════════
+   ALWAYS LOAD FROM THE TOP
+   Prevents the browser from restoring a previous scroll position
+   on refresh, and forces the page to start at the Hero section.
+═══════════════════════════ */
+if('scrollRestoration' in history){history.scrollRestoration='manual'}
+window.scrollTo(0,0);
+window.addEventListener('load',()=>window.scrollTo(0,0));
+
+/* ═══════════════════════════
    LOADER
 ═══════════════════════════ */
 (function(){
@@ -213,6 +222,7 @@ async function fetchYTMeta(url){
    edit them freely to match your real videos.
 ═══════════════════════════ */
 const videos=[
+  {id:'NXQTS1J31Tg',category:'Featured',duration:'',year:'2026',featured:true},
   {id:'yw6jr3jXrEI',category:'Podcast',duration:'18:24',year:'2026'},
   {id:'PTnRYDBoS98',category:'Interview',duration:'24:10',year:'2026'},
   {id:'Z9P_fJGcFUA',category:'Documentary',duration:'15:47',year:'2025'},
@@ -273,16 +283,21 @@ const videos=[
     updatePlayIcon(!!withAutoplay);
   }
 
-  function render(){
+  const featuredBadge=document.getElementById('lf2FeaturedBadge');
+
+  function render(initial){
     const v=videos[active];
     stage.classList.add('is-loading');
     poster.onload=()=>{stage.classList.remove('is-loading')};
     poster.src=`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`;
     titleEl.textContent='Loading…';
+    if(featuredBadge)featuredBadge.style.display=v.featured?'flex':'none';
 
     Array.from(list.children).forEach((item,i)=>item.classList.toggle('is-active',i===active));
-    const activeItem=list.children[active];
-    if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    if(!initial){
+      const activeItem=list.children[active];
+      if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    }
 
     fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
       titleEl.textContent=meta?meta.title:'Featured video';
@@ -299,15 +314,14 @@ const videos=[
 
   // Build playlist
   list.innerHTML=videos.map((v,i)=>`
-    <div class="lf2-item${i===0?' is-active':''}" data-index="${i}" role="option" tabindex="0">
-      <div class="lf2-item-thumb"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="" loading="lazy"></div>
+    <div class="lf2-item${i===0?' is-active':''}${v.featured?' is-featured':''}" data-index="${i}" role="option" tabindex="0">
+      <div class="lf2-item-thumb">${v.featured?'<span class="lf2-featured-tag">★ Featured</span>':''}<img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="" loading="lazy"></div>
       <div class="lf2-item-body">
         <p class="lf2-item-title" id="lf2it-${i}">Loading…</p>
         <p class="lf2-item-sub" id="lf2is-${i}">YouTube</p>
         <div class="lf2-item-meta">
           <span class="lf2-meta-tag">${v.category}</span>
-          <span class="lf2-meta-dot">•</span>
-          <span class="lf2-meta-text">${v.duration}</span>
+          ${v.duration?`<span class="lf2-meta-dot">•</span><span class="lf2-meta-text">${v.duration}</span>`:''}
           <span class="lf2-meta-dot">•</span>
           <span class="lf2-meta-text">${v.year}</span>
         </div>
@@ -376,7 +390,7 @@ const videos=[
     if(e.key==='ArrowRight'){e.preventDefault();goTo(active+1)}
   });
 
-  render();
+  render(true);
 })();
 
 /* ═══════════════════════════
@@ -447,7 +461,7 @@ const saasVideos=[
     saasUpdatePlayIcon(!!withAutoplay);
   }
 
-  function saasRender(){
+  function saasRender(initial){
     const v=saasVideos[saasCurrentVideo];
     saasStage.classList.add('is-loading');
     saasPoster.onload=()=>{saasStage.classList.remove('is-loading')};
@@ -455,8 +469,10 @@ const saasVideos=[
     saasTitleEl.textContent='Loading…';
 
     Array.from(saasPlaylist.children).forEach((item,i)=>item.classList.toggle('is-active',i===saasCurrentVideo));
-    const activeItem=saasPlaylist.children[saasCurrentVideo];
-    if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    if(!initial){
+      const activeItem=saasPlaylist.children[saasCurrentVideo];
+      if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    }
 
     fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
       saasTitleEl.textContent=meta?meta.title:'Featured video';
@@ -550,7 +566,7 @@ const saasVideos=[
     if(e.key==='ArrowRight'){e.preventDefault();saasGoTo(saasCurrentVideo+1)}
   });
 
-  saasRender();
+  saasRender(true);
 })();
 
 /* ═══════════════════════════
@@ -580,7 +596,6 @@ const saasVideos=[
   // Placeholder dates — YouTube's oEmbed API doesn't expose publish
   // dates, so these are illustrative. Edit freely.
   const SHORTS=[
-    {id:'NXQTS1J31Tg',date:'2026',featured:true},
     {id:'RHbh1ggzc5w',date:'2026'},
     {id:'DpmTiegTgSg',date:'2026'},
     {id:'9UYD9wNuOrE',date:'2026'},
@@ -632,7 +647,7 @@ const saasVideos=[
 
   const featuredBadge=document.getElementById('sfs2FeaturedBadge');
 
-  function render(){
+  function render(initial){
     const s=SHORTS[active];
     stage.classList.add('is-loading');
     poster.onload=()=>{stage.classList.remove('is-loading')};
@@ -641,8 +656,10 @@ const saasVideos=[
     if(featuredBadge)featuredBadge.style.display=s.featured?'flex':'none';
 
     Array.from(list.children).forEach((item,i)=>item.classList.toggle('is-active',i===active));
-    const activeItem=list.children[active];
-    if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    if(!initial){
+      const activeItem=list.children[active];
+      if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    }
 
     fetchYTMeta(`https://youtube.com/shorts/${s.id}`).then(meta=>{
       titleEl.textContent=meta?meta.title:'Short form video';
@@ -735,7 +752,7 @@ const saasVideos=[
     if(e.key==='ArrowRight'){e.preventDefault();goTo(active+1)}
   });
 
-  render();
+  render(true);
 })();
 
 
