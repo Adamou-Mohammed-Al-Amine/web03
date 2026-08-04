@@ -306,7 +306,13 @@ nav.sc{padding:16px 56px}
   background:rgba(212,175,55,.22);border-color:rgba(212,175,55,.5);
   box-shadow:0 0 40px rgba(212,175,55,.25)}
 .lf2-play-big svg{width:28px;height:28px;fill:#fff;margin-left:3px}
-.lf2-stage.has-player .lf2-play-big,.lf2-stage.has-player .lf2-poster{opacity:0;pointer-events:none}
+.lf2-stage.has-player .lf2-play-big,.lf2-stage.has-player .lf2-poster,
+.lf2-stage.has-player .lf2-featured-badge{opacity:0;pointer-events:none}
+.lf2-featured-badge{display:none;position:absolute;top:16px;left:16px;z-index:3;
+  align-items:center;gap:5px;font-family:var(--bf);font-size:11px;font-weight:700;
+  letter-spacing:.05em;color:#211501;background:linear-gradient(135deg,#f4dd93,var(--gold));
+  border-radius:100px;padding:7px 14px;box-shadow:0 10px 26px rgba(180,140,40,.35);
+  transition:opacity .4s var(--ease)}
 
 .lf2-controls{align-self:stretch;display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:10px 14px;border-radius:16px;background:rgba(255,255,255,.04);
@@ -346,7 +352,14 @@ nav.sc{padding:16px 56px}
   transform:scale(1.02);
   box-shadow:0 0 0 1px rgba(212,175,55,.2),0 10px 28px rgba(212,175,55,.16),0 6px 18px rgba(0,0,0,.4)}
 .lf2-item.is-active:hover{transform:scale(1.02)}
+.lf2-item.is-featured{border-color:rgba(212,175,55,.3);background:rgba(212,175,55,.04)}
+.lf2-item.is-featured.is-active{box-shadow:0 0 0 1px rgba(212,175,55,.25),0 14px 34px rgba(212,175,55,.18),0 6px 18px rgba(0,0,0,.4)}
 .lf2-item-thumb{flex:0 0 128px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative}
+.lf2-item.is-featured .lf2-item-thumb{box-shadow:0 0 0 1.5px var(--gold)}
+.lf2-featured-tag{position:absolute;top:6px;left:6px;z-index:2;display:inline-flex;align-items:center;
+  gap:3px;font-family:var(--bf);font-size:9px;font-weight:700;letter-spacing:.04em;color:#211501;
+  background:linear-gradient(135deg,#f4dd93,var(--gold));border-radius:100px;padding:3px 7px;
+  line-height:1;white-space:nowrap}
 .lf2-item-thumb::after{content:'▶';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:rgba(0,0,0,.4);color:#fff;font-size:14px;opacity:0;transition:opacity .3s}
 .lf2-item:hover .lf2-item-thumb::after{opacity:1}
@@ -535,7 +548,7 @@ nav.sc{padding:16px 56px}
 
     position: relative;
     width: 100%;
-    padding: 120px 24px;
+    padding: 96px 19px;
     background: linear-gradient(180deg, #050505 0%, #0e0e0e 45%, #050505 100%);
     color: var(--sfs-white);
     font-family: var(--bf);
@@ -581,32 +594,32 @@ nav.sc{padding:16px 56px}
   .sfs-header{
     text-align: center;
     max-width: 620px;
-    margin-bottom: 64px;
+    margin-bottom: 51px;
   }
   .sfs-eyebrow{
     display: inline-block;
     font-family: var(--bf);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
     letter-spacing: 0.4em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.35);
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     opacity: 1;
   }
   .sfs-title{
     font-family: var(--tf);
-    font-size: clamp(38px, 5vw, 64px);
+    font-size: clamp(30px, 4vw, 51px);
     font-weight: 900;
     letter-spacing: -0.03em;
     line-height: .95;
-    margin: 0 0 16px;
+    margin: 0 0 13px;
     color: var(--sfs-white);
   }
   .sfs-title em{ font-style: italic; color: var(--sfs-gold); }
   .sfs-subtitle{
     font-family: var(--bf);
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.7;
     color: rgba(255,255,255,0.4);
     margin: 0;
@@ -622,23 +635,22 @@ nav.sc{padding:16px 56px}
      ================================================================ */
   .sfs2-layout{
     position: relative;
-    width: min(1360px, 96vw);
+    width: min(1088px, 96vw);
     display: flex;
     align-items: stretch;
-    gap: 28px;
-    zoom: 0.8; /* scales the whole showcase down ~20% while preserving every internal proportion exactly */
+    gap: 22px;
   }
 
   /* ---------- LEFT: featured player (≈75%) ---------- */
   .sfs2-player-card{
     flex: 3 1 0%;
     min-width: 0;
-    min-height: 660px;
+    height: clamp(420px, 34vw, 528px);
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    padding: 22px 24px 24px;
-    border-radius: 32px;
+    gap: 14px;
+    padding: 18px 19px 19px;
+    border-radius: 26px;
     background: linear-gradient(165deg, #161616 0%, #0c0c0c 55%, #050505 100%);
     border: 1px solid var(--sfs-border);
     box-shadow:
@@ -652,11 +664,11 @@ nav.sc{padding:16px 56px}
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 16px;
+    gap: 13px;
   }
   .sfs2-player-title{
     font-family: var(--bf);
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--sfs-white);
     line-height: 1.4;
@@ -664,8 +676,8 @@ nav.sc{padding:16px 56px}
   }
   .sfs2-avatar{
     flex-shrink: 0;
-    width: 34px;
-    height: 34px;
+    width: 27px;
+    height: 27px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--sfs-gold), #8a6d33);
     display: flex;
@@ -673,7 +685,7 @@ nav.sc{padding:16px 56px}
     justify-content: center;
     box-shadow: 0 4px 14px rgba(0,0,0,0.4);
   }
-  .sfs2-avatar svg{ width: 18px; height: 18px; fill: #050505; }
+  .sfs2-avatar svg{ width: 14px; height: 14px; fill: #050505; }
 
   .sfs2-stage{
     position: relative;
@@ -683,7 +695,7 @@ nav.sc{padding:16px 56px}
     aspect-ratio: 9 / 16;
     max-width: 100%;
     margin: 0 auto;
-    border-radius: 22px;
+    border-radius: 18px;
     overflow: hidden;
     background: #000;
   }
@@ -707,8 +719,8 @@ nav.sc{padding:16px 56px}
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 74px;
-    height: 74px;
+    width: 59px;
+    height: 59px;
     border-radius: 50%;
     background: rgba(255,255,255,0.12);
     -webkit-backdrop-filter: blur(14px);
@@ -727,26 +739,26 @@ nav.sc{padding:16px 56px}
     border-color: rgba(201,169,98,0.5);
     box-shadow: 0 0 40px rgba(201,169,98,0.25);
   }
-  .sfs2-play-big svg{ width: 26px; height: 26px; fill: var(--sfs-white); margin-left: 3px; }
+  .sfs2-play-big svg{ width: 21px; height: 21px; fill: var(--sfs-white); margin-left: 3px; }
   .sfs2-stage.has-player .sfs2-play-big,
   .sfs2-stage.has-player .sfs2-poster,
   .sfs2-stage.has-player .sfs2-featured-badge{ opacity: 0; pointer-events: none; }
   .sfs2-featured-badge{
     display: none;
     position: absolute;
-    top: 16px;
-    left: 16px;
+    top: 13px;
+    left: 13px;
     z-index: 3;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     font-family: var(--bf);
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 700;
     letter-spacing: 0.05em;
     color: #211501;
     background: linear-gradient(135deg,#f4dd93,var(--gold));
     border-radius: 100px;
-    padding: 7px 14px;
+    padding: 6px 11px;
     box-shadow: 0 10px 26px rgba(180,140,40,0.35);
     transition: opacity 0.4s var(--sfs-ease);
   }
@@ -756,19 +768,19 @@ nav.sc{padding:16px 56px}
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    padding: 10px 14px;
-    border-radius: 16px;
+    gap: 10px;
+    padding: 8px 11px;
+    border-radius: 13px;
     background: rgba(255,255,255,0.04);
     border: 1px solid var(--sfs-border);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
   }
-  .sfs2-controls-group{ display: flex; align-items: center; gap: 8px; }
-  .sfs2-controls-center{ gap: 10px; }
+  .sfs2-controls-group{ display: flex; align-items: center; gap: 6px; }
+  .sfs2-controls-center{ gap: 8px; }
   .sfs2-btn{
-    width: 38px;
-    height: 38px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
@@ -779,7 +791,7 @@ nav.sc{padding:16px 56px}
     cursor: pointer;
     transition: all 0.35s var(--sfs-ease);
   }
-  .sfs2-btn svg{ width: 16px; height: 16px; fill: var(--sfs-white); }
+  .sfs2-btn svg{ width: 13px; height: 13px; fill: var(--sfs-white); }
   .sfs2-btn:hover{
     background: rgba(201,169,98,0.16);
     border-color: rgba(201,169,98,0.4);
@@ -788,10 +800,10 @@ nav.sc{padding:16px 56px}
   .sfs2-btn-text{
     width: auto;
     border-radius: 100px;
-    padding: 0 16px;
-    height: 36px;
+    padding: 0 13px;
+    height: 29px;
     font-family: var(--bf);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -812,12 +824,12 @@ nav.sc{padding:16px 56px}
   /* ---------- RIGHT: scrollable playlist (≈25%) ---------- */
   .sfs2-playlist-card{
     flex: 1 1 0%;
-    min-width: 240px;
-    max-width: 340px;
-    min-height: 660px;
+    min-width: 192px;
+    max-width: 272px;
+    height: clamp(420px, 34vw, 528px);
     display: flex;
-    padding: 14px;
-    border-radius: 28px;
+    padding: 11px;
+    border-radius: 22px;
     background: linear-gradient(165deg, #141414 0%, #0a0a0a 60%, #050505 100%);
     border: 1px solid var(--sfs-border);
     box-shadow:
@@ -828,20 +840,20 @@ nav.sc{padding:16px 56px}
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    gap: 7px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding-right: 10px;
+    padding-right: 8px;
   }
-  .sfs2-playlist-scroll::-webkit-scrollbar{ width: 6px; }
+  .sfs2-playlist-scroll::-webkit-scrollbar{ width: 5px; }
   .sfs2-playlist-scroll::-webkit-scrollbar-track{ background: rgba(255,255,255,0.06); border-radius: 6px; }
   .sfs2-playlist-scroll::-webkit-scrollbar-thumb{ background: rgba(255,255,255,0.28); border-radius: 6px; }
 
   .sfs2-item{
     display: flex;
-    gap: 11px;
-    padding: 9px;
-    border-radius: 15px;
+    gap: 9px;
+    padding: 7px;
+    border-radius: 12px;
     cursor: pointer;
     border: 1px solid transparent;
     transition: all 0.35s var(--sfs-ease);
@@ -863,20 +875,20 @@ nav.sc{padding:16px 56px}
   }
   .sfs2-item-thumb{
     position: relative;
-    flex: 0 0 70px;
+    flex: 0 0 56px;
     aspect-ratio: 9 / 16;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
     background: #111;
   }
   .sfs2-item.is-featured .sfs2-item-thumb{
-    flex-basis: 84px;
+    flex-basis: 67px;
     box-shadow: 0 0 0 1.5px var(--sfs-gold);
   }
   .sfs2-featured-tag{
     position: absolute;
-    top: 5px;
-    left: 5px;
+    top: 4px;
+    left: 4px;
     z-index: 2;
     display: inline-flex;
     align-items: center;
@@ -888,7 +900,7 @@ nav.sc{padding:16px 56px}
     color: #211501;
     background: linear-gradient(135deg,#f4dd93,var(--gold));
     border-radius: 100px;
-    padding: 3px 6px;
+    padding: 2px 5px;
     line-height: 1;
     white-space: nowrap;
   }
@@ -902,7 +914,7 @@ nav.sc{padding:16px 56px}
     justify-content: center;
     background: rgba(0,0,0,0.4);
     color: var(--sfs-white);
-    font-size: 13px;
+    font-size: 10px;
     opacity: 0;
     transition: opacity 0.3s;
     pointer-events: none;
@@ -911,7 +923,7 @@ nav.sc{padding:16px 56px}
   .sfs2-item-body{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; justify-content: center; }
   .sfs2-item-title{
     font-family: var(--bf);
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--sfs-white);
     line-height: 1.35;
@@ -921,26 +933,26 @@ nav.sc{padding:16px 56px}
     overflow: hidden;
   }
   .sfs2-item.is-active .sfs2-item-title{ color: var(--sfs-gold); }
-  .sfs2-item-sub{ font-size: 12px; color: rgba(255,255,255,0.4); }
-  .sfs2-item-date{ font-size: 11px; color: rgba(255,255,255,0.26); margin-top: 1px; }
-  .sfs2-item-icons{ display: flex; gap: 8px; margin-top: 3px; }
-  .sfs2-item-icons svg{ width: 17px; height: 17px; fill: none; stroke: rgba(255,255,255,0.32); stroke-width: 1.6; }
+  .sfs2-item-sub{ font-size: 10px; color: rgba(255,255,255,0.4); }
+  .sfs2-item-date{ font-size: 9px; color: rgba(255,255,255,0.26); margin-top: 1px; }
+  .sfs2-item-icons{ display: flex; gap: 6px; margin-top: 3px; }
+  .sfs2-item-icons svg{ width: 14px; height: 14px; fill: none; stroke: rgba(255,255,255,0.32); stroke-width: 1.6; }
 
   @media (max-width: 1024px){
     .sfs2-layout{ flex-direction: column; }
-    .sfs2-player-card{ min-height: 520px; }
-    .sfs2-playlist-card{ max-width: 100%; min-height: auto; }
+    .sfs2-player-card{ height: 416px; }
+    .sfs2-playlist-card{ max-width: 100%; height: auto; }
     .sfs2-playlist-scroll{ flex-direction: row; overflow-x: auto; overflow-y: hidden; padding-right: 0; padding-bottom: 6px; }
-    .sfs2-item{ flex-direction: column; min-width: 120px; }
+    .sfs2-item{ flex-direction: column; min-width: 96px; }
     .sfs2-item-thumb{ flex: 0 0 auto; width: 100%; }
   }
   @media (max-width: 640px){
-    #short-form-showcase{ padding: 80px 16px; }
-    .sfs2-player-card{ padding: 16px 16px 18px; border-radius: 24px; min-height: 440px; }
-    .sfs2-controls{ flex-wrap: wrap; gap: 10px; }
-    .sfs2-btn-text{ padding: 0 12px; font-size: 10px; }
-    .sfs2-play-big{ width: 60px; height: 60px; }
-    .sfs2-player-title{ font-size: 13px; }
+    #short-form-showcase{ padding: 64px 13px; }
+    .sfs2-player-card{ padding: 13px 13px 14px; border-radius: 19px; height: 352px; }
+    .sfs2-controls{ flex-wrap: wrap; gap: 8px; }
+    .sfs2-btn-text{ padding: 0 10px; font-size: 9px; }
+    .sfs2-play-big{ width: 48px; height: 48px; }
+    .sfs2-player-title{ font-size: 11px; }
   }
 
   @media (prefers-reduced-motion: reduce){
