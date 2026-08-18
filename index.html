@@ -5,14 +5,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Editedbyamine — Video Editor</title>
 <meta name="description" content="Editedbyamine — freelance video editor crafting cinematic long-form edits, short-form content, and motion graphics.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#050505">
+<link rel="canonical" href="https://editedbyamine.com/">
+
+<!-- Open Graph / Facebook / WhatsApp preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Editedbyamine — Video Editor">
+<meta property="og:description" content="Cinematic long-form edits, scroll-stopping shorts, clean motion graphics — freelance video editing for creators and brands.">
+<meta property="og:image" content="https://editedbyamine.com/logo.png">
+<meta property="og:url" content="https://editedbyamine.com/">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Editedbyamine — Video Editor">
+<meta name="twitter:description" content="Cinematic long-form edits, scroll-stopping shorts, clean motion graphics — freelance video editing for creators and brands.">
+<meta name="twitter:image" content="https://editedbyamine.com/logo.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://img.youtube.com">
+<link rel="preconnect" href="https://i.ytimg.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="shortcut icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 <link rel="stylesheet" href="css/style.css">
+
+<!-- Structured data for search engines -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Editedbyamine",
+  "description": "Freelance video editor crafting cinematic long-form edits, short-form content, and motion graphics.",
+  "image": "https://editedbyamine.com/logo.png",
+  "url": "https://editedbyamine.com/",
+  "email": "mailto:mohalaminadamou@gmail.com",
+  "sameAs": [
+    "https://www.instagram.com/adamou_moh_al_amine/",
+    "https://www.youtube.com/@Adamou_Amine_Mohammed_Al_Amine",
+    "https://www.facebook.com/mehalamine.adamou",
+    "https://x.com/Amine_art777"
+  ]
+}
+</script>
 </head>
+<body>
+
+<!-- Skip link — keyboard/screen-reader users can jump past the nav -->
+<a href="#main" class="skip-link">Skip to content</a>
 
 <!-- LOADER -->
 <div id="loader">
@@ -52,6 +95,8 @@
   <a href="#contact" class="nav-cta nav-mobile-cta"><div class="nav-avail"></div>Contact Me</a>
 </div>
 <div class="nav-mobile-scrim" id="navScrim"></div>
+
+<main id="main">
 
 <!-- ══════════════════════
      §1 HERO
@@ -102,7 +147,8 @@
       <div class="ftag ft2"><span class="fl">Style</span><span class="fv">Cinematic</span></div>
       <div class="ftag ft3"><span class="fl">Projects</span><span class="fv">120+ ✦</span></div>
       <div class="portrait" id="pc">
-        <img src="assets/images/me.png" alt="Editedbyamine portrait">
+        <img src="assets/images/me.png" alt="Editedbyamine portrait" fetchpriority="high"
+             onerror="this.closest('.portrait').classList.add('no-photo');this.remove()">
         <div class="portrait-glow"></div>
         <div class="portrait-badge"><div class="nav-avail"></div>Available</div>
         <div class="portrait-info">
@@ -473,6 +519,8 @@
   </div>
 </section>
 
+</main>
+
 <!-- FOOTER -->
 <footer>
   <a href="#hero" class="fl"><img src="logo.png" alt="Editedbyamine" width="660" height="660"></a>
@@ -484,8 +532,16 @@
   </div>
 </footer>
 
+<noscript>
+  <p style="position:fixed;inset:0;z-index:99999;background:#050505;color:#fff;
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    padding:40px;font-family:sans-serif">
+    This site needs JavaScript enabled to display properly. Please enable it in your browser settings.
+  </p>
+</noscript>
+
 <!-- EmailJS SDK — powers the contact form (see js/main.js) -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script src="js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
+<script src="js/main.js" defer></script>
 </body>
 </html>
