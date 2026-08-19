@@ -11,6 +11,7 @@
   --bg:#F7F4EE;--bg2:#EFECE5;
   --dark:#050505;--mid:#555;--muted:#8D8D8D;
   --gold:#E3B23C;--gold-light:#F9DA83;--gold-deep:#8a6d33;--border:rgba(0,0,0,.07);
+  --mono:'JetBrains Mono',ui-monospace,monospace;
   --ease:cubic-bezier(.22,1,.36,1);
   --ease2:cubic-bezier(.175,.885,.32,1.275)
 }
@@ -32,6 +33,24 @@ img{display:block;max-width:100%}
   transition:top .25s var(--ease)}
 .skip-link:focus{top:16px}
 
+/* ── SCROLL PROGRESS BAR ── */
+.scroll-progress{position:fixed;top:0;left:0;height:2.5px;width:0%;z-index:100001;
+  background:linear-gradient(90deg,var(--gold-deep),var(--gold),var(--gold-light));
+  box-shadow:0 0 10px rgba(227,178,60,.6);transition:width .1s linear}
+
+/* ── CUSTOM CURSOR (desktop / fine-pointer only) ── */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;z-index:100000;pointer-events:none;
+  border-radius:50%;transform:translate(-50%,-50%);display:none}
+.cursor-dot{width:6px;height:6px;background:var(--gold-light);
+  box-shadow:0 0 8px rgba(227,178,60,.8)}
+.cursor-ring{width:34px;height:34px;border:1.5px solid rgba(227,178,60,.55);
+  transition:width .25s var(--ease),height .25s var(--ease),
+    border-color .25s var(--ease),background .25s var(--ease)}
+.cursor-ring.is-active{width:54px;height:54px;background:rgba(227,178,60,.08);
+  border-color:var(--gold-light)}
+@media(hover:hover) and (pointer:fine){.cursor-dot,.cursor-ring{display:block}
+  body,a,button,[tabindex],input,textarea{cursor:none}}
+
 /* ── ACCESSIBILITY: VISIBLE KEYBOARD FOCUS ──
    Only shows for keyboard nav (:focus-visible), never on mouse click,
    so it doesn't disturb the site's visual design during normal use. */
@@ -49,8 +68,9 @@ body::before{content:'';position:fixed;inset:0;z-index:9990;pointer-events:none;
 /* ── LOADER ── */
 #loader{position:fixed;inset:0;z-index:99998;background:#050505;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:opacity .9s var(--ease),visibility .9s;overflow:hidden}
-#loader.out{opacity:0;visibility:hidden}
+  clip-path:circle(150% at 50% 50%);will-change:clip-path;
+  transition:clip-path 1.15s cubic-bezier(.76,0,.24,1);overflow:hidden}
+#loader.out{clip-path:circle(0% at 50% 50%);pointer-events:none}
 .l-num{font-family:var(--tf);font-size:clamp(60px,12vw,140px);font-weight:900;
   letter-spacing:-.05em;line-height:1;
   background:linear-gradient(175deg,#fff 0%,#aaa 60%,#333 100%);
@@ -175,6 +195,12 @@ nav.sc{padding:16px 56px}
 .h-eye{display:inline-flex;align-items:center;gap:12px;font-size:11px;
   letter-spacing:.44em;color:var(--muted);font-weight:500;text-transform:uppercase;margin-bottom:34px}
 .h-eye-line{width:36px;height:1px;background:linear-gradient(90deg,transparent,var(--muted))}
+.h-rec{display:inline-flex;align-items:center;gap:8px;margin-bottom:22px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--gold);
+  background:rgba(227,178,60,.08);border:1px solid rgba(227,178,60,.22);
+  border-radius:100px;padding:6px 14px 6px 12px}
+.h-rec-dot{width:6px;height:6px;border-radius:50%;background:#e5484d;flex-shrink:0;
+  box-shadow:0 0 8px rgba(229,72,77,.7);animation:pulse 1.6s infinite}
 .h-name{font-family:var(--tf);font-size:clamp(56px,7.5vw,110px);font-weight:900;
   line-height:.9;letter-spacing:-.04em;margin-bottom:36px;color:var(--dark)}
 .h-name .ln1{display:block}
@@ -200,10 +226,10 @@ nav.sc{padding:16px 56px}
 .tw-cur{display:inline-block;width:2.5px;height:.82em;background:currentColor;
   margin-left:5px;vertical-align:middle;animation:blink 1s step-end infinite}
 @keyframes blink{50%{opacity:0}}
-.c-y{color:#8a6500}.c-y .tw-word{background:linear-gradient(135deg,#ffe55a,#f0c200);color:#1a1200}
-.c-p{color:#3d2dd4}.c-p .tw-word{background:linear-gradient(135deg,#c4b8ff,#4a34f3);color:#fff}
-.c-o{color:#bf4200}.c-o .tw-word{background:linear-gradient(135deg,#ffb888,#e65100);color:#fff}
-.c-g{color:#1a6620}.c-g .tw-word{background:linear-gradient(135deg,#62f4a0,#2e7d32);color:#fff}
+.c-y{color:#8a6500}.c-y .tw-word{background:linear-gradient(135deg,#f9e396,#d4a73b);color:#1a1200}
+.c-p{color:#7a5c1e}.c-p .tw-word{background:linear-gradient(135deg,#f6ecc9,#c9a227);color:#2a1e00}
+.c-o{color:#6b4318}.c-o .tw-word{background:linear-gradient(135deg,#eec192,#a9672b);color:#2a1400}
+.c-g{color:#544117}.c-g .tw-word{background:linear-gradient(135deg,#ddc87f,#8a6d1f);color:#241c00}
 
 .h-desc{font-size:15.5px;color:var(--mid);line-height:1.82;font-weight:300;
   max-width:430px;margin-bottom:50px}
@@ -252,6 +278,28 @@ nav.sc{padding:16px 56px}
 .portrait.no-photo{display:flex;align-items:center;justify-content:center}
 .portrait.no-photo::after{content:'Photo coming soon';font-family:var(--tf);
   font-style:italic;font-size:15px;color:rgba(255,255,255,.35)}
+
+/* ── VIEWFINDER CORNERS — signature detail, reused on every video
+   stage and the portrait. Evokes a camera frame guide; appears
+   on hover as a subtle "you're in the shot" cue. ── */
+.vf-corners{position:relative}
+.vf-corners::before,.vf-corners::after{content:'';position:absolute;inset:14px;
+  z-index:5;pointer-events:none;opacity:0;transition:opacity .5s var(--ease),inset .5s var(--ease)}
+.vf-corners::before{
+  background:
+    linear-gradient(var(--gold-light),var(--gold-light)) top left/2px 18px no-repeat,
+    linear-gradient(var(--gold-light),var(--gold-light)) top left/18px 2px no-repeat,
+    linear-gradient(var(--gold-light),var(--gold-light)) top right/2px 18px no-repeat,
+    linear-gradient(var(--gold-light),var(--gold-light)) top right/18px 2px no-repeat;
+  filter:drop-shadow(0 0 6px rgba(227,178,60,.55))}
+.vf-corners::after{
+  background:
+    linear-gradient(var(--gold-light),var(--gold-light)) bottom left/2px 18px no-repeat,
+    linear-gradient(var(--gold-light),var(--gold-light)) bottom left/18px 2px no-repeat,
+    linear-gradient(var(--gold-light),var(--gold-light)) bottom right/2px 18px no-repeat,
+    linear-gradient(var(--gold-light),var(--gold-light)) bottom right/18px 2px no-repeat;
+  filter:drop-shadow(0 0 6px rgba(227,178,60,.55))}
+.vf-corners:hover::before,.vf-corners:hover::after{opacity:1;inset:10px}
 .portrait-glow{position:absolute;inset:0;
   background:radial-gradient(ellipse at 50% 0%,rgba(212,175,55,.14),transparent 58%);z-index:2;pointer-events:none}
 .portrait-badge{position:absolute;top:22px;right:22px;z-index:4;
@@ -284,16 +332,39 @@ nav.sc{padding:16px 56px}
 /* ══════════════════════════════════
    MARQUEE
 ══════════════════════════════════ */
-.mq{background:var(--dark);padding:20px 0;overflow:hidden;position:relative}
+/* ══════════════════════════════════
+   TIMELINE DIVIDER — signature motif
+   A video-editing timecode ruler: tick marks, a drifting gold
+   playhead, scrolling clip labels, and a live timecode readout.
+   Replaces a generic marquee with something that speaks the
+   subject's own vernacular (NLE timelines / scrubbers).
+══════════════════════════════════ */
+.mq{background:var(--dark);padding:22px 0;overflow:hidden;position:relative;
+  background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 34px);
+  border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
 .mq::before,.mq::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2}
 .mq::before{left:0;background:linear-gradient(90deg,var(--dark),transparent)}
 .mq::after{right:0;background:linear-gradient(-90deg,var(--dark),transparent)}
+.mq-playhead{position:absolute;top:0;bottom:0;width:1.5px;z-index:3;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--gold) 15%,var(--gold-light) 50%,var(--gold) 85%,transparent);
+  box-shadow:0 0 14px rgba(227,178,60,.7);
+  animation:mqScrub 9s ease-in-out infinite}
+.mq-playhead::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(45deg);
+  width:7px;height:7px;background:var(--gold-light);box-shadow:0 0 8px rgba(227,178,60,.9)}
+@keyframes mqScrub{0%{left:0%}50%{left:100%}100%{left:0%}}
+.mq-tc{position:absolute;right:22px;top:50%;transform:translateY(-50%);z-index:4;
+  font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--gold);
+  background:rgba(0,0,0,.55);border:1px solid rgba(227,178,60,.28);border-radius:8px;
+  padding:5px 11px;display:flex;align-items:center;gap:7px;backdrop-filter:blur(6px)}
+.mq-tc::before{content:'';width:6px;height:6px;border-radius:50%;background:#e5484d;
+  box-shadow:0 0 8px rgba(229,72,77,.8);animation:pulse 1.6s infinite}
 .mq-t{display:flex;width:max-content;animation:mqs 30s linear infinite}
 .mq-i{display:flex;align-items:center;gap:18px;padding:0 44px;
   font-family:var(--cf);font-style:italic;font-size:17px;font-weight:300;
   color:rgba(255,255,255,.38);letter-spacing:.05em;white-space:nowrap}
 .mq-d{width:4px;height:4px;background:rgba(255,255,255,.18);border-radius:50%;flex-shrink:0}
 @keyframes mqs{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@media(max-width:820px){.mq-tc{display:none}}
 
 /* ══════════════════════════════════
    §2 LONG FORM PORTFOLIO — reused player/playlist pattern
@@ -311,6 +382,8 @@ nav.sc{padding:16px 56px}
 .lf2-layout{width:100%;max-width:1600px;margin:0 auto;display:flex;align-items:stretch;gap:26px}
 
 /* ---------- LEFT: featured player (~75%) ---------- */
+.lf2-player-card,.sfs2-player-card,.saas-player-card{transition:transform .35s var(--ease);
+  transform-style:preserve-3d;will-change:transform}
 .lf2-player-card{flex:75 1 0%;min-width:0;height:clamp(520px,34vw,760px);
   display:flex;flex-direction:column;align-items:center;gap:14px;
   padding:20px 22px 22px;border-radius:30px;
@@ -553,11 +626,17 @@ nav.sc{padding:16px 56px}
 
 /* Gold marquee variant — same animation/structure as .mq, used as a
    section divider (gold background, black text/dots). */
-.mq-gold{background:var(--gold)}
+/* Gold variant — same timeline-ruler language, warm instead of ink */
+.mq-gold{background:var(--gold);background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.12) 0 1px,transparent 1px 34px);
+  border-top-color:rgba(0,0,0,.12);border-bottom-color:rgba(0,0,0,.12)}
 .mq-gold::before{background:linear-gradient(90deg,var(--gold),transparent)}
 .mq-gold::after{background:linear-gradient(-90deg,var(--gold),transparent)}
 .mq-gold .mq-i{color:rgba(0,0,0,.72)}
 .mq-gold .mq-d{background:rgba(0,0,0,.4)}
+.mq-gold .mq-playhead{background:linear-gradient(180deg,transparent,#1a1200 15%,#3a2c05 50%,#1a1200 85%,transparent);
+  box-shadow:0 0 14px rgba(0,0,0,.35)}
+.mq-gold .mq-playhead::before{background:#1a1200;box-shadow:none}
+.mq-gold .mq-tc{color:#1a1200;background:rgba(255,255,255,.35);border-color:rgba(0,0,0,.18)}
 
 /* ══════════════════════════════════
    §3 SHORT FORM SHOWCASE
