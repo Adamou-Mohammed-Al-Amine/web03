@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://img.youtube.com">
 <link rel="preconnect" href="https://i.ytimg.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="shortcut icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
@@ -56,6 +56,13 @@
 
 <!-- Skip link — keyboard/screen-reader users can jump past the nav -->
 <a href="#main" class="skip-link">Skip to content</a>
+
+<!-- Scroll progress — thin gold line that fills as you read down the page -->
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<!-- Custom cursor — gold dot + trailing ring (desktop only, see main.js) -->
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <!-- LOADER -->
 <div id="loader">
@@ -112,6 +119,7 @@
         <div class="nav-avail"></div>
         Editedbyamine &nbsp;·&nbsp; Freelance
       </div>
+      <div class="h-rec fu" aria-hidden="true"><span class="h-rec-dot"></span>REC <span id="heroTc">00:00:00:00</span></div>
 
       <h1 class="h-name fu d1">
         <span class="ln1">Edited by</span>
@@ -146,7 +154,7 @@
       <div class="ftag ft1"><span class="fl">Specialty</span><span class="fv">Editing</span></div>
       <div class="ftag ft2"><span class="fl">Style</span><span class="fv">Cinematic</span></div>
       <div class="ftag ft3"><span class="fl">Projects</span><span class="fv">120+ ✦</span></div>
-      <div class="portrait" id="pc">
+      <div class="portrait vf-corners" id="pc">
         <img src="assets/images/me.png" alt="Editedbyamine portrait" fetchpriority="high"
              onerror="this.closest('.portrait').classList.add('no-photo');this.remove()">
         <div class="portrait-glow"></div>
@@ -160,8 +168,8 @@
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="mq"><div class="mq-t" id="mqt"></div></div>
+<!-- TIMELINE DIVIDER — signature motif: ticks + drifting playhead + live timecode -->
+<div class="mq"><div class="mq-playhead"></div><div class="mq-t" id="mqt"></div><div class="mq-tc" id="tc1">00:00:00:00</div></div>
 
 <!-- ══════════════════════
      §2 LONG FORM PORTFOLIO
@@ -182,7 +190,7 @@
         </div>
       </div>
 
-      <div class="lf2-stage" id="lf2Stage">
+      <div class="lf2-stage vf-corners" id="lf2Stage">
         <img class="lf2-poster" id="lf2Poster" src="" alt="Video preview">
         <div class="lf2-featured-badge" id="lf2FeaturedBadge">★ Featured</div>
         <button class="lf2-play-big" id="lf2PlayBig" aria-label="Play video">
@@ -251,7 +259,7 @@
         </div>
       </div>
 
-      <div class="sfs2-stage" id="sfs2Stage">
+      <div class="sfs2-stage vf-corners" id="sfs2Stage">
         <img class="sfs2-poster" id="sfs2Poster" src="" alt="Video preview">
         <div class="sfs2-featured-badge" id="sfs2FeaturedBadge">★ Featured</div>
         <button class="sfs2-play-big" id="sfs2PlayBig" aria-label="Play video">
@@ -317,7 +325,7 @@
         </div>
       </div>
 
-      <div class="saas-stage" id="saasStage">
+      <div class="saas-stage vf-corners" id="saasStage">
         <img class="saas-poster" id="saasPoster" src="" alt="Video preview">
         <button class="saas-play-big" id="saasPlayBig" aria-label="Play video">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -358,8 +366,8 @@
   </div>
 </section>
 
-<!-- Category divider — reuses the site's marquee component (gold variant) -->
-<div class="mq mq-gold" aria-hidden="true"><div class="mq-t" id="mqtSaas"></div></div>
+<!-- Category divider — reuses the site's timeline-ruler component (gold variant) -->
+<div class="mq mq-gold" aria-hidden="true"><div class="mq-playhead"></div><div class="mq-t" id="mqtSaas"></div><div class="mq-tc" id="tc2">00:00:00:00</div></div>
 
 <!-- ══════════════════════
      §4 COLLABORATIONS
