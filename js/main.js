@@ -103,6 +103,68 @@ if(saasMqEl){
 }
 
 /* ═══════════════════════════
+   LIVE TIMECODE READOUTS (HH:MM:SS:FF)
+   Purely decorative — reinforces the editing-timeline motif on
+   the two divider bars. Runs off requestAnimationFrame so the
+   frame count (24fps) stays smooth without a heavy timer.
+═══════════════════════════ */
+(function initTimecodes(){
+  const els=[document.getElementById('tc1'),document.getElementById('tc2'),document.getElementById('heroTc')].filter(Boolean);
+  if(!els.length)return;
+  const start=performance.now();
+  const pad=n=>String(n).padStart(2,'0');
+  function tick(now){
+    const total=(now-start)/1000;
+    const h=Math.floor(total/3600),m=Math.floor((total%3600)/60),s=Math.floor(total%60),f=Math.floor((total%1)*24);
+    const str=`${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;
+    els.forEach(el=>el.textContent=str);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+/* ═══════════════════════════
+   SCROLL PROGRESS BAR
+═══════════════════════════ */
+(function initScrollProgress(){
+  const bar=document.getElementById('scrollProgress');
+  if(!bar)return;
+  function update(){
+    const h=document.documentElement;
+    const scrolled=h.scrollTop;
+    const max=h.scrollHeight-h.clientHeight;
+    bar.style.width=(max>0?(scrolled/max)*100:0)+'%';
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('resize',update);
+  update();
+})();
+
+/* ═══════════════════════════
+   CUSTOM CURSOR — gold dot + lagging ring, desktop only.
+   Ring eases toward the pointer (lerp) for a premium feel;
+   grows on hover over anything clickable.
+═══════════════════════════ */
+(function initCursor(){
+  if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches)return;
+  const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');
+  if(!dot||!ring)return;
+  let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+  window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;
+    dot.style.left=mx+'px';dot.style.top=my+'px'});
+  document.addEventListener('mouseover',e=>{
+    ring.classList.toggle('is-active',!!e.target.closest('a,button,[tabindex],input,textarea,.lf2-item,.sfs2-item,.saas-item'));
+  });
+  document.addEventListener('mousedown',()=>ring.style.transform='translate(-50%,-50%) scale(.85)');
+  document.addEventListener('mouseup',()=>ring.style.transform='translate(-50%,-50%) scale(1)');
+  function loop(){rx+=(mx-rx)*.16;ry+=(my-ry)*.16;
+    ring.style.left=rx+'px';ring.style.top=ry+'px';
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* ═══════════════════════════
    HERO TYPEWRITER
 ═══════════════════════════ */
 const hRoles=[{t:'Storyteller',c:'c-y'},{t:'Editor',c:'c-p'},{t:'Animator',c:'c-o'},{t:'Creator',c:'c-g'}];
@@ -128,6 +190,25 @@ document.addEventListener('mousemove',e=>{
   const dx=(e.clientX-(r.left+r.width/2))/window.innerWidth*14;
   const dy=(e.clientY-(r.top+r.height/2))/window.innerHeight*10;
   pc.style.transform=`perspective(750px) rotateY(${dx}deg) rotateX(${-dy}deg) scale(1.01)`;
+});
+
+/* ═══════════════════════════
+   PLAYER CARD TILT — same gentle 3D-follow as the portrait,
+   applied to the three video showcase cards. Scoped to each
+   card's own bounding box (not the whole viewport) and gated to
+   :hover so it never fights with clicks on the playback controls.
+═══════════════════════════ */
+document.querySelectorAll('.lf2-player-card,.sfs2-player-card,.saas-player-card').forEach(card=>{
+  let hovering=false;
+  card.addEventListener('mouseenter',()=>hovering=true);
+  card.addEventListener('mouseleave',()=>{hovering=false;card.style.transform='';});
+  card.addEventListener('mousemove',e=>{
+    if(!hovering)return;
+    const r=card.getBoundingClientRect();
+    const dx=(e.clientX-(r.left+r.width/2))/r.width*4;
+    const dy=(e.clientY-(r.top+r.height/2))/r.height*3;
+    card.style.transform=`perspective(1400px) rotateY(${dx}deg) rotateX(${-dy}deg)`;
+  });
 });
 
 /* ═══════════════════════════
