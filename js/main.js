@@ -605,7 +605,9 @@ const saasVideos=[
     {id:'bqh0P_7SKos',date:'2026'},
     {id:'5NeUdeqINiM',date:'2026'},
     {id:'hqzEK0Sb_RE',date:'2026'},
-    {id:'8x8if3PDtcY',date:'2026'}
+    {id:'8x8if3PDtcY',date:'2026'},
+    {id:'auPxAjLg-qE',date:'2026'},
+    {id:'vU1waaMwUn8',date:'2026'}
   ];
 
   let active=0;
