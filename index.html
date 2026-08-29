@@ -74,8 +74,8 @@
     <b>Edited<em>by</em>amine</b>
   </a>
   <ul class="nav-links">
-    <li><a href="#shortform">Shorts</a></li>
     <li><a href="#longform">Long Form</a></li>
+    <li><a href="#shortform">Shorts</a></li>
     <li><a href="#saas">Commercials</a></li>
     <li><a href="#collab">Collabs</a></li>
     <li><a href="#services">Services</a></li>
@@ -92,8 +92,8 @@
 </nav>
 <div class="nav-scrim" id="navScrim"></div>
 <div class="nav-mobile" id="navMobile">
-  <a href="#shortform">Shorts</a>
   <a href="#longform">Long Form</a>
+  <a href="#shortform">Shorts</a>
   <a href="#saas">Commercials</a>
   <a href="#collab">Collabs</a>
   <a href="#services">Services</a>
@@ -104,8 +104,8 @@
 <!-- SIDE SCROLL INDICATOR -->
 <div id="si">
   <a href="#hero" aria-label="Hero"></a>
-  <a href="#shortform" aria-label="Shorts"></a>
   <a href="#longform" aria-label="Long Form"></a>
+  <a href="#shortform" aria-label="Shorts"></a>
   <a href="#saas" aria-label="Commercials"></a>
   <a href="#collab" aria-label="Collaborations"></a>
   <a href="#services" aria-label="Services"></a>
@@ -140,7 +140,7 @@
       <p class="h-desc fu d3">Cinematic long-form edits, scroll-stopping shorts, clean motion graphics — I turn raw footage into content people actually watch.</p>
 
       <div class="h-btns fu d4">
-        <a href="#shortform" class="btn-p"><span>View Portfolio</span><span class="bt-arr">→</span></a>
+        <a href="#longform" class="btn-p"><span>View Portfolio</span><span class="bt-arr">→</span></a>
         <a href="#contact" class="btn-s">Contact Me</a>
       </div>
 
@@ -165,18 +165,6 @@
 
 <div class="tl" aria-hidden="true"><div class="tl-playhead"></div><div class="tl-t" data-tl></div><div class="tl-tc" data-tc>00:00:00:00</div></div>
 
-<!-- ══════════════════════ SHORT FORM ══════════════════════ -->
-<section id="shortform" class="sec sec-dark">
-  <div class="sec-head fu">
-    <div class="sec-eye">Shorts &amp; Reels</div>
-    <h2 class="sec-tt">Built To Stop The <em>Scroll</em></h2>
-    <p class="sec-sub">Fast cuts, punchy captions, sound-designed for retention.</p>
-  </div>
-  <div class="sf-grid" id="sfGrid"></div>
-</section>
-
-<div class="tl" aria-hidden="true"><div class="tl-playhead"></div><div class="tl-t" data-tl></div><div class="tl-tc" data-tc>00:00:00:00</div></div>
-
 <!-- ══════════════════════ LONG FORM ══════════════════════ -->
 <section id="longform" class="sec">
   <div class="sec-head fu">
@@ -184,9 +172,24 @@
     <h2 class="sec-tt">A Reel Worth <em>Watching</em></h2>
     <p class="sec-sub">Podcasts, interviews, and documentary-style storytelling.</p>
   </div>
-  <div class="lf-layout">
-    <div class="lf-feature fu" id="lfFeature"></div>
-    <div class="lf-list" id="lfList"></div>
+  <div class="nf nf-long">
+    <div class="nf-feature vf" id="lfFeature"></div>
+    <div class="nf-rail nf-rail-rows" id="lfList"></div>
+  </div>
+</section>
+
+<div class="tl" aria-hidden="true"><div class="tl-playhead"></div><div class="tl-t" data-tl></div><div class="tl-tc" data-tc>00:00:00:00</div></div>
+
+<!-- ══════════════════════ SHORT FORM ══════════════════════ -->
+<section id="shortform" class="sec sec-dark">
+  <div class="sec-head fu">
+    <div class="sec-eye">Shorts &amp; Reels</div>
+    <h2 class="sec-tt">Built To Stop The <em>Scroll</em></h2>
+    <p class="sec-sub">Fast cuts, punchy captions, sound-designed for retention.</p>
+  </div>
+  <div class="nf nf-short">
+    <div class="nf-feature nf-feature-tall vf" id="sfFeature"></div>
+    <div class="nf-rail nf-rail-tiles" id="sfRail"></div>
   </div>
 </section>
 
@@ -199,7 +202,10 @@
     <h2 class="sec-tt">Performance-Ready <em>Ads</em></h2>
     <p class="sec-sub">Clean, conversion-minded edits for SaaS and product launches.</p>
   </div>
-  <div class="saas-duo" id="saasDuo"></div>
+  <div class="nf nf-saas">
+    <div class="nf-feature vf" id="saasFeature"></div>
+    <div class="nf-rail nf-rail-spot" id="saasRail"></div>
+  </div>
 </section>
 
 <div class="tl" aria-hidden="true"><div class="tl-playhead"></div><div class="tl-t" data-tl></div><div class="tl-tc" data-tc>00:00:00:00</div></div>
@@ -355,8 +361,8 @@
 <footer>
   <div class="fm">© 2026 <a href="#hero" class="fl">Editedbyamine</a>. All rights reserved.</div>
   <div class="fls">
-    <a href="#shortform">Shorts</a>
     <a href="#longform">Long Form</a>
+    <a href="#shortform">Shorts</a>
     <a href="#saas">Commercials</a>
     <a href="#collab">Collabs</a>
     <a href="#contact">Contact</a>
