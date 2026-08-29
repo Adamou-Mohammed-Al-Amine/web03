@@ -224,87 +224,110 @@ lbClose?.addEventListener('click',closeLightbox);
 lb?.addEventListener('click',e=>{if(e.target===lb)closeLightbox();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&lb?.classList.contains('open'))closeLightbox();});
 
-/* ── SHORT FORM — dense vertical grid ── */
-(function initShorts(){
-  const grid=document.getElementById('sfGrid');
-  if(!grid)return;
-  grid.innerHTML=SHORTS.map((v,i)=>`
-    <div class="sf-card fu" style="transition-delay:${Math.min(i*0.05,0.4)}s" data-i="${i}" tabindex="0" role="button" aria-label="Play short">
-      <span class="sf-tag">${v.src==='drive'?'New':'Short'}</span>
-      <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy"
-        onerror="this.src='https://drive.google.com/thumbnail?id=${v.id}&sz=w640'; this.onerror=function(){this.closest('.sf-card').classList.add('no-thumb'); this.remove();}">
-      <span class="sf-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-    </div>`).join('');
-  io.observe && [...grid.children].forEach(el=>io.observe(el));
-  grid.addEventListener('click',e=>{
-    const card=e.target.closest('.sf-card');
-    if(card)openLightbox(SHORTS[+card.dataset.i],true);
-  });
-  grid.addEventListener('keydown',e=>{
-    if(e.key!=='Enter'&&e.key!==' ')return;
-    const card=e.target.closest('.sf-card');
-    if(card){e.preventDefault();openLightbox(SHORTS[+card.dataset.i],true);}
-  });
-})();
+/* ═══════════════════════════
+   NETFLIX-STYLE SHOWCASE — every section below follows the same
+   idea (one large featured card + a rail of the rest) but each
+   rail is shaped differently for its content: horizontal rows
+   for long-form, a scrollable tile column for shorts, and a
+   single spotlight companion for the two-video Commercials set.
+═══════════════════════════ */
+function playIconSVG(sizeClass){
+  return `<span class="${sizeClass}"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>`;
+}
 
-/* ── LONG FORM — one big featured card + a scannable list ── */
+/* ── LONG FORM: big feature + row list ── */
 (function initLongform(){
   const featureEl=document.getElementById('lfFeature'),listEl=document.getElementById('lfList');
   if(!featureEl||!listEl)return;
   const [feature,...rest]=LONGFORM;
   featureEl.innerHTML=`
-    <div class="lf-card vf" data-i="0" tabindex="0" role="button" aria-label="Play featured video">
+    <div class="nf-card" data-i="0" tabindex="0" role="button" aria-label="Play featured video">
       <span class="wk-tag featured">★ Featured</span>
       <img src="https://img.youtube.com/vi/${feature.id}/hqdefault.jpg" alt="" loading="lazy">
-      <span class="wk-play lf-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+      ${playIconSVG('wk-play nf-play-lg')}
     </div>`;
-  featureEl.querySelector('.lf-card').addEventListener('click',()=>openLightbox(feature));
-  featureEl.querySelector('.lf-card').addEventListener('keydown',e=>{
-    if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(feature);}
-  });
+  featureEl.addEventListener('click',()=>openLightbox(feature));
+  featureEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(feature);}});
 
   listEl.innerHTML=rest.map((v,i)=>`
-    <div class="lf-row fu" style="transition-delay:${Math.min(i*.08,.4)}s" data-i="${i+1}" tabindex="0" role="button" aria-label="Play video">
+    <div class="nf-row fu" style="transition-delay:${Math.min(i*.08,.4)}s" data-i="${i+1}" tabindex="0" role="button" aria-label="Play video">
       <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="" loading="lazy">
-      <div class="lf-row-meta">
-        <b>${v.category}</b>
-        <span>${v.year}${v.duration?' · '+v.duration:''}</span>
-      </div>
-      <span class="lf-row-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+      <div class="nf-row-meta"><b>${v.category}</b><span>${v.year}${v.duration?' · '+v.duration:''}</span></div>
+      ${playIconSVG('nf-row-play')}
     </div>`).join('');
   [...listEl.children].forEach(el=>io.observe(el));
   listEl.addEventListener('click',e=>{
-    const row=e.target.closest('.lf-row');
+    const row=e.target.closest('.nf-row');
     if(row)openLightbox(LONGFORM[+row.dataset.i]);
   });
   listEl.addEventListener('keydown',e=>{
     if(e.key!=='Enter'&&e.key!==' ')return;
-    const row=e.target.closest('.lf-row');
+    const row=e.target.closest('.nf-row');
     if(row){e.preventDefault();openLightbox(LONGFORM[+row.dataset.i]);}
   });
 })();
 
-/* ── SAAS / COMMERCIALS — two large side-by-side cards ── */
-(function initSaas(){
-  const wrap=document.getElementById('saasDuo');
-  if(!wrap)return;
-  wrap.innerHTML=SAAS.map((v,i)=>`
-    <div class="saas-card vf fu" style="transition-delay:${i*.12}s" data-i="${i}" tabindex="0" role="button" aria-label="Play commercial">
-      <span class="wk-tag">${v.category}</span>
-      <span class="wk-dur">${v.duration}</span>
-      <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy">
-      <span class="wk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+/* ── SHORT FORM: tall feature + scrollable tile rail ── */
+(function initShorts(){
+  const featureEl=document.getElementById('sfFeature'),railEl=document.getElementById('sfRail');
+  if(!featureEl||!railEl)return;
+  const [feature,...rest]=SHORTS;
+  featureEl.innerHTML=`
+    <div class="nf-card" data-i="0" tabindex="0" role="button" aria-label="Play featured short">
+      <span class="sf-tag">${feature.src==='drive'?'New':'Featured'}</span>
+      <img src="https://img.youtube.com/vi/${feature.id}/hqdefault.jpg" alt="" loading="lazy">
+      ${playIconSVG('wk-play nf-play-lg')}
+    </div>`;
+  featureEl.addEventListener('click',()=>openLightbox(feature,true));
+  featureEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(feature,true);}});
+
+  railEl.innerHTML=rest.map((v,i)=>`
+    <div class="nf-tile fu" style="transition-delay:${Math.min(i*.05,.4)}s" data-i="${i+1}" tabindex="0" role="button" aria-label="Play short">
+      <span class="nf-tile-tag">${v.src==='drive'?'New':'Short'}</span>
+      <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy"
+        onerror="this.src='https://drive.google.com/thumbnail?id=${v.id}&sz=w640'; this.onerror=function(){this.closest('.nf-tile').classList.add('no-thumb'); this.remove();}">
+      ${playIconSVG('nf-tile-play')}
     </div>`).join('');
-  [...wrap.children].forEach(el=>io.observe(el));
-  wrap.addEventListener('click',e=>{
-    const card=e.target.closest('.saas-card');
-    if(card)openLightbox(SAAS[+card.dataset.i]);
+  [...railEl.children].forEach(el=>io.observe(el));
+  railEl.addEventListener('click',e=>{
+    const tile=e.target.closest('.nf-tile');
+    if(tile)openLightbox(SHORTS[+tile.dataset.i],true);
   });
-  wrap.addEventListener('keydown',e=>{
+  railEl.addEventListener('keydown',e=>{
     if(e.key!=='Enter'&&e.key!==' ')return;
-    const card=e.target.closest('.saas-card');
-    if(card){e.preventDefault();openLightbox(SAAS[+card.dataset.i]);}
+    const tile=e.target.closest('.nf-tile');
+    if(tile){e.preventDefault();openLightbox(SHORTS[+tile.dataset.i],true);}
   });
+})();
+
+/* ── SAAS / COMMERCIALS: feature + single spotlight companion ── */
+(function initSaas(){
+  const featureEl=document.getElementById('saasFeature'),railEl=document.getElementById('saasRail');
+  if(!featureEl||!railEl)return;
+  const [feature,companion]=SAAS;
+  featureEl.innerHTML=`
+    <div class="nf-card" data-i="0" tabindex="0" role="button" aria-label="Play featured commercial">
+      <span class="wk-tag">${feature.category}</span>
+      <span class="wk-dur">${feature.duration}</span>
+      <img src="https://img.youtube.com/vi/${feature.id}/hqdefault.jpg" alt="" loading="lazy">
+      ${playIconSVG('wk-play nf-play-lg')}
+    </div>`;
+  featureEl.addEventListener('click',()=>openLightbox(feature));
+  featureEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(feature);}});
+
+  if(companion){
+    railEl.innerHTML=`
+      <div class="nf-spot-label">Also Playing</div>
+      <div class="nf-spot fu" data-i="1" tabindex="0" role="button" aria-label="Play commercial">
+        <span class="wk-tag">${companion.category}</span>
+        <span class="wk-dur">${companion.duration}</span>
+        <img src="https://img.youtube.com/vi/${companion.id}/hqdefault.jpg" alt="" loading="lazy">
+        ${playIconSVG('wk-play nf-play-md')}
+      </div>`;
+    io.observe(railEl.querySelector('.nf-spot'));
+    railEl.addEventListener('click',()=>openLightbox(companion));
+    railEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(companion);}});
+  }
 })();
 
 /* ═══════════════════════════
