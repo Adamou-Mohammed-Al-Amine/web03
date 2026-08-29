@@ -939,8 +939,18 @@ nav.sc{padding:16px 56px}
   .sfs2-item-icons svg{ width: 14px; height: 14px; fill: none; stroke: rgba(255,255,255,0.32); stroke-width: 1.6; }
 
   @media (max-width: 1024px){
+    /* Below this width the player card stacks above the playlist.
+       Previously the card kept a flat fixed height (416px) while the
+       stage inside it kept height:100% + aspect-ratio 9/16 — on a
+       narrow phone this meant the video shrank down to a small
+       floating rectangle inside a mostly-empty dark card, making the
+       card look oversized relative to its own content. Letting the
+       stage's WIDTH drive its height (aspect-ratio, height:auto)
+       makes the video fill the card edge-to-edge like a normal
+       vertical short, and the card just wraps snugly around it. */
     .sfs2-layout{ flex-direction: column; }
-    .sfs2-player-card{ height: 416px; }
+    .sfs2-player-card{ height: auto; }
+    .sfs2-stage{ flex: none; width: 100%; height: auto; max-height: 72vh; }
     .sfs2-playlist-card{ max-width: 100%; height: auto; }
     .sfs2-playlist-scroll{ flex-direction: row; overflow-x: auto; overflow-y: hidden; padding-right: 0; padding-bottom: 6px; }
     .sfs2-item{ flex-direction: column; min-width: 96px; }
@@ -948,7 +958,8 @@ nav.sc{padding:16px 56px}
   }
   @media (max-width: 640px){
     #short-form-showcase{ padding: 64px 13px; }
-    .sfs2-player-card{ padding: 13px 13px 14px; border-radius: 19px; height: 352px; }
+    .sfs2-player-card{ padding: 13px 13px 14px; border-radius: 19px; }
+    .sfs2-stage{ max-height: 66vh; }
     .sfs2-controls{ flex-wrap: wrap; gap: 8px; }
     .sfs2-btn-text{ padding: 0 10px; font-size: 9px; }
     .sfs2-play-big{ width: 48px; height: 48px; }
