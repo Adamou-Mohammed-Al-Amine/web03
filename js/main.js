@@ -1,142 +1,126 @@
 /* ═══════════════════════════
-   EDITEDBYAMINE — rebuilt from scratch
-   Single unified "Work" data + lightbox system replaces three
-   near-duplicate custom video players from the previous build —
-   same YouTube content, far less code, easier to extend.
+   ALWAYS LOAD FROM THE TOP
+   Prevents the browser from restoring a previous scroll position
+   on refresh, and forces the page to start at the Hero section.
 ═══════════════════════════ */
-
 if('scrollRestoration' in history){history.scrollRestoration='manual'}
 window.scrollTo(0,0);
 window.addEventListener('load',()=>window.scrollTo(0,0));
 
-/* ── LOADER ── */
+/* ═══════════════════════════
+   LOADER
+═══════════════════════════ */
 (function(){
-  const lfill=document.getElementById('lfill'),loader=document.getElementById('loader');
-  if(!loader)return;
+  const lnum=document.getElementById('lnum'),lfill=document.getElementById('lfill'),loader=document.getElementById('loader');
   let p=0;
   const t=setInterval(()=>{
-    p+=Math.random()*16;
+    p+=Math.random()*14;
     if(p>=100){p=100;clearInterval(t);
-      setTimeout(()=>{loader.classList.add('out');document.body.classList.add('ready')},200);
+      setTimeout(()=>{loader.classList.add('out');document.body.classList.add('ready')},250);
     }
-    if(lfill)lfill.style.width=p+'%';
+    lnum.textContent=Math.floor(p);
+    lfill.style.width=p+'%';
   },90);
 })();
 
-/* ── LIVE TIMECODE (hero badge + both timeline dividers) ── */
-(function(){
-  const els=[...document.querySelectorAll('[data-tc]')];
-  if(!els.length)return;
-  const start=performance.now();
-  const pad=n=>String(n).padStart(2,'0');
-  function tick(now){
-    const total=(now-start)/1000;
-    const h=Math.floor(total/3600),m=Math.floor((total%3600)/60),s=Math.floor(total%60),f=Math.floor((total%1)*24);
-    const str=`${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;
-    els.forEach(el=>el.textContent=str);
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-})();
-
-/* ── SCROLL PROGRESS ── */
-(function(){
-  const bar=document.getElementById('scrollProgress');
-  if(!bar)return;
-  function update(){
-    const h=document.documentElement,max=h.scrollHeight-h.clientHeight;
-    bar.style.width=(max>0?(h.scrollTop/max)*100:0)+'%';
-  }
-  window.addEventListener('scroll',update,{passive:true});
-  window.addEventListener('resize',update);
-  update();
-})();
-
-/* ── CUSTOM CURSOR ── */
-(function(){
-  if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches)return;
-  const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');
-  if(!dot||!ring)return;
-  let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
-  window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px'});
-  document.addEventListener('mouseover',e=>{
-    ring.classList.toggle('is-active',!!e.target.closest('a,button,[tabindex],input,textarea,.wk-card'));
-  });
-  document.addEventListener('mousedown',()=>ring.style.transform='translate(-50%,-50%) scale(.85)');
-  document.addEventListener('mouseup',()=>ring.style.transform='translate(-50%,-50%) scale(1)');
-  (function loop(){rx+=(mx-rx)*.16;ry+=(my-ry)*.16;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
-})();
-
-/* ── NAV: shrink-on-scroll + active side dots + mobile drawer ── */
+/* ═══════════════════════════
+   NAV + SCROLL INDICATOR
+═══════════════════════════ */
 const nav=document.getElementById('nav'),si=document.getElementById('si');
-const sections=[...document.querySelectorAll('section[id]')];
 window.addEventListener('scroll',()=>{
-  const y=window.scrollY;
-  if(nav)nav.classList.toggle('sc',y>60);
-  let current=sections[0]?.id;
-  for(const s of sections){if(y>=s.offsetTop-140)current=s.id;}
-  if(si)si.querySelectorAll('a').forEach(a=>a.classList.toggle('h',a.getAttribute('href')==='#'+current));
+  nav.classList.toggle('sc',scrollY>55);
+  si.classList.toggle('h',scrollY>220);
 },{passive:true});
 
-const burger=document.getElementById('navBurger'),mobile=document.getElementById('navMobile'),scrim=document.getElementById('navScrim');
-function closeMobile(){burger?.classList.remove('open');mobile?.classList.remove('open');scrim?.classList.remove('open');}
-burger?.addEventListener('click',()=>{
-  const open=!mobile.classList.contains('open');
-  burger.classList.toggle('open',open);mobile.classList.toggle('open',open);scrim.classList.toggle('open',open);
-});
-scrim?.addEventListener('click',closeMobile);
-document.querySelectorAll('.nav-mobile a').forEach(a=>a.addEventListener('click',closeMobile));
-
-/* ── SMOOTH ANCHOR SCROLL ── */
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click',e=>{
-    const id=a.getAttribute('href');
-    const target=id.length>1?document.querySelector(id):null;
-    if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
-  });
-});
-
-/* ── SCROLL REVEAL (shared .fu utility + staggered .wk-card grid) ── */
-const io=new IntersectionObserver((entries)=>{
-  entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('v');io.unobserve(en.target);}});
-},{threshold:.15,rootMargin:'0px 0px -8% 0px'});
-document.querySelectorAll('.fu').forEach(el=>io.observe(el));
-
-/* ── HERO TYPEWRITER ── */
-const hRoles=['Storyteller','Editor','Animator','Creator'];
+/* ═══════════════════════════
+   MOBILE NAV
+═══════════════════════════ */
 (function(){
-  const el=document.getElementById('hT');
-  if(!el)return;
-  let ri=0,ci=0,deleting=false;
-  function step(){
-    const word=hRoles[ri];
-    ci+=deleting?-1:1;
-    el.textContent=word.slice(0,ci);
-    let delay=deleting?45:95;
-    if(!deleting&&ci===word.length){delay=1400;deleting=true;}
-    else if(deleting&&ci===0){deleting=false;ri=(ri+1)%hRoles.length;delay=300;}
-    setTimeout(step,delay);
+  const burger=document.getElementById('navBurger');
+  const panel=document.getElementById('navMobile');
+  const scrim=document.getElementById('navScrim');
+  if(!burger||!panel||!scrim)return;
+  function closeMenu(){
+    burger.setAttribute('aria-expanded','false');
+    panel.classList.remove('open');
+    scrim.classList.remove('open');
+    document.body.style.overflow='';
   }
-  step();
+  function openMenu(){
+    burger.setAttribute('aria-expanded','true');
+    panel.classList.add('open');
+    scrim.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  burger.addEventListener('click',()=>{
+    burger.getAttribute('aria-expanded')==='true'?closeMenu():openMenu();
+  });
+  scrim.addEventListener('click',closeMenu);
+  panel.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
+  window.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});
+  window.addEventListener('resize',()=>{if(window.innerWidth>820)closeMenu()});
 })();
 
-/* ── HERO STAT COUNTERS ── */
-(function(){
-  const nums=document.querySelectorAll('[data-cnt]');
-  if(!nums.length)return;
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(en=>{
-      if(!en.isIntersecting)return;
-      const el=en.target,target=+el.dataset.cnt,suf=el.dataset.suf||'';
-      let cur=0;const step=Math.max(1,target/50);
-      const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t);}el.textContent=Math.floor(cur)+suf;},24);
-      obs.unobserve(el);
-    });
-  },{threshold:.6});
-  nums.forEach(n=>obs.observe(n));
-})();
+/* ═══════════════════════════
+   FADE / BLUR REVEAL ON SCROLL
+═══════════════════════════ */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('v');io.unobserve(e.target)}
+}),{threshold:.08});
+document.querySelectorAll('.fu').forEach(el=>io.observe(el));
+window.addEventListener('load',()=>document.querySelectorAll('#hero .fu').forEach(el=>el.classList.add('v')));
 
-/* ── PORTRAIT 3D TILT ── */
+/* ═══════════════════════════
+   COUNTERS
+═══════════════════════════ */
+function countUp(el,target,suf){
+  const dur=1700,st=performance.now();
+  (function step(now){
+    const t=Math.min((now-st)/dur,1),ease=1-Math.pow(1-t,4);
+    el.innerHTML=Math.floor(ease*target)+suf;
+    if(t<1)requestAnimationFrame(step);else el.innerHTML=target+suf;
+  })(performance.now());
+}
+const co=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){countUp(e.target,+e.target.dataset.cnt,e.target.dataset.suf);co.unobserve(e.target)}
+}),{threshold:.4});
+document.querySelectorAll('[data-cnt]').forEach(el=>co.observe(el));
+
+/* ═══════════════════════════
+   MARQUEE
+═══════════════════════════ */
+const mqItems=['Long Form Editing','Short Form','Motion Graphics','Color Grading','Sound Design','Storytelling','YouTube Edits','Reels & Shorts'];
+document.getElementById('mqt').innerHTML=[...mqItems,...mqItems]
+  .map(t=>`<span class="mq-i">${t}<span class="mq-d"></span></span>`).join('');
+
+/* Gold marquee divider — SaaS & Commercials / Collaborations section break.
+   Same rendering pattern as the marquee above, own content + element. */
+const saasMqItems=['Performance Ads','SaaS Marketing','Product Launches','Commercial Campaigns'];
+const saasMqEl=document.getElementById('mqtSaas');
+if(saasMqEl){
+  saasMqEl.innerHTML=[...saasMqItems,...saasMqItems]
+    .map(t=>`<span class="mq-i">${t}<span class="mq-d"></span></span>`).join('');
+}
+
+/* ═══════════════════════════
+   HERO TYPEWRITER
+═══════════════════════════ */
+const hRoles=[{t:'Storyteller',c:'c-y'},{t:'Editor',c:'c-p'},{t:'Animator',c:'c-o'},{t:'Creator',c:'c-g'}];
+let hI=0;
+const hW=document.getElementById('hW'),hT=document.getElementById('hT'),hL=document.getElementById('hL'),hR=document.getElementById('hR');
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+async function typeH(){
+  const d=hRoles[hI];hW.className=`tw ${d.c} fu d2 v`;
+  hL.style.height='96px';hR.style.height='96px';hT.textContent='';
+  for(const ch of d.t){hT.textContent+=ch;await wait(95)}
+  await wait(2100);hL.style.height='52px';hR.style.height='52px';
+  while(hT.textContent.length){hT.textContent=hT.textContent.slice(0,-1);await wait(55)}
+  hI=(hI+1)%hRoles.length;typeH();
+}typeH();
+
+/* ═══════════════════════════
+   PORTRAIT PARALLAX
+═══════════════════════════ */
 const pc=document.getElementById('pc');
 document.addEventListener('mousemove',e=>{
   if(!pc)return;
@@ -146,273 +130,763 @@ document.addEventListener('mousemove',e=>{
   pc.style.transform=`perspective(750px) rotateY(${dx}deg) rotateX(${-dy}deg) scale(1.01)`;
 });
 
-/* ── MAGNETIC BUTTONS ── */
+/* ═══════════════════════════
+   MAGNETIC BUTTONS
+═══════════════════════════ */
 document.querySelectorAll('.btn-p,.btn-s,.nav-cta,.con-send').forEach(btn=>{
   btn.addEventListener('mousemove',e=>{
     const r=btn.getBoundingClientRect();
-    const dx=(e.clientX-(r.left+r.width/2))*.25,dy=(e.clientY-(r.top+r.height/2))*.35;
-    btn.style.transform=`translate(${dx}px,${dy}px)`;
+    btn.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.11}px,${(e.clientY-r.top-r.height/2)*.11}px) translateY(-3px)`;
   });
   btn.addEventListener('mouseleave',()=>btn.style.transform='');
 });
 
-/* ── TIMELINE DIVIDER LABEL CONTENT ── */
-(function(){
-  const items=['Long Form Editing','Short Form','Motion Graphics','Color Grading','Sound Design','Storytelling','YouTube Edits','Reels & Shorts'];
-  document.querySelectorAll('[data-tl]').forEach(el=>{
-    el.innerHTML=[...items,...items].map(t=>`<span class="tl-i">${t}<span class="tl-d"></span></span>`).join('');
-  });
-})();
-
 /* ═══════════════════════════
-   SHOWCASE DATA — three dedicated sections (Shorts / Long Form /
-   Commercials), each with its own layout, sharing one lightbox
-   that can play either a YouTube video or a Google Drive file.
+   COLLABORATIONS — NIGHT SKY STARFIELD
+   Slow, soft twinkling dots behind the orbit cluster.
 ═══════════════════════════ */
-const SHORTS=[
-  {src:'yt',id:'RHbh1ggzc5w',year:'2026'},
-  {src:'yt',id:'DpmTiegTgSg',year:'2026'},
-  {src:'yt',id:'9UYD9wNuOrE',year:'2026'},
-  {src:'yt',id:'o3Fa0lyHC-w',year:'2026'},
-  {src:'yt',id:'YUtNjogUrlU',year:'2026'},
-  {src:'yt',id:'1DY0rg1EdwA',year:'2026'},
-  {src:'yt',id:'bqh0P_7SKos',year:'2026'},
-  {src:'yt',id:'5NeUdeqINiM',year:'2026'},
-  {src:'yt',id:'hqzEK0Sb_RE',year:'2026'},
-  {src:'yt',id:'8x8if3PDtcY',year:'2026'},
-  {src:'drive',id:'1RbRyk6ufNCFE4wINCV3QMdylZwqQL1H9',year:'2026'},
-  {src:'drive',id:'14uDlXQDzIzuzyddfAEH9PsLRDWNit2k2',year:'2026'}
-];
-const LONGFORM=[
-  {src:'yt',id:'NXQTS1J31Tg',category:'Featured',year:'2026',featured:true},
-  {src:'yt',id:'yw6jr3jXrEI',category:'Podcast',duration:'18:24',year:'2026'},
-  {src:'yt',id:'PTnRYDBoS98',category:'Interview',duration:'24:10',year:'2026'},
-  {src:'yt',id:'Z9P_fJGcFUA',category:'Documentary',duration:'15:47',year:'2025'},
-  {src:'yt',id:'ij8dMxFkbug',category:'Podcast',duration:'21:33',year:'2025'},
-  {src:'yt',id:'X2Rfjeh4QwI',category:'Brand Story',duration:'9:52',year:'2025'},
-  {src:'yt',id:'-qQsvqKB1_Y',category:'Interview',duration:'27:05',year:'2025'},
-  {src:'yt',id:'jAKU_YR0YDs',category:'Documentary',duration:'19:38',year:'2024'}
-];
-const SAAS=[
-  {src:'yt',id:'cXuI_S4f6BY',category:'Commercial',duration:'0:30',year:'2026'},
-  {src:'yt',id:'iPB5hUqP3eU',category:'SaaS Ad',duration:'0:45',year:'2026'}
-];
-
-/* ── Shared lightbox: plays a YouTube embed or a Google Drive preview ── */
-const lb=document.getElementById('lb'),lbFrame=document.getElementById('lbFrame'),lbClose=document.getElementById('lbClose');
-let lbLastFocused=null;
-function openLightbox(v,isPortrait){
-  if(!lb)return;
-  lbLastFocused=document.activeElement;
-  lbFrame.classList.toggle('is-portrait',!!isPortrait);
-  const src=v.src==='drive'
-    ? `https://drive.google.com/file/d/${v.id}/preview`
-    : `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
-  lbFrame.innerHTML=`<iframe src="${src}" title="Video player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-  lb.classList.add('open');
-  lbClose.focus();
-  document.body.style.overflow='hidden';
-}
-function closeLightbox(){
-  if(!lb)return;
-  lb.classList.remove('open');
-  lbFrame.innerHTML='';
-  document.body.style.overflow='';
-  lbLastFocused?.focus();
-}
-lbClose?.addEventListener('click',closeLightbox);
-lb?.addEventListener('click',e=>{if(e.target===lb)closeLightbox();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&lb?.classList.contains('open'))closeLightbox();});
-
-/* ═══════════════════════════
-   NETFLIX-STYLE SHOWCASE — every section below follows the same
-   idea (one large featured card + a rail of the rest) but each
-   rail is shaped differently for its content: horizontal rows
-   for long-form, a scrollable tile column for shorts, and a
-   single spotlight companion for the two-video Commercials set.
-═══════════════════════════ */
-function playIconSVG(sizeClass){
-  return `<span class="${sizeClass}"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>`;
-}
-
-/* ── LONG FORM: big feature + row list ── */
-(function initLongform(){
-  const featureEl=document.getElementById('lfFeature'),listEl=document.getElementById('lfList');
-  if(!featureEl||!listEl)return;
-  const [feature,...rest]=LONGFORM;
-  featureEl.innerHTML=`
-    <div class="nf-card" data-i="0" tabindex="0" role="button" aria-label="Play featured video">
-      <span class="wk-tag featured">★ Featured</span>
-      <img src="https://img.youtube.com/vi/${feature.id}/hqdefault.jpg" alt="" loading="lazy">
-      ${playIconSVG('wk-play nf-play-lg')}
-    </div>`;
-  featureEl.addEventListener('click',()=>openLightbox(feature));
-  featureEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(feature);}});
-
-  listEl.innerHTML=rest.map((v,i)=>`
-    <div class="nf-row fu" style="transition-delay:${Math.min(i*.08,.4)}s" data-i="${i+1}" tabindex="0" role="button" aria-label="Play video">
-      <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="" loading="lazy">
-      <div class="nf-row-meta"><b>${v.category}</b><span>${v.year}${v.duration?' · '+v.duration:''}</span></div>
-      ${playIconSVG('nf-row-play')}
-    </div>`).join('');
-  [...listEl.children].forEach(el=>io.observe(el));
-  listEl.addEventListener('click',e=>{
-    const row=e.target.closest('.nf-row');
-    if(row)openLightbox(LONGFORM[+row.dataset.i]);
-  });
-  listEl.addEventListener('keydown',e=>{
-    if(e.key!=='Enter'&&e.key!==' ')return;
-    const row=e.target.closest('.nf-row');
-    if(row){e.preventDefault();openLightbox(LONGFORM[+row.dataset.i]);}
-  });
-})();
-
-/* ── SHORT FORM: tall feature + scrollable tile rail ── */
-(function initShorts(){
-  const featureEl=document.getElementById('sfFeature'),railEl=document.getElementById('sfRail');
-  if(!featureEl||!railEl)return;
-  const [feature,...rest]=SHORTS;
-  featureEl.innerHTML=`
-    <div class="nf-card" data-i="0" tabindex="0" role="button" aria-label="Play featured short">
-      <span class="sf-tag">${feature.src==='drive'?'New':'Featured'}</span>
-      <img src="https://img.youtube.com/vi/${feature.id}/hqdefault.jpg" alt="" loading="lazy">
-      ${playIconSVG('wk-play nf-play-lg')}
-    </div>`;
-  featureEl.addEventListener('click',()=>openLightbox(feature,true));
-  featureEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(feature,true);}});
-
-  railEl.innerHTML=rest.map((v,i)=>`
-    <div class="nf-tile fu" style="transition-delay:${Math.min(i*.05,.4)}s" data-i="${i+1}" tabindex="0" role="button" aria-label="Play short">
-      <span class="nf-tile-tag">${v.src==='drive'?'New':'Short'}</span>
-      <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy"
-        onerror="this.src='https://drive.google.com/thumbnail?id=${v.id}&sz=w640'; this.onerror=function(){this.closest('.nf-tile').classList.add('no-thumb'); this.remove();}">
-      ${playIconSVG('nf-tile-play')}
-    </div>`).join('');
-  [...railEl.children].forEach(el=>io.observe(el));
-  railEl.addEventListener('click',e=>{
-    const tile=e.target.closest('.nf-tile');
-    if(tile)openLightbox(SHORTS[+tile.dataset.i],true);
-  });
-  railEl.addEventListener('keydown',e=>{
-    if(e.key!=='Enter'&&e.key!==' ')return;
-    const tile=e.target.closest('.nf-tile');
-    if(tile){e.preventDefault();openLightbox(SHORTS[+tile.dataset.i],true);}
-  });
-})();
-
-/* ── SAAS / COMMERCIALS: feature + single spotlight companion ── */
-(function initSaas(){
-  const featureEl=document.getElementById('saasFeature'),railEl=document.getElementById('saasRail');
-  if(!featureEl||!railEl)return;
-  const [feature,companion]=SAAS;
-  featureEl.innerHTML=`
-    <div class="nf-card" data-i="0" tabindex="0" role="button" aria-label="Play featured commercial">
-      <span class="wk-tag">${feature.category}</span>
-      <span class="wk-dur">${feature.duration}</span>
-      <img src="https://img.youtube.com/vi/${feature.id}/hqdefault.jpg" alt="" loading="lazy">
-      ${playIconSVG('wk-play nf-play-lg')}
-    </div>`;
-  featureEl.addEventListener('click',()=>openLightbox(feature));
-  featureEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(feature);}});
-
-  if(companion){
-    railEl.innerHTML=`
-      <div class="nf-spot-label">Also Playing</div>
-      <div class="nf-spot fu" data-i="1" tabindex="0" role="button" aria-label="Play commercial">
-        <span class="wk-tag">${companion.category}</span>
-        <span class="wk-dur">${companion.duration}</span>
-        <img src="https://img.youtube.com/vi/${companion.id}/hqdefault.jpg" alt="" loading="lazy">
-        ${playIconSVG('wk-play nf-play-md')}
-      </div>`;
-    io.observe(railEl.querySelector('.nf-spot'));
-    railEl.addEventListener('click',()=>openLightbox(companion));
-    railEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(companion);}});
-  }
-})();
-
-/* ═══════════════════════════
-   COLLAB STARFIELD — slow ambient drift behind the orbit
-═══════════════════════════ */
-(function(){
-  const canvas=document.getElementById('collabCanvas');
-  if(!canvas)return;
+(function initCollabStarfield(){
+  const container=document.getElementById('collabCanvas');
+  if(!container)return;
+  const canvas=document.createElement('canvas');
+  canvas.style.cssText='width:100%;height:100%;position:absolute;inset:0;';
+  container.appendChild(canvas);
   const ctx=canvas.getContext('2d');
-  let w,h,stars=[];
+  let stars=[];
   function resize(){
-    w=canvas.width=canvas.offsetWidth;h=canvas.height=canvas.offsetHeight;
-    stars=Array.from({length:70},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.3+.3,s:Math.random()*.25+.05}));
+    canvas.width=container.offsetWidth;
+    canvas.height=container.offsetHeight;
+    stars=Array.from({length:130},()=>({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*1.3+.3,
+      alpha:Math.random()*.7+.1,
+      speed:Math.random()*.15+.03
+    }));
   }
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    ctx.fillStyle='rgba(227,178,60,.5)';
+  resize();
+  window.addEventListener('resize',resize);
+  (function tick(t){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     stars.forEach(s=>{
-      s.y-=s.s;if(s.y<0)s.y=h;
-      ctx.globalAlpha=.3+Math.sin(Date.now()/1400+s.x)*.25;
-      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();
+      s.phase=(s.phase||0)+s.speed*0.03;
+      const a=s.alpha*(.6+.4*Math.sin(s.phase));
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(212,175,55,${a})`;
+      ctx.fill();
     });
-    requestAnimationFrame(draw);
+    requestAnimationFrame(tick);
+  })();
+})();
+
+/* Gentle parallax on the orbit cluster — subtle, not distracting */
+const coWrap=document.getElementById('coWrap');
+document.addEventListener('mousemove',e=>{
+  if(!coWrap)return;
+  const r=coWrap.getBoundingClientRect();
+  if(e.clientY<r.top-200||e.clientY>r.bottom+200)return;
+  const dx=(e.clientX-(r.left+r.width/2))/window.innerWidth*10;
+  const dy=(e.clientY-(r.top+r.height/2))/window.innerHeight*8;
+  coWrap.style.transform=`translate(${dx}px,${dy}px)`;
+});
+
+/* ═══════════════════════════
+   YOUTUBE OEMBED — AUTO-FETCH TITLE + CHANNEL
+   Thumbnails load instantly from img.youtube.com (no fetch needed).
+   Titles + channel names are fetched live from YouTube's public
+   oEmbed endpoint at runtime — no hardcoding required. If a viewer's
+   browser blocks the request (ad-blocker, offline), the fallback
+   text already in the DOM is left in place.
+═══════════════════════════ */
+async function fetchYTMeta(url){
+  try{
+    const res=await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
+    if(!res.ok)throw new Error('oembed failed');
+    const data=await res.json();
+    return{title:data.title,author:data.author_name};
+  }catch(e){return null}
+}
+
+/* ═══════════════════════════
+   LONG FORM — featured player + scrollable playlist
+   Left: one large player (poster → real YouTube iframe on play,
+   with Play/Sound/Prev/Next/Autoplay/Fullscreen controls). Right:
+   an independently-scrolling playlist; clicking an item swaps the
+   featured video instantly. Play/Sound use YouTube's postMessage
+   API (enablejsapi=1) — this needs the page served over http(s),
+   not opened directly as a local file, to work in every browser.
+   Replace the `id` values below with your own YouTube video IDs.
+   category/duration/year are illustrative — YouTube's oEmbed API
+   doesn't expose duration or category, so these are manually set;
+   edit them freely to match your real videos.
+═══════════════════════════ */
+const videos=[
+  {id:'NXQTS1J31Tg',category:'Featured',duration:'',year:'2026',featured:true},
+  {id:'yw6jr3jXrEI',category:'Podcast',duration:'18:24',year:'2026'},
+  {id:'PTnRYDBoS98',category:'Interview',duration:'24:10',year:'2026'},
+  {id:'Z9P_fJGcFUA',category:'Documentary',duration:'15:47',year:'2025'},
+  {id:'ij8dMxFkbug',category:'Podcast',duration:'21:33',year:'2025'},
+  {id:'X2Rfjeh4QwI',category:'Brand Story',duration:'9:52',year:'2025'},
+  {id:'-qQsvqKB1_Y',category:'Interview',duration:'27:05',year:'2025'},
+  {id:'jAKU_YR0YDs',category:'Documentary',duration:'19:38',year:'2024'}
+];
+
+(function initLongFormPlayer(){
+  const list=document.getElementById('lf2List');
+  const stage=document.getElementById('lf2Stage');
+  const poster=document.getElementById('lf2Poster');
+  const titleEl=document.getElementById('lf2Title');
+  const playBigBtn=document.getElementById('lf2PlayBig');
+  const playBtn=document.getElementById('lf2Play');
+  const soundBtn=document.getElementById('lf2Sound');
+  const prevBtn=document.getElementById('lf2Prev');
+  const nextBtn=document.getElementById('lf2Next');
+  const autoplayBtn=document.getElementById('lf2Autoplay');
+  const fullscreenBtn=document.getElementById('lf2Fullscreen');
+  if(!list||!stage)return;
+
+  let active=0;
+  let autoplay=false;
+  let muted=false;
+  let iframeEl=null;
+
+  function ytEmbedSrc(id,opts={}){
+    const params=new URLSearchParams({enablejsapi:'1',rel:'0',playsinline:'1',origin:window.location.origin});
+    if(opts.autoplay)params.set('autoplay','1');
+    if(muted)params.set('mute','1');
+    return `https://www.youtube.com/embed/${id}?${params.toString()}`;
   }
-  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    window.addEventListener('resize',resize);resize();draw();
+  function postCmd(func,args=[]){
+    if(!iframeEl||!iframeEl.contentWindow)return;
+    iframeEl.contentWindow.postMessage(JSON.stringify({event:'command',func,args}),'*');
   }
+  function updatePlayIcon(isPlaying){
+    playBtn.querySelector('.ic-play').style.display=isPlaying?'none':'block';
+    playBtn.querySelector('.ic-pause').style.display=isPlaying?'block':'none';
+  }
+  function destroyPlayer(){
+    if(iframeEl){iframeEl.remove();iframeEl=null}
+    stage.classList.remove('has-player');
+    updatePlayIcon(false);
+  }
+  function mountPlayer(withAutoplay){
+    destroyPlayer();
+    const v=videos[active];
+    iframeEl=document.createElement('iframe');
+    iframeEl.src=ytEmbedSrc(v.id,{autoplay:withAutoplay});
+    iframeEl.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+    iframeEl.allowFullscreen=true;
+    iframeEl.title='Featured video player';
+    stage.appendChild(iframeEl);
+    stage.classList.add('has-player');
+    updatePlayIcon(!!withAutoplay);
+  }
+
+  const featuredBadge=document.getElementById('lf2FeaturedBadge');
+
+  function render(initial){
+    const v=videos[active];
+    stage.classList.add('is-loading');
+    poster.onload=()=>{stage.classList.remove('is-loading')};
+    poster.src=`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`;
+    titleEl.textContent='Loading…';
+    if(featuredBadge)featuredBadge.style.display=v.featured?'flex':'none';
+
+    Array.from(list.children).forEach((item,i)=>item.classList.toggle('is-active',i===active));
+    if(!initial){
+      const activeItem=list.children[active];
+      if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    }
+
+    fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
+      titleEl.textContent=meta?meta.title:'Featured video';
+    });
+  }
+
+  function goTo(index,withAutoplay){
+    active=((index%videos.length)+videos.length)%videos.length;
+    destroyPlayer();
+    render();
+    const shouldAutoplay=withAutoplay===undefined?autoplay:withAutoplay;
+    if(shouldAutoplay)mountPlayer(true);
+  }
+
+  // Build playlist
+  list.innerHTML=videos.map((v,i)=>`
+    <div class="lf2-item${i===0?' is-active':''}${v.featured?' is-featured':''}" data-index="${i}" role="option" tabindex="0">
+      <div class="lf2-item-thumb">${v.featured?'<span class="lf2-featured-tag">★ Featured</span>':''}<img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="" loading="lazy"></div>
+      <div class="lf2-item-body">
+        <p class="lf2-item-title" id="lf2it-${i}">Loading…</p>
+        <p class="lf2-item-sub" id="lf2is-${i}">YouTube</p>
+        <div class="lf2-item-meta">
+          <span class="lf2-meta-tag">${v.category}</span>
+          ${v.duration?`<span class="lf2-meta-dot">•</span><span class="lf2-meta-text">${v.duration}</span>`:''}
+          <span class="lf2-meta-dot">•</span>
+          <span class="lf2-meta-text">${v.year}</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  videos.forEach((v,i)=>{
+    fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
+      if(!meta)return;
+      const t=document.getElementById(`lf2it-${i}`),sub=document.getElementById(`lf2is-${i}`);
+      if(t)t.textContent=meta.title;
+      if(sub)sub.textContent=meta.author;
+    });
+  });
+
+  // Playlist click
+  list.addEventListener('click',e=>{
+    const item=e.target.closest('.lf2-item');
+    if(!item)return;
+    goTo(+item.dataset.index);
+  });
+  list.addEventListener('keydown',e=>{
+    const item=e.target.closest('.lf2-item');
+    if(!item)return;
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();goTo(+item.dataset.index)}
+  });
+
+  // Big play button
+  playBigBtn.addEventListener('click',()=>mountPlayer(true));
+
+  // Bottom control bar
+  playBtn.addEventListener('click',()=>{
+    if(!iframeEl){mountPlayer(true);return}
+    const isPlaying=playBtn.querySelector('.ic-pause').style.display!=='none';
+    if(isPlaying){postCmd('pauseVideo');updatePlayIcon(false)}
+    else{postCmd('playVideo');updatePlayIcon(true)}
+  });
+  soundBtn.addEventListener('click',()=>{
+    muted=!muted;
+    soundBtn.querySelector('.ic-on').style.display=muted?'none':'block';
+    soundBtn.querySelector('.ic-off').style.display=muted?'block':'none';
+    postCmd(muted?'mute':'unMute');
+  });
+  prevBtn.addEventListener('click',()=>goTo(active-1));
+  nextBtn.addEventListener('click',()=>goTo(active+1));
+  autoplayBtn.addEventListener('click',()=>{
+    autoplay=!autoplay;
+    autoplayBtn.classList.toggle('is-on',autoplay);
+    autoplayBtn.setAttribute('aria-pressed',String(autoplay));
+  });
+  fullscreenBtn.addEventListener('click',()=>{
+    const target=iframeEl||stage;
+    if(target.requestFullscreen)target.requestFullscreen();
+    else if(target.webkitRequestFullscreen)target.webkitRequestFullscreen();
+  });
+
+  // Keyboard navigation — only while the player is in view, and
+  // never while the visitor is typing in a form field.
+  let inView=false;
+  new IntersectionObserver(es=>{inView=es[0].isIntersecting},{threshold:.3}).observe(stage);
+  document.addEventListener('keydown',e=>{
+    if(!inView)return;
+    const tag=(e.target.tagName||'').toLowerCase();
+    if(tag==='input'||tag==='textarea')return;
+    if(e.key==='ArrowLeft'){e.preventDefault();goTo(active-1)}
+    if(e.key==='ArrowRight'){e.preventDefault();goTo(active+1)}
+  });
+
+  render(true);
 })();
 
 /* ═══════════════════════════
-   SERVICE / BUDGET PICKER → feeds the contact form
+   SAAS & COMMERCIALS — featured player + scrollable playlist
+   Independent duplicate of the Long Form player pattern above.
+   Uses its own unique IDs/classes (saas*) and its own state —
+   does not share or touch any Long Form variables or elements.
+   PLACEHOLDER DATA: replace the entries in `saasVideos` below
+   with your own SaaS/commercial YouTube video IDs when ready.
+   category/duration/year are illustrative, same as Long Form.
 ═══════════════════════════ */
-const svcR=document.getElementById('svcR'),budR=document.getElementById('budR');
-const serviceInput=document.getElementById('serviceInput'),budgetInput=document.getElementById('budgetInput');
-svcR?.querySelectorAll('.svc-o').forEach(o=>o.addEventListener('click',()=>{
-  svcR.querySelectorAll('.svc-o').forEach(x=>x.classList.remove('sel'));
-  o.classList.add('sel');
-  if(serviceInput)serviceInput.value=o.dataset.s;
-}));
-budR?.querySelectorAll('.bud-o').forEach(o=>o.addEventListener('click',()=>{
-  budR.querySelectorAll('.bud-o').forEach(x=>x.classList.remove('sel'));
-  o.classList.add('sel');
-  if(budgetInput)budgetInput.value=o.dataset.b;
-}));
+const saasVideos=[
+  {id:'cXuI_S4f6BY',category:'Commercial',duration:'0:30',year:'2026'},
+  {id:'iPB5hUqP3eU',category:'SaaS Ad',duration:'0:45',year:'2026'}
+  // Add more videos here as {id:'YOUTUBE_ID', category:'...', duration:'...', year:'...'} —
+  // the layout, playlist, and scroll behavior adapt automatically, no other changes needed.
+];
+
+(function initSaasPlayer(){
+  const saasSection=document.getElementById('saasSection');
+  const saasPlaylist=document.getElementById('saasPlaylist');
+  const saasStage=document.getElementById('saasStage');
+  const saasPoster=document.getElementById('saasPoster');
+  const saasTitleEl=document.getElementById('saasTitle');
+  const saasPlayBigBtn=document.getElementById('saasPlayBig');
+  const saasPlayBtn=document.getElementById('saasPlay');
+  const saasSoundBtn=document.getElementById('saasSound');
+  const saasPrevBtn=document.getElementById('saasPrev');
+  const saasNextBtn=document.getElementById('saasNext');
+  const saasAutoplayBtn=document.getElementById('saasAutoplay');
+  const saasFullscreenBtn=document.getElementById('saasFullscreen');
+  if(!saasPlaylist||!saasStage)return;
+
+  let saasCurrentVideo=0;
+  let saasAutoplay=false;
+  let saasMuted=false;
+  let saasPlayer=null; // the mounted YouTube iframe
+
+  function saasYtEmbedSrc(id,opts={}){
+    const params=new URLSearchParams({enablejsapi:'1',rel:'0',playsinline:'1',origin:window.location.origin});
+    if(opts.autoplay)params.set('autoplay','1');
+    if(saasMuted)params.set('mute','1');
+    return `https://www.youtube.com/embed/${id}?${params.toString()}`;
+  }
+  function saasPostCmd(func,args=[]){
+    if(!saasPlayer||!saasPlayer.contentWindow)return;
+    saasPlayer.contentWindow.postMessage(JSON.stringify({event:'command',func,args}),'*');
+  }
+  function saasUpdatePlayIcon(isPlaying){
+    saasPlayBtn.querySelector('.ic-play').style.display=isPlaying?'none':'block';
+    saasPlayBtn.querySelector('.ic-pause').style.display=isPlaying?'block':'none';
+  }
+  function saasDestroyPlayer(){
+    if(saasPlayer){saasPlayer.remove();saasPlayer=null}
+    saasStage.classList.remove('has-player');
+    saasUpdatePlayIcon(false);
+  }
+  function saasMountPlayer(withAutoplay){
+    saasDestroyPlayer();
+    const v=saasVideos[saasCurrentVideo];
+    saasPlayer=document.createElement('iframe');
+    saasPlayer.src=saasYtEmbedSrc(v.id,{autoplay:withAutoplay});
+    saasPlayer.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+    saasPlayer.allowFullscreen=true;
+    saasPlayer.title='Featured video player';
+    saasStage.appendChild(saasPlayer);
+    saasStage.classList.add('has-player');
+    saasUpdatePlayIcon(!!withAutoplay);
+  }
+
+  function saasRender(initial){
+    const v=saasVideos[saasCurrentVideo];
+    saasStage.classList.add('is-loading');
+    saasPoster.onload=()=>{saasStage.classList.remove('is-loading')};
+    saasPoster.src=`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`;
+    saasTitleEl.textContent='Loading…';
+
+    Array.from(saasPlaylist.children).forEach((item,i)=>item.classList.toggle('is-active',i===saasCurrentVideo));
+    if(!initial){
+      const activeItem=saasPlaylist.children[saasCurrentVideo];
+      if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    }
+
+    fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
+      saasTitleEl.textContent=meta?meta.title:'Featured video';
+    });
+  }
+
+  function saasGoTo(index,withAutoplay){
+    saasCurrentVideo=((index%saasVideos.length)+saasVideos.length)%saasVideos.length;
+    saasDestroyPlayer();
+    saasRender();
+    const shouldAutoplay=withAutoplay===undefined?saasAutoplay:withAutoplay;
+    if(shouldAutoplay)saasMountPlayer(true);
+  }
+
+  // Build playlist
+  saasPlaylist.innerHTML=saasVideos.map((v,i)=>`
+    <div class="saas-item${i===0?' is-active':''}" data-index="${i}" role="option" tabindex="0">
+      <div class="saas-item-thumb"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="" loading="lazy"></div>
+      <div class="saas-item-body">
+        <p class="saas-item-title" id="saasit-${i}">Loading…</p>
+        <p class="saas-item-sub" id="saasis-${i}">YouTube</p>
+        <div class="saas-item-meta">
+          <span class="saas-meta-tag">${v.category}</span>
+          <span class="saas-meta-dot">•</span>
+          <span class="saas-meta-text">${v.duration}</span>
+          <span class="saas-meta-dot">•</span>
+          <span class="saas-meta-text">${v.year}</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  saasVideos.forEach((v,i)=>{
+    fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
+      if(!meta)return;
+      const t=document.getElementById(`saasit-${i}`),sub=document.getElementById(`saasis-${i}`);
+      if(t)t.textContent=meta.title;
+      if(sub)sub.textContent=meta.author;
+    });
+  });
+
+  // Playlist click
+  saasPlaylist.addEventListener('click',e=>{
+    const item=e.target.closest('.saas-item');
+    if(!item)return;
+    saasGoTo(+item.dataset.index);
+  });
+  saasPlaylist.addEventListener('keydown',e=>{
+    const item=e.target.closest('.saas-item');
+    if(!item)return;
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();saasGoTo(+item.dataset.index)}
+  });
+
+  // Big play button
+  saasPlayBigBtn.addEventListener('click',()=>saasMountPlayer(true));
+
+  // Bottom control bar
+  saasPlayBtn.addEventListener('click',()=>{
+    if(!saasPlayer){saasMountPlayer(true);return}
+    const isPlaying=saasPlayBtn.querySelector('.ic-pause').style.display!=='none';
+    if(isPlaying){saasPostCmd('pauseVideo');saasUpdatePlayIcon(false)}
+    else{saasPostCmd('playVideo');saasUpdatePlayIcon(true)}
+  });
+  saasSoundBtn.addEventListener('click',()=>{
+    saasMuted=!saasMuted;
+    saasSoundBtn.querySelector('.ic-on').style.display=saasMuted?'none':'block';
+    saasSoundBtn.querySelector('.ic-off').style.display=saasMuted?'block':'none';
+    saasPostCmd(saasMuted?'mute':'unMute');
+  });
+  saasPrevBtn.addEventListener('click',()=>saasGoTo(saasCurrentVideo-1));
+  saasNextBtn.addEventListener('click',()=>saasGoTo(saasCurrentVideo+1));
+  saasAutoplayBtn.addEventListener('click',()=>{
+    saasAutoplay=!saasAutoplay;
+    saasAutoplayBtn.classList.toggle('is-on',saasAutoplay);
+    saasAutoplayBtn.setAttribute('aria-pressed',String(saasAutoplay));
+  });
+  saasFullscreenBtn.addEventListener('click',()=>{
+    const target=saasPlayer||saasStage;
+    if(target.requestFullscreen)target.requestFullscreen();
+    else if(target.webkitRequestFullscreen)target.webkitRequestFullscreen();
+  });
+
+  // Keyboard navigation — only while this player is in view, and
+  // never while the visitor is typing in a form field.
+  let saasInView=false;
+  new IntersectionObserver(es=>{saasInView=es[0].isIntersecting},{threshold:.3}).observe(saasStage);
+  document.addEventListener('keydown',e=>{
+    if(!saasInView)return;
+    const tag=(e.target.tagName||'').toLowerCase();
+    if(tag==='input'||tag==='textarea')return;
+    if(e.key==='ArrowLeft'){e.preventDefault();saasGoTo(saasCurrentVideo-1)}
+    if(e.key==='ArrowRight'){e.preventDefault();saasGoTo(saasCurrentVideo+1)}
+  });
+
+  saasRender(true);
+})();
 
 /* ═══════════════════════════
-   CONTACT FORM — EmailJS
-   To activate: create a free account at emailjs.com, then fill in
-   the three constants below. Your EmailJS template should expect
-   fields named: name, email, service, budget, message.
+   SHORT FORM SHOWCASE — featured player + scrollable playlist
+   Left: one large player (poster → real YouTube iframe on play,
+   with Play/Sound/Prev/Next/Autoplay/Fullscreen controls). Right:
+   an independently-scrolling playlist; clicking an item swaps the
+   featured video instantly. Play/Sound use YouTube's postMessage
+   API (enablejsapi=1) — this needs the page served over http(s),
+   not opened directly as a local file, to work in every browser.
+   Replace the `id`/`date` values in SHORTS with your real clips.
 ═══════════════════════════ */
-const EMAILJS_PUBLIC_KEY='';
-const EMAILJS_SERVICE_ID='';
-const EMAILJS_TEMPLATE_ID='';
+(function initShortFormPlayer(){
+  const list=document.getElementById('sfs2List');
+  const stage=document.getElementById('sfs2Stage');
+  const poster=document.getElementById('sfs2Poster');
+  const titleEl=document.getElementById('sfs2Title');
+  const playBigBtn=document.getElementById('sfs2PlayBig');
+  const playBtn=document.getElementById('sfs2Play');
+  const soundBtn=document.getElementById('sfs2Sound');
+  const prevBtn=document.getElementById('sfs2Prev');
+  const nextBtn=document.getElementById('sfs2Next');
+  const autoplayBtn=document.getElementById('sfs2Autoplay');
+  const fullscreenBtn=document.getElementById('sfs2Fullscreen');
+  if(!list||!stage)return;
+
+  // Placeholder dates — YouTube's oEmbed API doesn't expose publish
+  // dates, so these are illustrative. Edit freely.
+  const SHORTS=[
+    {id:'RHbh1ggzc5w',date:'2026'},
+    {id:'DpmTiegTgSg',date:'2026'},
+    {id:'9UYD9wNuOrE',date:'2026'},
+    {id:'o3Fa0lyHC-w',date:'2026'},
+    {id:'YUtNjogUrlU',date:'2026'},
+    {id:'1DY0rg1EdwA',date:'2026'},
+    {id:'bqh0P_7SKos',date:'2026'},
+    {id:'5NeUdeqINiM',date:'2026'},
+    {id:'hqzEK0Sb_RE',date:'2026'},
+    {id:'8x8if3PDtcY',date:'2026'}
+  ];
+
+  let active=0;
+  let autoplay=false;
+  let muted=false;
+  let iframeEl=null;
+
+  function ytEmbedSrc(id,opts={}){
+    const params=new URLSearchParams({enablejsapi:'1',rel:'0',playsinline:'1',origin:window.location.origin});
+    if(opts.autoplay)params.set('autoplay','1');
+    if(muted)params.set('mute','1');
+    return `https://www.youtube.com/embed/${id}?${params.toString()}`;
+  }
+  function postCmd(func,args=[]){
+    if(!iframeEl||!iframeEl.contentWindow)return;
+    iframeEl.contentWindow.postMessage(JSON.stringify({event:'command',func,args}),'*');
+  }
+  function updatePlayIcon(isPlaying){
+    playBtn.querySelector('.ic-play').style.display=isPlaying?'none':'block';
+    playBtn.querySelector('.ic-pause').style.display=isPlaying?'block':'none';
+  }
+  function destroyPlayer(){
+    if(iframeEl){iframeEl.remove();iframeEl=null}
+    stage.classList.remove('has-player');
+    updatePlayIcon(false);
+  }
+  function mountPlayer(withAutoplay){
+    destroyPlayer();
+    const s=SHORTS[active];
+    iframeEl=document.createElement('iframe');
+    iframeEl.src=ytEmbedSrc(s.id,{autoplay:withAutoplay});
+    iframeEl.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+    iframeEl.allowFullscreen=true;
+    iframeEl.title='Short form video player';
+    stage.appendChild(iframeEl);
+    stage.classList.add('has-player');
+    updatePlayIcon(!!withAutoplay);
+  }
+
+  const featuredBadge=document.getElementById('sfs2FeaturedBadge');
+
+  function render(initial){
+    const s=SHORTS[active];
+    stage.classList.add('is-loading');
+    poster.onload=()=>{stage.classList.remove('is-loading')};
+    poster.src=`https://img.youtube.com/vi/${s.id}/hqdefault.jpg`;
+    titleEl.textContent='Loading…';
+    if(featuredBadge)featuredBadge.style.display=s.featured?'flex':'none';
+
+    Array.from(list.children).forEach((item,i)=>item.classList.toggle('is-active',i===active));
+    if(!initial){
+      const activeItem=list.children[active];
+      if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    }
+
+    fetchYTMeta(`https://youtube.com/shorts/${s.id}`).then(meta=>{
+      titleEl.textContent=meta?meta.title:'Short form video';
+    });
+  }
+
+  function goTo(index,withAutoplay){
+    active=((index%SHORTS.length)+SHORTS.length)%SHORTS.length;
+    destroyPlayer();
+    render();
+    const shouldAutoplay=withAutoplay===undefined?autoplay:withAutoplay;
+    if(shouldAutoplay)mountPlayer(true);
+  }
+
+  // Build playlist
+  list.innerHTML=SHORTS.map((s,i)=>`
+    <div class="sfs2-item${i===0?' is-active':''}${s.featured?' is-featured':''}" data-index="${i}" role="option" tabindex="0">
+      <div class="sfs2-item-thumb">${s.featured?'<span class="sfs2-featured-tag">★ Featured</span>':''}<img src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg" alt="" loading="lazy"></div>
+      <div class="sfs2-item-body">
+        <div class="sfs2-item-title" id="sfs2it-${i}">Loading…</div>
+        <div class="sfs2-item-sub" id="sfs2is-${i}">YouTube Shorts</div>
+        <div class="sfs2-item-date">${s.date}</div>
+        <div class="sfs2-item-icons">
+          <svg viewBox="0 0 24 24"><path d="M21 6H3a1 1 0 00-1 1v10a1 1 0 001 1h5l3 3 3-3h7a1 1 0 001-1V7a1 1 0 00-1-1z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.93V21h2v-3.07A7 7 0 0019 11h-2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M3 12h2v4H3zM7 8h2v10H7zM11 5h2v14h-2zM15 9h2v8h-2zM19 11h2v6h-2z"/></svg>
+        </div>
+      </div>
+    </div>`).join('');
+
+  SHORTS.forEach((s,i)=>{
+    fetchYTMeta(`https://youtube.com/shorts/${s.id}`).then(meta=>{
+      if(!meta)return;
+      const t=document.getElementById(`sfs2it-${i}`),sub=document.getElementById(`sfs2is-${i}`);
+      if(t)t.textContent=meta.title;
+      if(sub)sub.textContent=meta.author;
+    });
+  });
+
+  // Playlist click
+  list.addEventListener('click',e=>{
+    const item=e.target.closest('.sfs2-item');
+    if(!item)return;
+    goTo(+item.dataset.index);
+  });
+  list.addEventListener('keydown',e=>{
+    const item=e.target.closest('.sfs2-item');
+    if(!item)return;
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();goTo(+item.dataset.index)}
+  });
+
+  // Big play button
+  playBigBtn.addEventListener('click',()=>mountPlayer(true));
+
+  // Bottom control bar
+  playBtn.addEventListener('click',()=>{
+    if(!iframeEl){mountPlayer(true);return}
+    const isPlaying=playBtn.querySelector('.ic-pause').style.display!=='none';
+    if(isPlaying){postCmd('pauseVideo');updatePlayIcon(false)}
+    else{postCmd('playVideo');updatePlayIcon(true)}
+  });
+  soundBtn.addEventListener('click',()=>{
+    muted=!muted;
+    soundBtn.querySelector('.ic-on').style.display=muted?'none':'block';
+    soundBtn.querySelector('.ic-off').style.display=muted?'block':'none';
+    postCmd(muted?'mute':'unMute');
+  });
+  prevBtn.addEventListener('click',()=>goTo(active-1));
+  nextBtn.addEventListener('click',()=>goTo(active+1));
+  autoplayBtn.addEventListener('click',()=>{
+    autoplay=!autoplay;
+    autoplayBtn.classList.toggle('is-on',autoplay);
+    autoplayBtn.setAttribute('aria-pressed',String(autoplay));
+  });
+  fullscreenBtn.addEventListener('click',()=>{
+    const target=iframeEl||stage;
+    if(target.requestFullscreen)target.requestFullscreen();
+    else if(target.webkitRequestFullscreen)target.webkitRequestFullscreen();
+  });
+
+  // Keyboard navigation — only while the player is in view, and
+  // never while the visitor is typing in a form field.
+  let inView=false;
+  new IntersectionObserver(es=>{inView=es[0].isIntersecting},{threshold:.3}).observe(stage);
+  document.addEventListener('keydown',e=>{
+    if(!inView)return;
+    const tag=(e.target.tagName||'').toLowerCase();
+    if(tag==='input'||tag==='textarea')return;
+    if(e.key==='ArrowLeft'){e.preventDefault();goTo(active-1)}
+    if(e.key==='ArrowRight'){e.preventDefault();goTo(active+1)}
+  });
+
+  render(true);
+})();
+
+
+/* ═══════════════════════════
+   SERVICE / BUDGET PICKERS
+   Selecting an option also syncs the hidden form fields
+   (#serviceInput / #budgetInput) that get submitted with the form.
+═══════════════════════════ */
+document.getElementById('svcR').addEventListener('click',e=>{
+  const o=e.target.closest('.svc-o');if(!o)return;
+  document.querySelectorAll('.svc-o').forEach(x=>x.classList.remove('sel'));
+  o.classList.add('sel');
+  document.getElementById('serviceInput').value=o.dataset.s;
+});
+document.getElementById('budR').addEventListener('click',e=>{
+  const o=e.target.closest('.bud-o');if(!o)return;
+  document.querySelectorAll('.bud-o').forEach(x=>x.classList.remove('sel'));
+  o.classList.add('sel');
+  document.getElementById('budgetInput').value=o.dataset.b;
+});
+
+/* ═══════════════════════════
+   CONTACT FORM — EmailJS (client-side, no backend)
+   Uses the official EmailJS SDK (script tag in index.html) to send
+   the form directly from the browser via emailjs.sendForm(), which
+   reads each field by its `name` attribute — no manual field mapping
+   needed. Fill in the three values below from your EmailJS account:
+
+     EMAILJS_PUBLIC_KEY   → Account → General → Public Key
+     EMAILJS_SERVICE_ID   → Email Services → your connected inbox
+     EMAILJS_TEMPLATE_ID  → Email Templates → your template
+
+   In your EmailJS template, map these variables (they match the
+   form field names exactly, via sendForm):
+     {{name}}    — Name
+     {{email}}   — Email (also set as the template's Reply-To)
+     {{social}}  — Social Handle
+     {{media}}   — Media
+     {{service}} — Selected Service
+     {{budget}}  — Budget
+     {{message}} — Message
+
+   Until all three IDs below are filled in, submissions will show a
+   clear configuration error instead of silently failing.
+═══════════════════════════ */
+const EMAILJS_PUBLIC_KEY='';   // ← paste your EmailJS Public Key here
+const EMAILJS_SERVICE_ID='';   // ← paste your EmailJS Service ID here
+const EMAILJS_TEMPLATE_ID='';  // ← paste your EmailJS Template ID here
+
 if(EMAILJS_PUBLIC_KEY&&window.emailjs)emailjs.init(EMAILJS_PUBLIC_KEY);
 
 const contactForm=document.getElementById('contactForm');
-const sendBtn=document.getElementById('sendBtn'),conStatus=document.getElementById('conStatus');
-contactForm?.addEventListener('submit',async function(e){
+const sendBtn=document.getElementById('sendBtn');
+const conStatus=document.getElementById('conStatus');
+let isSubmitting=false; // guards against duplicate/double-click submissions
+
+function setStatus(kind,message){
+  conStatus.textContent=message;
+  conStatus.className=`con-status show ${kind}`;
+}
+function clearStatus(){
+  conStatus.className='con-status';
+}
+function validateForm(form){
+  let firstInvalid=null;
+  form.querySelectorAll('[required]').forEach(f=>{
+    const empty=!f.value||!f.value.trim();
+    f.classList.toggle('invalid',empty);
+    if(empty&&!firstInvalid)firstInvalid=f;
+  });
+  const emailField=form.querySelector('[name="email"]');
+  if(emailField&&emailField.value&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value)){
+    emailField.classList.add('invalid');
+    if(!firstInvalid)firstInvalid=emailField;
+  }
+  return firstInvalid;
+}
+contactForm.querySelectorAll('[required]').forEach(f=>{
+  f.addEventListener('input',()=>f.classList.remove('invalid'));
+});
+
+contactForm.addEventListener('submit',async function(e){
   e.preventDefault();
-  const email=this.querySelector('[name="email"]');
-  if(email && !email.checkValidity()){
-    conStatus.textContent='Please enter a valid email address.';
-    conStatus.className='con-status err';
-    email.focus();
+  if(isSubmitting)return; // prevent duplicate submissions
+
+  clearStatus();
+  const firstInvalid=validateForm(this);
+  if(firstInvalid){
+    setStatus('error','Please fill in the required fields highlighted below.');
+    firstInvalid.focus();
     return;
   }
   if(!EMAILJS_PUBLIC_KEY||!EMAILJS_SERVICE_ID||!EMAILJS_TEMPLATE_ID){
-    conStatus.textContent='Form is not connected yet — fill in the EmailJS keys in js/main.js.';
-    conStatus.className='con-status err';
+    setStatus('error','Contact form isn\'t configured yet — missing EmailJS keys in js/main.js.');
     console.warn('EmailJS is not configured. Fill in EMAILJS_PUBLIC_KEY / EMAILJS_SERVICE_ID / EMAILJS_TEMPLATE_ID in js/main.js.');
     return;
   }
-  sendBtn.disabled=true;sendBtn.textContent='Sending…';
-  conStatus.textContent='';conStatus.className='con-status';
+
+  isSubmitting=true;
+  sendBtn.classList.add('loading');
+  sendBtn.disabled=true;
+
   try{
     await emailjs.sendForm(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,this);
-    conStatus.textContent='Message sent — I\'ll get back to you soon.';
-    conStatus.className='con-status ok';
+
+    setStatus('success','Message sent — thank you! I\'ll reply within 12–24 hours.');
     this.reset();
+    document.getElementById('serviceInput').value='Long Form';
+    document.getElementById('budgetInput').value='1k-2k';
+    document.querySelectorAll('.svc-o').forEach(x=>x.classList.remove('sel'));
+    document.querySelector('.svc-o[data-s="Long Form"]').classList.add('sel');
+    document.querySelectorAll('.bud-o').forEach(x=>x.classList.remove('sel'));
+    document.querySelector('.bud-o[data-b="1k-2k"]').classList.add('sel');
   }catch(err){
-    conStatus.textContent='Something went wrong — please try again or email me directly.';
-    conStatus.className='con-status err';
-    console.error(err);
+    console.error('EmailJS submission failed:',err);
+    // Surface EmailJS's own error text (e.g. invalid service/template ID,
+    // rate limit, etc.) instead of a generic message.
+    const reason=(err&&(err.text||err.message))||'Unknown error.';
+    setStatus('error',`Failed to send: ${reason}`);
   }finally{
-    sendBtn.disabled=false;sendBtn.textContent='Send Message';
+    isSubmitting=false;
+    sendBtn.classList.remove('loading');
+    sendBtn.disabled=false;
   }
+});
+
+/* Nav links — smooth hash scroll */
+document.querySelectorAll('.nav-links a, .nav-logo, footer .fl').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const h=a.getAttribute('href');
+    if(h && h.startsWith('#')){
+      e.preventDefault();
+      const el=document.querySelector(h);
+      if(el)el.scrollIntoView({behavior:'smooth'});
+    }
+  });
 });
