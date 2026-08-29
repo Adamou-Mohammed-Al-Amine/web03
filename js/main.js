@@ -165,90 +165,146 @@ document.querySelectorAll('.btn-p,.btn-s,.nav-cta,.con-send').forEach(btn=>{
 })();
 
 /* ═══════════════════════════
-   WORK — unified data source + masonry grid + filter tabs +
-   lightbox playback. Replaces the three separate custom YouTube
-   players from the previous build with one reusable system.
+   SHOWCASE DATA — three dedicated sections (Shorts / Long Form /
+   Commercials), each with its own layout, sharing one lightbox
+   that can play either a YouTube video or a Google Drive file.
 ═══════════════════════════ */
-const WORK=[
-  {id:'NXQTS1J31Tg',type:'long',category:'Featured',duration:'',year:'2026',featured:true},
-  {id:'yw6jr3jXrEI',type:'long',category:'Podcast',duration:'18:24',year:'2026'},
-  {id:'PTnRYDBoS98',type:'long',category:'Interview',duration:'24:10',year:'2026'},
-  {id:'cXuI_S4f6BY',type:'commercial',category:'Commercial',duration:'0:30',year:'2026'},
-  {id:'RHbh1ggzc5w',type:'short',category:'Short',year:'2026'},
-  {id:'DpmTiegTgSg',type:'short',category:'Short',year:'2026'},
-  {id:'Z9P_fJGcFUA',type:'long',category:'Documentary',duration:'15:47',year:'2025'},
-  {id:'9UYD9wNuOrE',type:'short',category:'Short',year:'2026'},
-  {id:'iPB5hUqP3eU',type:'commercial',category:'SaaS Ad',duration:'0:45',year:'2026'},
-  {id:'ij8dMxFkbug',type:'long',category:'Podcast',duration:'21:33',year:'2025'},
-  {id:'o3Fa0lyHC-w',type:'short',category:'Short',year:'2026'},
-  {id:'X2Rfjeh4QwI',type:'long',category:'Brand Story',duration:'9:52',year:'2025'},
-  {id:'YUtNjogUrlU',type:'short',category:'Short',year:'2026'},
-  {id:'1DY0rg1EdwA',type:'short',category:'Short',year:'2026'},
-  {id:'-qQsvqKB1_Y',type:'long',category:'Interview',duration:'27:05',year:'2025'},
-  {id:'bqh0P_7SKos',type:'short',category:'Short',year:'2026'},
-  {id:'5NeUdeqINiM',type:'short',category:'Short',year:'2026'},
-  {id:'jAKU_YR0YDs',type:'long',category:'Documentary',duration:'19:38',year:'2024'},
-  {id:'hqzEK0Sb_RE',type:'short',category:'Short',year:'2026'},
-  {id:'8x8if3PDtcY',type:'short',category:'Short',year:'2026'}
+const SHORTS=[
+  {src:'yt',id:'RHbh1ggzc5w',year:'2026'},
+  {src:'yt',id:'DpmTiegTgSg',year:'2026'},
+  {src:'yt',id:'9UYD9wNuOrE',year:'2026'},
+  {src:'yt',id:'o3Fa0lyHC-w',year:'2026'},
+  {src:'yt',id:'YUtNjogUrlU',year:'2026'},
+  {src:'yt',id:'1DY0rg1EdwA',year:'2026'},
+  {src:'yt',id:'bqh0P_7SKos',year:'2026'},
+  {src:'yt',id:'5NeUdeqINiM',year:'2026'},
+  {src:'yt',id:'hqzEK0Sb_RE',year:'2026'},
+  {src:'yt',id:'8x8if3PDtcY',year:'2026'},
+  {src:'drive',id:'1RbRyk6ufNCFE4wINCV3QMdylZwqQL1H9',year:'2026'},
+  {src:'drive',id:'14uDlXQDzIzuzyddfAEH9PsLRDWNit2k2',year:'2026'}
 ];
-const TYPE_LABEL={long:'Long Form',short:'Short',commercial:'Commercial'};
+const LONGFORM=[
+  {src:'yt',id:'NXQTS1J31Tg',category:'Featured',year:'2026',featured:true},
+  {src:'yt',id:'yw6jr3jXrEI',category:'Podcast',duration:'18:24',year:'2026'},
+  {src:'yt',id:'PTnRYDBoS98',category:'Interview',duration:'24:10',year:'2026'},
+  {src:'yt',id:'Z9P_fJGcFUA',category:'Documentary',duration:'15:47',year:'2025'},
+  {src:'yt',id:'ij8dMxFkbug',category:'Podcast',duration:'21:33',year:'2025'},
+  {src:'yt',id:'X2Rfjeh4QwI',category:'Brand Story',duration:'9:52',year:'2025'},
+  {src:'yt',id:'-qQsvqKB1_Y',category:'Interview',duration:'27:05',year:'2025'},
+  {src:'yt',id:'jAKU_YR0YDs',category:'Documentary',duration:'19:38',year:'2024'}
+];
+const SAAS=[
+  {src:'yt',id:'cXuI_S4f6BY',category:'Commercial',duration:'0:30',year:'2026'},
+  {src:'yt',id:'iPB5hUqP3eU',category:'SaaS Ad',duration:'0:45',year:'2026'}
+];
 
-(function initWork(){
-  const grid=document.getElementById('wkGrid');
+/* ── Shared lightbox: plays a YouTube embed or a Google Drive preview ── */
+const lb=document.getElementById('lb'),lbFrame=document.getElementById('lbFrame'),lbClose=document.getElementById('lbClose');
+let lbLastFocused=null;
+function openLightbox(v,isPortrait){
+  if(!lb)return;
+  lbLastFocused=document.activeElement;
+  lbFrame.classList.toggle('is-portrait',!!isPortrait);
+  const src=v.src==='drive'
+    ? `https://drive.google.com/file/d/${v.id}/preview`
+    : `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
+  lbFrame.innerHTML=`<iframe src="${src}" title="Video player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  lb.classList.add('open');
+  lbClose.focus();
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  if(!lb)return;
+  lb.classList.remove('open');
+  lbFrame.innerHTML='';
+  document.body.style.overflow='';
+  lbLastFocused?.focus();
+}
+lbClose?.addEventListener('click',closeLightbox);
+lb?.addEventListener('click',e=>{if(e.target===lb)closeLightbox();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&lb?.classList.contains('open'))closeLightbox();});
+
+/* ── SHORT FORM — dense vertical grid ── */
+(function initShorts(){
+  const grid=document.getElementById('sfGrid');
   if(!grid)return;
-  const tabs=document.querySelectorAll('.wk-tab');
-  const lb=document.getElementById('lb'),lbFrame=document.getElementById('lbFrame'),lbClose=document.getElementById('lbClose');
-  let lastFocused=null;
-
-  function render(filter){
-    const items=filter==='all'?WORK:WORK.filter(v=>v.type===filter);
-    grid.innerHTML=items.map(v=>`
-      <div class="wk-card" data-type="${v.type}" data-id="${v.id}" data-portrait="${v.type==='short'}" tabindex="0" role="button" aria-label="Play video">
-        <span class="wk-tag${v.featured?' featured':''}">${v.featured?'★ Featured':TYPE_LABEL[v.type]}</span>
-        ${v.duration?`<span class="wk-dur">${v.duration}</span>`:''}
-        <img src="https://img.youtube.com/vi/${v.id}/${v.type==='short'?'hqdefault':'mqdefault'}.jpg" alt="" loading="lazy">
-        <span class="wk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-      </div>`).join('');
-    // Stagger the reveal-in of the freshly rendered cards.
-    requestAnimationFrame(()=>{
-      [...grid.children].forEach((el,i)=>setTimeout(()=>el.classList.add('v'),i*45));
-    });
-  }
-
-  tabs.forEach(tab=>tab.addEventListener('click',()=>{
-    tabs.forEach(t=>t.classList.remove('is-on'));
-    tab.classList.add('is-on');
-    render(tab.dataset.filter);
-  }));
-
-  function openLightbox(id,isPortrait){
-    lastFocused=document.activeElement;
-    lbFrame.classList.toggle('is-portrait',isPortrait);
-    lbFrame.innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0" title="Video player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-    lb.classList.add('open');
-    lbClose.focus();
-    document.body.style.overflow='hidden';
-  }
-  function closeLightbox(){
-    lb.classList.remove('open');
-    lbFrame.innerHTML='';
-    document.body.style.overflow='';
-    lastFocused?.focus();
-  }
+  grid.innerHTML=SHORTS.map((v,i)=>`
+    <div class="sf-card fu" style="transition-delay:${Math.min(i*0.05,0.4)}s" data-i="${i}" tabindex="0" role="button" aria-label="Play short">
+      <span class="sf-tag">${v.src==='drive'?'New':'Short'}</span>
+      <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy"
+        onerror="this.src='https://drive.google.com/thumbnail?id=${v.id}&sz=w640'; this.onerror=function(){this.closest('.sf-card').classList.add('no-thumb'); this.remove();}">
+      <span class="sf-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+    </div>`).join('');
+  io.observe && [...grid.children].forEach(el=>io.observe(el));
   grid.addEventListener('click',e=>{
-    const card=e.target.closest('.wk-card');
-    if(card)openLightbox(card.dataset.id,card.dataset.portrait==='true');
+    const card=e.target.closest('.sf-card');
+    if(card)openLightbox(SHORTS[+card.dataset.i],true);
   });
   grid.addEventListener('keydown',e=>{
     if(e.key!=='Enter'&&e.key!==' ')return;
-    const card=e.target.closest('.wk-card');
-    if(card){e.preventDefault();openLightbox(card.dataset.id,card.dataset.portrait==='true');}
+    const card=e.target.closest('.sf-card');
+    if(card){e.preventDefault();openLightbox(SHORTS[+card.dataset.i],true);}
   });
-  lbClose.addEventListener('click',closeLightbox);
-  lb.addEventListener('click',e=>{if(e.target===lb)closeLightbox();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&lb.classList.contains('open'))closeLightbox();});
+})();
 
-  render('all');
+/* ── LONG FORM — one big featured card + a scannable list ── */
+(function initLongform(){
+  const featureEl=document.getElementById('lfFeature'),listEl=document.getElementById('lfList');
+  if(!featureEl||!listEl)return;
+  const [feature,...rest]=LONGFORM;
+  featureEl.innerHTML=`
+    <div class="lf-card vf" data-i="0" tabindex="0" role="button" aria-label="Play featured video">
+      <span class="wk-tag featured">★ Featured</span>
+      <img src="https://img.youtube.com/vi/${feature.id}/hqdefault.jpg" alt="" loading="lazy">
+      <span class="wk-play lf-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+    </div>`;
+  featureEl.querySelector('.lf-card').addEventListener('click',()=>openLightbox(feature));
+  featureEl.querySelector('.lf-card').addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(feature);}
+  });
+
+  listEl.innerHTML=rest.map((v,i)=>`
+    <div class="lf-row fu" style="transition-delay:${Math.min(i*.08,.4)}s" data-i="${i+1}" tabindex="0" role="button" aria-label="Play video">
+      <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="" loading="lazy">
+      <div class="lf-row-meta">
+        <b>${v.category}</b>
+        <span>${v.year}${v.duration?' · '+v.duration:''}</span>
+      </div>
+      <span class="lf-row-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+    </div>`).join('');
+  [...listEl.children].forEach(el=>io.observe(el));
+  listEl.addEventListener('click',e=>{
+    const row=e.target.closest('.lf-row');
+    if(row)openLightbox(LONGFORM[+row.dataset.i]);
+  });
+  listEl.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    const row=e.target.closest('.lf-row');
+    if(row){e.preventDefault();openLightbox(LONGFORM[+row.dataset.i]);}
+  });
+})();
+
+/* ── SAAS / COMMERCIALS — two large side-by-side cards ── */
+(function initSaas(){
+  const wrap=document.getElementById('saasDuo');
+  if(!wrap)return;
+  wrap.innerHTML=SAAS.map((v,i)=>`
+    <div class="saas-card vf fu" style="transition-delay:${i*.12}s" data-i="${i}" tabindex="0" role="button" aria-label="Play commercial">
+      <span class="wk-tag">${v.category}</span>
+      <span class="wk-dur">${v.duration}</span>
+      <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy">
+      <span class="wk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+    </div>`).join('');
+  [...wrap.children].forEach(el=>io.observe(el));
+  wrap.addEventListener('click',e=>{
+    const card=e.target.closest('.saas-card');
+    if(card)openLightbox(SAAS[+card.dataset.i]);
+  });
+  wrap.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    const card=e.target.closest('.saas-card');
+    if(card){e.preventDefault();openLightbox(SAAS[+card.dataset.i]);}
+  });
 })();
 
 /* ═══════════════════════════
