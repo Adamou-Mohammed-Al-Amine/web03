@@ -248,7 +248,7 @@ const videos=[
 
   let active=0;
   let autoplay=false;
-  let muted=false;
+  let muted=true; /* muted-by-default autoplay: mobile browsers block unmuted autoplay in cross-origin iframes even on direct tap; sound button lets the visitor unmute */
   let iframeEl=null;
 
   function ytEmbedSrc(id,opts={}){
@@ -426,7 +426,7 @@ const saasVideos=[
 
   let saasCurrentVideo=0;
   let saasAutoplay=false;
-  let saasMuted=false;
+  let saasMuted=true; /* muted-by-default autoplay for reliable mobile playback */
   let saasPlayer=null; // the mounted YouTube iframe
 
   function saasYtEmbedSrc(id,opts={}){
@@ -579,19 +579,13 @@ const saasVideos=[
    not opened directly as a local file, to work in every browser.
    Replace the `id`/`date` values in SHORTS with your real clips.
 ═══════════════════════════ */
-(function initShortFormPlayer(){
-  const list=document.getElementById('sfs2List');
-  const stage=document.getElementById('sfs2Stage');
-  const poster=document.getElementById('sfs2Poster');
-  const titleEl=document.getElementById('sfs2Title');
-  const playBigBtn=document.getElementById('sfs2PlayBig');
-  const playBtn=document.getElementById('sfs2Play');
-  const soundBtn=document.getElementById('sfs2Sound');
-  const prevBtn=document.getElementById('sfs2Prev');
-  const nextBtn=document.getElementById('sfs2Next');
-  const autoplayBtn=document.getElementById('sfs2Autoplay');
-  const fullscreenBtn=document.getElementById('sfs2Fullscreen');
-  if(!list||!stage)return;
+(function initShortFormCarousel(){
+  const track=document.getElementById('sfcTrack');
+  const dotsEl=document.getElementById('sfcDots');
+  const prevBtn=document.getElementById('sfcPrev');
+  const nextBtn=document.getElementById('sfcNext');
+  const wrap=document.getElementById('sfcWrap');
+  if(!track)return;
 
   // Placeholder dates — YouTube's oEmbed API doesn't expose publish
   // dates, so these are illustrative. Edit freely.
@@ -611,13 +605,14 @@ const saasVideos=[
   ];
 
   let active=0;
-  let autoplay=false;
-  let muted=false;
   let iframeEl=null;
+  let mountedIndex=null;
+  let muted=true; // muted-by-default autoplay: reliable on mobile, unlike unmuted
+  let scrollRaf=null;
+  let programmaticScroll=false;
 
-  function ytEmbedSrc(id,opts={}){
-    const params=new URLSearchParams({enablejsapi:'1',rel:'0',playsinline:'1',origin:window.location.origin});
-    if(opts.autoplay)params.set('autoplay','1');
+  function ytEmbedSrc(id){
+    const params=new URLSearchParams({enablejsapi:'1',rel:'0',playsinline:'1',autoplay:'1',origin:window.location.origin});
     if(muted)params.set('mute','1');
     return `https://www.youtube.com/embed/${id}?${params.toString()}`;
   }
@@ -625,127 +620,145 @@ const saasVideos=[
     if(!iframeEl||!iframeEl.contentWindow)return;
     iframeEl.contentWindow.postMessage(JSON.stringify({event:'command',func,args}),'*');
   }
-  function updatePlayIcon(isPlaying){
-    playBtn.querySelector('.ic-play').style.display=isPlaying?'none':'block';
-    playBtn.querySelector('.ic-pause').style.display=isPlaying?'block':'none';
-  }
   function destroyPlayer(){
     if(iframeEl){iframeEl.remove();iframeEl=null}
-    stage.classList.remove('has-player');
-    updatePlayIcon(false);
+    if(mountedIndex!==null){
+      const prevMedia=track.children[mountedIndex]?.querySelector('.sfc-media');
+      if(prevMedia)prevMedia.classList.remove('has-player');
+    }
+    mountedIndex=null;
   }
-  function mountPlayer(withAutoplay){
+  function mountPlayer(index){
     destroyPlayer();
-    const s=SHORTS[active];
+    const s=SHORTS[index];
+    const media=track.children[index]?.querySelector('.sfc-media');
+    if(!media)return;
     iframeEl=document.createElement('iframe');
-    iframeEl.src=ytEmbedSrc(s.id,{autoplay:withAutoplay});
+    iframeEl.src=ytEmbedSrc(s.id);
     iframeEl.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
     iframeEl.allowFullscreen=true;
     iframeEl.title='Short form video player';
-    stage.appendChild(iframeEl);
-    stage.classList.add('has-player');
-    updatePlayIcon(!!withAutoplay);
+    media.appendChild(iframeEl);
+    media.classList.add('has-player');
+    mountedIndex=index;
+  }
+  function toggleMute(btn){
+    muted=!muted;
+    btn.querySelector('.ic-on').style.display=muted?'none':'block';
+    btn.querySelector('.ic-off').style.display=muted?'block':'none';
+    postCmd(muted?'mute':'unMute');
   }
 
-  const featuredBadge=document.getElementById('sfs2FeaturedBadge');
-
-  function render(initial){
-    const s=SHORTS[active];
-    stage.classList.add('is-loading');
-    poster.onload=()=>{stage.classList.remove('is-loading')};
-    poster.src=`https://img.youtube.com/vi/${s.id}/hqdefault.jpg`;
-    titleEl.textContent='Loading…';
-    if(featuredBadge)featuredBadge.style.display=s.featured?'flex':'none';
-
-    Array.from(list.children).forEach((item,i)=>item.classList.toggle('is-active',i===active));
-    if(!initial){
-      const activeItem=list.children[active];
-      if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
-    }
-
-    fetchYTMeta(`https://youtube.com/shorts/${s.id}`).then(meta=>{
-      titleEl.textContent=meta?meta.title:'Short form video';
-    });
-  }
-
-  function goTo(index,withAutoplay){
-    active=((index%SHORTS.length)+SHORTS.length)%SHORTS.length;
-    destroyPlayer();
-    render();
-    const shouldAutoplay=withAutoplay===undefined?autoplay:withAutoplay;
-    if(shouldAutoplay)mountPlayer(true);
-  }
-
-  // Build playlist
-  list.innerHTML=SHORTS.map((s,i)=>`
-    <div class="sfs2-item${i===0?' is-active':''}${s.featured?' is-featured':''}" data-index="${i}" role="option" tabindex="0">
-      <div class="sfs2-item-thumb">${s.featured?'<span class="sfs2-featured-tag">★ Featured</span>':''}<img src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg" alt="" loading="lazy"></div>
-      <div class="sfs2-item-body">
-        <div class="sfs2-item-title" id="sfs2it-${i}">Loading…</div>
-        <div class="sfs2-item-sub" id="sfs2is-${i}">YouTube Shorts</div>
-        <div class="sfs2-item-date">${s.date}</div>
-        <div class="sfs2-item-icons">
-          <svg viewBox="0 0 24 24"><path d="M21 6H3a1 1 0 00-1 1v10a1 1 0 001 1h5l3 3 3-3h7a1 1 0 001-1V7a1 1 0 00-1-1z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.93V21h2v-3.07A7 7 0 0019 11h-2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M3 12h2v4H3zM7 8h2v10H7zM11 5h2v14h-2zM15 9h2v8h-2zM19 11h2v6h-2z"/></svg>
+  // ---- build slides ----
+  track.innerHTML=SHORTS.map((s,i)=>`
+    <div class="sfc-slide${i===0?' is-active':''}" data-index="${i}" role="option" aria-selected="${i===0}" tabindex="0">
+      <span class="sfc-num">${String(i+1).padStart(2,'0')}</span>
+      <div class="sfc-media">
+        <img class="sfc-poster" src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg" alt="" loading="lazy">
+        <button class="sfc-play" aria-label="Play video">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="sfc-mute" aria-label="Toggle sound">
+          <svg class="ic-on" viewBox="0 0 24 24" style="display:none"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>
+          <svg class="ic-off" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4zm14.7-3.3l-1.4-1.4L15 6.6l-2.3-2.3-1.4 1.4L13.6 8l-2.3 2.3 1.4 1.4L15 9.4l2.3 2.3 1.4-1.4L16.4 8l2.3-2.3z"/></svg>
+        </button>
+      </div>
+      <div class="sfc-info">
+        <div class="sfc-tags">
+          <span class="sfc-tag">Shorts</span>
+          <span class="sfc-tag">YouTube</span>
         </div>
+        <h3 class="sfc-title-txt" id="sfcTitle-${i}">Loading…</h3>
+        <p class="sfc-desc">Vertical short edited for fast-paced watch time.</p>
+        <a class="sfc-open" href="https://youtube.com/shorts/${s.id}" target="_blank" rel="noopener">
+          Open <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8m9 0v9"/></svg>
+        </a>
       </div>
     </div>`).join('');
 
   SHORTS.forEach((s,i)=>{
     fetchYTMeta(`https://youtube.com/shorts/${s.id}`).then(meta=>{
-      if(!meta)return;
-      const t=document.getElementById(`sfs2it-${i}`),sub=document.getElementById(`sfs2is-${i}`);
-      if(t)t.textContent=meta.title;
-      if(sub)sub.textContent=meta.author;
+      const t=document.getElementById(`sfcTitle-${i}`);
+      if(t)t.textContent=meta?meta.title:'Short form video';
     });
   });
 
-  // Playlist click
-  list.addEventListener('click',e=>{
-    const item=e.target.closest('.sfs2-item');
-    if(!item)return;
-    goTo(+item.dataset.index);
-  });
-  list.addEventListener('keydown',e=>{
-    const item=e.target.closest('.sfs2-item');
-    if(!item)return;
-    if(e.key==='Enter'||e.key===' '){e.preventDefault();goTo(+item.dataset.index)}
-  });
+  // ---- dots ----
+  dotsEl.innerHTML=SHORTS.map((s,i)=>`<button class="sfc-dot${i===0?' is-active':''}" data-index="${i}" aria-label="Go to video ${i+1}"></button>`).join('');
 
-  // Big play button
-  playBigBtn.addEventListener('click',()=>mountPlayer(true));
+  function setActive(index){
+    if(index===active)return;
+    active=index;
+    Array.from(track.children).forEach((slide,i)=>{
+      slide.classList.toggle('is-active',i===active);
+      slide.setAttribute('aria-selected',i===active);
+    });
+    Array.from(dotsEl.children).forEach((dot,i)=>dot.classList.toggle('is-active',i===active));
+    if(mountedIndex!==null&&mountedIndex!==active)destroyPlayer();
+  }
 
-  // Bottom control bar
-  playBtn.addEventListener('click',()=>{
-    if(!iframeEl){mountPlayer(true);return}
-    const isPlaying=playBtn.querySelector('.ic-pause').style.display!=='none';
-    if(isPlaying){postCmd('pauseVideo');updatePlayIcon(false)}
-    else{postCmd('playVideo');updatePlayIcon(true)}
+  function goTo(index,{center=true}={}){
+    index=((index%SHORTS.length)+SHORTS.length)%SHORTS.length;
+    const slide=track.children[index];
+    if(!slide)return;
+    setActive(index);
+    if(center){
+      programmaticScroll=true;
+      slide.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+      window.clearTimeout(goTo._t);
+      goTo._t=window.setTimeout(()=>{programmaticScroll=false},500);
+    }
+  }
+
+  // ---- scroll → detect nearest-to-center slide ----
+  function onScroll(){
+    if(scrollRaf)return;
+    scrollRaf=requestAnimationFrame(()=>{
+      scrollRaf=null;
+      if(programmaticScroll)return;
+      const trackRect=track.getBoundingClientRect();
+      const center=trackRect.left+trackRect.width/2;
+      let closest=0,closestDist=Infinity;
+      Array.from(track.children).forEach((slide,i)=>{
+        const r=slide.getBoundingClientRect();
+        const dist=Math.abs((r.left+r.width/2)-center);
+        if(dist<closestDist){closestDist=dist;closest=i}
+      });
+      if(closest!==active)setActive(closest);
+    });
+  }
+  track.addEventListener('scroll',onScroll,{passive:true});
+
+  // ---- interactions ----
+  track.addEventListener('click',e=>{
+    const slide=e.target.closest('.sfc-slide');
+    if(!slide)return;
+    const index=+slide.dataset.index;
+    if(index!==active){goTo(index);return}
+    const muteBtn=e.target.closest('.sfc-mute');
+    if(muteBtn){toggleMute(muteBtn);return}
+    if(e.target.closest('.sfc-open'))return; // let the link work
+    if(e.target.closest('.sfc-play')||e.target.closest('.sfc-media')){
+      if(mountedIndex!==index)mountPlayer(index);
+    }
   });
-  soundBtn.addEventListener('click',()=>{
-    muted=!muted;
-    soundBtn.querySelector('.ic-on').style.display=muted?'none':'block';
-    soundBtn.querySelector('.ic-off').style.display=muted?'block':'none';
-    postCmd(muted?'mute':'unMute');
+  track.addEventListener('keydown',e=>{
+    const slide=e.target.closest('.sfc-slide');
+    if(!slide)return;
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();goTo(+slide.dataset.index)}
+  });
+  dotsEl.addEventListener('click',e=>{
+    const dot=e.target.closest('.sfc-dot');
+    if(!dot)return;
+    goTo(+dot.dataset.index);
   });
   prevBtn.addEventListener('click',()=>goTo(active-1));
   nextBtn.addEventListener('click',()=>goTo(active+1));
-  autoplayBtn.addEventListener('click',()=>{
-    autoplay=!autoplay;
-    autoplayBtn.classList.toggle('is-on',autoplay);
-    autoplayBtn.setAttribute('aria-pressed',String(autoplay));
-  });
-  fullscreenBtn.addEventListener('click',()=>{
-    const target=iframeEl||stage;
-    if(target.requestFullscreen)target.requestFullscreen();
-    else if(target.webkitRequestFullscreen)target.webkitRequestFullscreen();
-  });
 
-  // Keyboard navigation — only while the player is in view, and
+  // Keyboard navigation — only while the carousel is in view, and
   // never while the visitor is typing in a form field.
   let inView=false;
-  new IntersectionObserver(es=>{inView=es[0].isIntersecting},{threshold:.3}).observe(stage);
+  new IntersectionObserver(es=>{inView=es[0].isIntersecting},{threshold:.3}).observe(wrap);
   document.addEventListener('keydown',e=>{
     if(!inView)return;
     const tag=(e.target.tagName||'').toLowerCase();
@@ -754,7 +767,8 @@ const saasVideos=[
     if(e.key==='ArrowRight'){e.preventDefault();goTo(active+1)}
   });
 
-  render(true);
+  // Center the first slide once layout has settled.
+  requestAnimationFrame(()=>goTo(0));
 })();
 
 
