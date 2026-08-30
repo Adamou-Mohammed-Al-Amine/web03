@@ -627,349 +627,261 @@ nav.sc{padding:16px 56px}
   }
 
   /* ================================================================
-     PLAYER + PLAYLIST LAYOUT
-     Premium showcase inspired by a reference UI: large featured
-     player on the left, independently scrollable playlist on the
-     right. Colors/fonts stay on-brand (site's dark gradient + gold
-     accent) — nothing from the reference's palette was copied.
+     CENTER-FOCUSED CAROUSEL
+     One card centered and fully lit, neighbours peeking on either
+     side, dimmed and slightly scaled down. Native horizontal scroll
+     + scroll-snap drives it, so touch/trackpad swiping on mobile is
+     smooth and doesn't fight the browser (this is what makes it
+     behave properly on phones, unlike a JS-transform carousel).
      ================================================================ */
-  .sfs2-layout{
+  .sfc-wrap{
     position: relative;
-    width: min(1088px, 96vw);
-    display: flex;
-    align-items: stretch;
-    gap: 22px;
-  }
-
-  /* ---------- LEFT: featured player (≈75%) ---------- */
-  .sfs2-player-card{
-    flex: 3 1 0%;
-    min-width: 0;
-    height: clamp(420px, 34vw, 528px);
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: 18px 19px 19px;
-    border-radius: 26px;
-    background: linear-gradient(165deg, #161616 0%, #0c0c0c 55%, #050505 100%);
-    border: 1px solid var(--sfs-border);
-    box-shadow:
-      0 50px 120px -30px rgba(0,0,0,0.6),
-      inset 0 1px 0 rgba(255,255,255,0.05);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .sfs2-player-top{
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 13px;
-  }
-  .sfs2-player-title{
-    font-family: var(--bf);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--sfs-white);
-    line-height: 1.4;
-    max-width: 82%;
-  }
-  .sfs2-avatar{
-    flex-shrink: 0;
-    width: 27px;
-    height: 27px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--sfs-gold), #8a6d33);
+    width: 100%;
+    max-width: 1160px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
   }
-  .sfs2-avatar svg{ width: 14px; height: 14px; fill: #050505; }
 
-  .sfs2-stage{
+  .sfc-track{
+    --slide-w: min(300px, 74vw);
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 6px calc(50% - (var(--slide-w) / 2)) 10px;
+  }
+  .sfc-track::-webkit-scrollbar{ display: none; }
+
+  .sfc-slide{
     position: relative;
-    flex: 1;
-    min-height: 0;
-    height: 100%;
+    flex: 0 0 auto;
+    width: var(--slide-w);
+    scroll-snap-align: center;
+    opacity: 0.32;
+    transform: scale(0.86);
+    filter: blur(1.5px);
+    transition: opacity 0.5s var(--sfs-ease), transform 0.5s var(--sfs-ease), filter 0.5s var(--sfs-ease);
+    cursor: pointer;
+  }
+  .sfc-slide.is-active{
+    opacity: 1;
+    transform: scale(1);
+    filter: none;
+    z-index: 2;
+    cursor: default;
+  }
+
+  .sfc-num{
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    font-family: var(--bf);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  }
+
+  .sfc-media{
+    position: relative;
+    width: 100%;
     aspect-ratio: 9 / 16;
-    max-width: 100%;
-    margin: 0 auto;
     border-radius: 18px;
     overflow: hidden;
     background: #000;
+    border: 1px solid var(--sfs-border);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
   }
-  .sfs2-poster{
+  .sfc-poster{
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    transition: opacity 0.5s var(--sfs-ease);
+    transition: opacity 0.3s var(--sfs-ease);
   }
-  .sfs2-stage.is-loading .sfs2-poster{ opacity: 0.25; }
-  .sfs2-stage iframe{
+  .sfc-media.has-player .sfc-poster,
+  .sfc-media.has-player .sfc-play{ opacity: 0; pointer-events: none; }
+  .sfc-media iframe{
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     border: 0;
   }
-  .sfs2-play-big{
+  .sfc-play{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 59px;
-    height: 59px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.12);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    border: 1px solid rgba(255,255,255,0.28);
+    background: rgba(10,10,10,0.55);
+    border: 1px solid rgba(255,255,255,0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 3;
-    transition: all 0.4s var(--sfs-ease);
+    transition: transform 0.3s var(--sfs-ease), background 0.3s var(--sfs-ease);
   }
-  .sfs2-play-big:hover{
-    transform: translate(-50%, -50%) scale(1.08);
-    background: rgba(201,169,98,0.22);
-    border-color: rgba(201,169,98,0.5);
-    box-shadow: 0 0 40px rgba(201,169,98,0.25);
-  }
-  .sfs2-play-big svg{ width: 21px; height: 21px; fill: var(--sfs-white); margin-left: 3px; }
-  .sfs2-stage.has-player .sfs2-play-big,
-  .sfs2-stage.has-player .sfs2-poster,
-  .sfs2-stage.has-player .sfs2-featured-badge{ opacity: 0; pointer-events: none; }
-  .sfs2-featured-badge{
-    display: none;
-    position: absolute;
-    top: 13px;
-    left: 13px;
-    z-index: 3;
-    align-items: center;
-    gap: 4px;
-    font-family: var(--bf);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: #211501;
-    background: linear-gradient(135deg,#f4dd93,var(--gold));
-    border-radius: 100px;
-    padding: 6px 11px;
-    box-shadow: 0 10px 26px rgba(180,140,40,0.35);
-    transition: opacity 0.4s var(--sfs-ease);
-  }
+  .sfc-slide.is-active .sfc-play:hover{ transform: translate(-50%, -50%) scale(1.08); background: rgba(212,175,55,0.85); }
+  .sfc-play svg{ width: 20px; height: 20px; fill: var(--sfs-white); margin-left: 3px; }
+  .sfc-slide:not(.is-active) .sfc-play{ pointer-events: none; }
 
-  /* bottom control bar */
-  .sfs2-controls{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 8px 11px;
-    border-radius: 13px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--sfs-border);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-  }
-  .sfs2-controls-group{ display: flex; align-items: center; gap: 6px; }
-  .sfs2-controls-center{ gap: 8px; }
-  .sfs2-btn{
+  .sfc-mute{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 3;
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: var(--sfs-white);
-    display: flex;
+    background: rgba(10,10,10,0.6);
+    border: 1px solid rgba(255,255,255,0.25);
+    display: none;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.35s var(--sfs-ease);
   }
-  .sfs2-btn svg{ width: 13px; height: 13px; fill: var(--sfs-white); }
-  .sfs2-btn:hover{
-    background: rgba(201,169,98,0.16);
-    border-color: rgba(201,169,98,0.4);
-    transform: translateY(-1px);
-  }
-  .sfs2-btn-text{
-    width: auto;
-    border-radius: 100px;
-    padding: 0 13px;
-    height: 29px;
-    font-family: var(--bf);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .sfs2-toggle.is-on{
-    background: rgba(201,169,98,0.18);
-    border-color: rgba(201,169,98,0.5);
-    color: var(--sfs-gold);
-  }
-  #sfs2Fullscreen svg{
-    fill: none;
-    stroke: var(--sfs-white);
-    stroke-width: 1.7;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
+  .sfc-media.has-player .sfc-mute{ display: flex; }
+  .sfc-mute svg{ width: 13px; height: 13px; fill: var(--sfs-white); }
 
-  /* ---------- RIGHT: scrollable playlist (≈25%) ---------- */
-  .sfs2-playlist-card{
-    flex: 1 1 0%;
-    min-width: 192px;
-    max-width: 272px;
-    height: clamp(420px, 34vw, 528px);
-    display: flex;
-    padding: 11px;
-    border-radius: 22px;
-    background: linear-gradient(165deg, #141414 0%, #0a0a0a 60%, #050505 100%);
-    border: 1px solid var(--sfs-border);
-    box-shadow:
-      0 40px 100px -30px rgba(0,0,0,0.55),
-      inset 0 1px 0 rgba(255,255,255,0.04);
-  }
-  .sfs2-playlist-scroll{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 8px;
-  }
-  .sfs2-playlist-scroll::-webkit-scrollbar{ width: 5px; }
-  .sfs2-playlist-scroll::-webkit-scrollbar-track{ background: rgba(255,255,255,0.06); border-radius: 6px; }
-  .sfs2-playlist-scroll::-webkit-scrollbar-thumb{ background: rgba(255,255,255,0.28); border-radius: 6px; }
-
-  .sfs2-item{
-    display: flex;
-    gap: 9px;
-    padding: 7px;
-    border-radius: 12px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.35s var(--sfs-ease);
-    flex-shrink: 0;
-  }
-  .sfs2-item:hover{ background: rgba(255,255,255,0.04); transform: translateX(4px); }
-  .sfs2-item.is-active{
-    background: rgba(212,175,55,0.08);
-    border-color: rgba(212,175,55,0.45);
-  }
-  .sfs2-item.is-featured{
-    border-color: rgba(212,175,55,0.3);
-    background: rgba(212,175,55,0.04);
-  }
-  .sfs2-item.is-featured.is-active{
-    background: rgba(212,175,55,0.12);
-    border-color: rgba(212,175,55,0.6);
-    box-shadow: 0 0 0 1px rgba(212,175,55,0.15), 0 14px 34px rgba(212,175,55,0.14);
-  }
-  .sfs2-item-thumb{
-    position: relative;
-    flex: 0 0 56px;
-    aspect-ratio: 9 / 16;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #111;
-  }
-  .sfs2-item.is-featured .sfs2-item-thumb{
-    flex-basis: 67px;
-    box-shadow: 0 0 0 1.5px var(--sfs-gold);
-  }
-  .sfs2-featured-tag{
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-family: var(--bf);
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: #211501;
-    background: linear-gradient(135deg,#f4dd93,var(--gold));
-    border-radius: 100px;
-    padding: 2px 5px;
-    line-height: 1;
-    white-space: nowrap;
-  }
-  .sfs2-item-thumb img{ width: 100%; height: 100%; object-fit: cover; }
-  .sfs2-item-thumb::after{
-    content: '▶';
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0.4);
-    color: var(--sfs-white);
-    font-size: 10px;
+  .sfc-info{
+    padding: 16px 4px 0;
     opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.4s var(--sfs-ease) 0.05s, transform 0.4s var(--sfs-ease) 0.05s;
   }
-  .sfs2-item:hover .sfs2-item-thumb::after{ opacity: 1; }
-  .sfs2-item-body{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; justify-content: center; }
-  .sfs2-item-title{
+  .sfc-slide.is-active .sfc-info{ opacity: 1; transform: translateY(0); }
+
+  .sfc-tags{ display: flex; gap: 6px; margin-bottom: 10px; }
+  .sfc-tag{
     font-family: var(--bf);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
+    letter-spacing: 0.03em;
+    color: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--sfs-border);
+    border-radius: 100px;
+    padding: 4px 11px;
+  }
+
+  .sfc-title-txt{
+    font-family: var(--tf);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.25;
     color: var(--sfs-white);
-    line-height: 1.35;
+    margin: 0 0 6px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .sfs2-item.is-active .sfs2-item-title{ color: var(--sfs-gold); }
-  .sfs2-item-sub{ font-size: 10px; color: rgba(255,255,255,0.4); }
-  .sfs2-item-date{ font-size: 9px; color: rgba(255,255,255,0.26); margin-top: 1px; }
-  .sfs2-item-icons{ display: flex; gap: 6px; margin-top: 3px; }
-  .sfs2-item-icons svg{ width: 14px; height: 14px; fill: none; stroke: rgba(255,255,255,0.32); stroke-width: 1.6; }
 
-  @media (max-width: 1024px){
-    /* Below this width the player card stacks above the playlist.
-       Previously the card kept a flat fixed height (416px) while the
-       stage inside it kept height:100% + aspect-ratio 9/16 — on a
-       narrow phone this meant the video shrank down to a small
-       floating rectangle inside a mostly-empty dark card, making the
-       card look oversized relative to its own content. Letting the
-       stage's WIDTH drive its height (aspect-ratio, height:auto)
-       makes the video fill the card edge-to-edge like a normal
-       vertical short, and the card just wraps snugly around it. */
-    .sfs2-layout{ flex-direction: column; }
-    .sfs2-player-card{ height: auto; }
-    .sfs2-stage{ flex: none; width: 100%; height: auto; max-height: 72vh; }
-    .sfs2-playlist-card{ max-width: 100%; height: auto; }
-    .sfs2-playlist-scroll{ flex-direction: row; overflow-x: auto; overflow-y: hidden; padding-right: 0; padding-bottom: 6px; }
-    .sfs2-item{ flex-direction: column; min-width: 96px; }
-    .sfs2-item-thumb{ flex: 0 0 auto; width: 100%; }
+  .sfc-desc{
+    font-family: var(--bf);
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.42);
+    margin: 0 0 16px;
+    font-weight: 300;
   }
-  @media (max-width: 640px){
+
+  .sfc-open{
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--bf);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sfs-black);
+    background: var(--sfs-white);
+    border-radius: 100px;
+    padding: 9px 17px;
+    text-decoration: none;
+    transition: background 0.25s var(--sfs-ease), transform 0.25s var(--sfs-ease);
+  }
+  .sfc-open:hover{ background: var(--sfs-gold); transform: translateY(-1px); }
+  .sfc-open svg{ width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ---------- arrows ---------- */
+  .sfc-arrow{
+    position: absolute;
+    top: 42%;
+    transform: translateY(-50%);
+    z-index: 4;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(15,15,16,0.6);
+    border: 1px solid var(--sfs-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.25s var(--sfs-ease), border-color 0.25s var(--sfs-ease);
+  }
+  .sfc-arrow:hover{ background: rgba(212,175,55,0.18); border-color: var(--sfs-gold-soft); }
+  .sfc-arrow svg{ width: 18px; height: 18px; fill: none; stroke: var(--sfs-white); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .sfc-arrow-prev{ left: 2px; }
+  .sfc-arrow-next{ right: 2px; }
+
+  /* ---------- dots ---------- */
+  .sfc-dots{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 28px;
+  }
+  .sfc-dot{
+    width: 6px;
+    height: 6px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.22);
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: width 0.3s var(--sfs-ease), background 0.3s var(--sfs-ease);
+  }
+  .sfc-dot.is-active{ width: 22px; background: var(--sfs-gold); }
+
+  @media (max-width: 820px){
+    .sfc-track{ --slide-w: min(280px, 68vw); gap: 16px; }
+    .sfc-arrow{ width: 38px; height: 38px; }
+    .sfc-arrow-prev{ left: -4px; }
+    .sfc-arrow-next{ right: -4px; }
+  }
+  @media (max-width: 530px){
     #short-form-showcase{ padding: 64px 13px; }
-    .sfs2-player-card{ padding: 13px 13px 14px; border-radius: 19px; }
-    .sfs2-stage{ max-height: 66vh; }
-    .sfs2-controls{ flex-wrap: wrap; gap: 8px; }
-    .sfs2-btn-text{ padding: 0 10px; font-size: 9px; }
-    .sfs2-play-big{ width: 48px; height: 48px; }
-    .sfs2-player-title{ font-size: 11px; }
+    .sfc-track{ --slide-w: min(240px, 66vw); gap: 12px; padding-top: 4px; }
+    .sfc-title-txt{ font-size: 15px; }
+    .sfc-desc{ font-size: 11px; margin-bottom: 13px; }
+    .sfc-arrow{ width: 34px; height: 34px; top: 36%; }
+    .sfc-arrow svg{ width: 15px; height: 15px; }
+    .sfc-arrow-prev{ left: -2px; }
+    .sfc-arrow-next{ right: -2px; }
   }
 
   @media (prefers-reduced-motion: reduce){
-    .sfs2-poster, .sfs2-btn, .sfs2-item{ transition: opacity 0.3s linear; }
+    .sfc-slide, .sfc-poster, .sfc-info, .sfc-dot{ transition: opacity 0.3s linear; }
     #short-form-showcase::before{ animation: none; }
   }
+
 
 /* ══════════════════════════════════
    §4 COLLABORATIONS — "The Creative Universe"
