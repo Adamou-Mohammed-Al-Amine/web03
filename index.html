@@ -151,8 +151,8 @@
             <svg class="ic-pause" viewBox="0 0 24 24" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
           </button>
           <button class="lf2-btn" id="lf2Sound" aria-label="Toggle sound">
-            <svg class="ic-on" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>
-            <svg class="ic-off" viewBox="0 0 24 24" style="display:none"><path d="M4 9v6h4l5 5V4L8 9H4zm14.7-3.3l-1.4-1.4L15 6.6l-2.3-2.3-1.4 1.4L13.6 8l-2.3 2.3 1.4 1.4L15 9.4l2.3 2.3 1.4-1.4L16.4 8l2.3-2.3z"/></svg>
+            <svg class="ic-on" viewBox="0 0 24 24" style="display:none"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>
+            <svg class="ic-off" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4zm14.7-3.3l-1.4-1.4L15 6.6l-2.3-2.3-1.4 1.4L13.6 8l-2.3 2.3 1.4 1.4L15 9.4l2.3 2.3 1.4-1.4L16.4 8l2.3-2.3z"/></svg>
           </button>
         </div>
 
@@ -193,58 +193,20 @@
     </p>
   </div>
 
-  <!-- ============================ SHOWCASE ============================= -->
-  <div class="sfs2-layout fu d3" id="sfs2Layout">
+  <!-- ============================ CAROUSEL ============================= -->
+  <div class="sfc-wrap fu d3" id="sfcWrap">
+    <button class="sfc-arrow sfc-arrow-prev" id="sfcPrev" aria-label="Previous video">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
 
-    <!-- LEFT — large featured player card -->
-    <div class="sfs2-player-card">
-      <div class="sfs2-player-top">
-        <span class="sfs2-player-title" id="sfs2Title">Loading…</span>
-        <div class="sfs2-avatar" id="sfs2Avatar" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.4c-3.3 0-9.8 1.6-9.8 4.9v2.5h19.6v-2.5c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
-        </div>
-      </div>
+    <div class="sfc-track" id="sfcTrack" role="listbox" aria-label="Short form videos"></div>
 
-      <div class="sfs2-stage" id="sfs2Stage">
-        <img class="sfs2-poster" id="sfs2Poster" src="" alt="Video preview">
-        <div class="sfs2-featured-badge" id="sfs2FeaturedBadge">★ Featured</div>
-        <button class="sfs2-play-big" id="sfs2PlayBig" aria-label="Play video">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </button>
-      </div>
-
-      <div class="sfs2-controls">
-        <div class="sfs2-controls-group">
-          <button class="sfs2-btn" id="sfs2Play" aria-label="Play or pause">
-            <svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="ic-pause" viewBox="0 0 24 24" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
-          </button>
-          <button class="sfs2-btn" id="sfs2Sound" aria-label="Toggle sound">
-            <svg class="ic-on" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>
-            <svg class="ic-off" viewBox="0 0 24 24" style="display:none"><path d="M4 9v6h4l5 5V4L8 9H4zm14.7-3.3l-1.4-1.4L15 6.6l-2.3-2.3-1.4 1.4L13.6 8l-2.3 2.3 1.4 1.4L15 9.4l2.3 2.3 1.4-1.4L16.4 8l2.3-2.3z"/></svg>
-          </button>
-        </div>
-
-        <div class="sfs2-controls-group sfs2-controls-center">
-          <button class="sfs2-btn sfs2-btn-text" id="sfs2Prev" aria-label="Previous video">Prev</button>
-          <button class="sfs2-btn sfs2-btn-text" id="sfs2Next" aria-label="Next video">Next</button>
-        </div>
-
-        <div class="sfs2-controls-group">
-          <button class="sfs2-btn sfs2-btn-text sfs2-toggle" id="sfs2Autoplay" aria-pressed="false">Autoplay</button>
-          <button class="sfs2-btn" id="sfs2Fullscreen" aria-label="Fullscreen">
-            <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT — scrollable playlist -->
-    <div class="sfs2-playlist-card">
-      <div class="sfs2-playlist-scroll" id="sfs2List"></div>
-    </div>
-
+    <button class="sfc-arrow sfc-arrow-next" id="sfcNext" aria-label="Next video">
+      <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
   </div>
+
+  <div class="sfc-dots" id="sfcDots"></div>
 
 </section>
 
@@ -285,8 +247,8 @@
             <svg class="ic-pause" viewBox="0 0 24 24" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
           </button>
           <button class="saas-btn" id="saasSound" aria-label="Toggle sound">
-            <svg class="ic-on" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>
-            <svg class="ic-off" viewBox="0 0 24 24" style="display:none"><path d="M4 9v6h4l5 5V4L8 9H4zm14.7-3.3l-1.4-1.4L15 6.6l-2.3-2.3-1.4 1.4L13.6 8l-2.3 2.3 1.4 1.4L15 9.4l2.3 2.3 1.4-1.4L16.4 8l2.3-2.3z"/></svg>
+            <svg class="ic-on" viewBox="0 0 24 24" style="display:none"><path d="M4 9v6h4l5 5V4L8 9H4zm11.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>
+            <svg class="ic-off" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4zm14.7-3.3l-1.4-1.4L15 6.6l-2.3-2.3-1.4 1.4L13.6 8l-2.3 2.3 1.4 1.4L15 9.4l2.3 2.3 1.4-1.4L16.4 8l2.3-2.3z"/></svg>
           </button>
         </div>
 
