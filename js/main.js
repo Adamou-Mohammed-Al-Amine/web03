@@ -604,12 +604,29 @@ const saasVideos=[
     {id:'vU1waaMwUn8',date:'2026'}
   ];
 
-  let active=0;
   let iframeEl=null;
-  let mountedIndex=null;
+  let mountedIndex=null; // DOM index (not real index) of the slide with a live player
   let muted=true; // muted-by-default autoplay: reliable on mobile, unlike unmuted
   let scrollRaf=null;
+  let scrollEndTimer=null;
   let programmaticScroll=false;
+
+  // ---- infinite loop via edge-cloning ----
+  // K clones of the tail are prepended and K clones of the head are
+  // appended around the real N slides. Native scroll-snap then just
+  // keeps scrolling in one direction; once the visitor drifts into a
+  // cloned zone we silently (no animation) jump the scroll position
+  // back to the matching real slide — same artwork, so it's invisible
+  // — which is what makes prev/next/swipe feel endless.
+  const N=SHORTS.length;
+  const K=Math.min(4,N);
+  const domData=[
+    ...SHORTS.slice(N-K).map((s,i)=>({s,real:N-K+i})),
+    ...SHORTS.map((s,i)=>({s,real:i})),
+    ...SHORTS.slice(0,K).map((s,i)=>({s,real:i}))
+  ];
+  const total=domData.length;
+  let active=K; // DOM index of the first real slide
 
   function ytEmbedSrc(id){
     const params=new URLSearchParams({enablejsapi:'1',rel:'0',playsinline:'1',autoplay:'1',origin:window.location.origin});
@@ -628,10 +645,10 @@ const saasVideos=[
     }
     mountedIndex=null;
   }
-  function mountPlayer(index){
+  function mountPlayer(domIndex){
     destroyPlayer();
-    const s=SHORTS[index];
-    const media=track.children[index]?.querySelector('.sfc-media');
+    const s=domData[domIndex].s;
+    const media=track.children[domIndex]?.querySelector('.sfc-media');
     if(!media)return;
     iframeEl=document.createElement('iframe');
     iframeEl.src=ytEmbedSrc(s.id);
@@ -640,7 +657,7 @@ const saasVideos=[
     iframeEl.title='Short form video player';
     media.appendChild(iframeEl);
     media.classList.add('has-player');
-    mountedIndex=index;
+    mountedIndex=domIndex;
   }
   function toggleMute(btn){
     muted=!muted;
@@ -650,11 +667,11 @@ const saasVideos=[
   }
 
   // ---- build slides ----
-  track.innerHTML=SHORTS.map((s,i)=>`
-    <div class="sfc-slide${i===0?' is-active':''}" data-index="${i}" role="option" aria-selected="${i===0}" tabindex="0">
-      <span class="sfc-num">${String(i+1).padStart(2,'0')}</span>
+  track.innerHTML=domData.map((d,i)=>`
+    <div class="sfc-slide${i===active?' is-active':''}" data-index="${i}" data-real="${d.real}" role="option" aria-selected="${i===active}" tabindex="0">
+      <span class="sfc-num">${String(d.real+1).padStart(2,'0')}</span>
       <div class="sfc-media">
-        <img class="sfc-poster" src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg" alt="" loading="lazy">
+        <img class="sfc-poster" src="https://img.youtube.com/vi/${d.s.id}/hqdefault.jpg" alt="" loading="lazy">
         <button class="sfc-play" aria-label="Play video">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
@@ -670,44 +687,74 @@ const saasVideos=[
         </div>
         <h3 class="sfc-title-txt" id="sfcTitle-${i}">Loading…</h3>
         <p class="sfc-desc">Vertical short edited for fast-paced watch time.</p>
-        <a class="sfc-open" href="https://youtube.com/shorts/${s.id}" target="_blank" rel="noopener">
+        <a class="sfc-open" href="https://youtube.com/shorts/${d.s.id}" target="_blank" rel="noopener">
           Open <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8m9 0v9"/></svg>
         </a>
       </div>
     </div>`).join('');
 
-  SHORTS.forEach((s,i)=>{
-    fetchYTMeta(`https://youtube.com/shorts/${s.id}`).then(meta=>{
-      const t=document.getElementById(`sfcTitle-${i}`);
-      if(t)t.textContent=meta?meta.title:'Short form video';
-    });
+  // Fetch each real video's title once and apply it to every DOM
+  // clone that shares that id (avoids redundant oEmbed calls).
+  const titleCache={};
+  domData.forEach((d,i)=>{
+    const t=document.getElementById(`sfcTitle-${i}`);
+    const cached=titleCache[d.s.id];
+    if(cached){cached.then(meta=>{if(t)t.textContent=meta?meta.title:'Short form video'});return}
+    const p=fetchYTMeta(`https://youtube.com/shorts/${d.s.id}`);
+    titleCache[d.s.id]=p;
+    p.then(meta=>{if(t)t.textContent=meta?meta.title:'Short form video'});
   });
 
-  // ---- dots ----
-  dotsEl.innerHTML=SHORTS.map((s,i)=>`<button class="sfc-dot${i===0?' is-active':''}" data-index="${i}" aria-label="Go to video ${i+1}"></button>`).join('');
+  // ---- dots (one per real slide) ----
+  dotsEl.innerHTML=SHORTS.map((s,i)=>`<button class="sfc-dot${i===0?' is-active':''}" data-real="${i}" aria-label="Go to video ${i+1}"></button>`).join('');
 
-  function setActive(index){
-    if(index===active)return;
-    active=index;
+  function setActive(domIndex){
+    if(domIndex===active){
+      // still refresh classes in case this is a post-reposition relabel
+    }
+    active=domIndex;
+    const realIndex=domData[domIndex].real;
     Array.from(track.children).forEach((slide,i)=>{
       slide.classList.toggle('is-active',i===active);
       slide.setAttribute('aria-selected',i===active);
     });
-    Array.from(dotsEl.children).forEach((dot,i)=>dot.classList.toggle('is-active',i===active));
+    Array.from(dotsEl.children).forEach((dot,i)=>dot.classList.toggle('is-active',i===realIndex));
     if(mountedIndex!==null&&mountedIndex!==active)destroyPlayer();
   }
 
-  function goTo(index,{center=true}={}){
-    index=((index%SHORTS.length)+SHORTS.length)%SHORTS.length;
-    const slide=track.children[index];
+  // If we've drifted into a cloned zone, silently re-center on the
+  // matching real slide — identical artwork, so the jump is invisible.
+  let repositioning=false;
+  function maybeReposition(){
+    if(repositioning)return;
+    let target=null;
+    if(active<K)target=active+N;
+    else if(active>=K+N)target=active-N;
+    if(target===null)return;
+    repositioning=true;
+    programmaticScroll=true;
+    setActive(target);
+    const slide=track.children[target];
+    if(slide)slide.scrollIntoView({behavior:'auto',inline:'center',block:'nearest'});
+    requestAnimationFrame(()=>{requestAnimationFrame(()=>{programmaticScroll=false;repositioning=false})});
+  }
+
+  function domIndexForReal(realIndex){
+    const candidates=[K+realIndex-N,K+realIndex,K+realIndex+N].filter(v=>v>=0&&v<total);
+    return candidates.reduce((best,c)=>Math.abs(c-active)<Math.abs(best-active)?c:best,candidates[0]);
+  }
+
+  function goTo(domIndex){
+    domIndex=Math.max(0,Math.min(total-1,domIndex));
+    const slide=track.children[domIndex];
     if(!slide)return;
-    setActive(index);
-    if(center){
-      programmaticScroll=true;
-      slide.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
-      window.clearTimeout(goTo._t);
-      goTo._t=window.setTimeout(()=>{programmaticScroll=false},500);
-    }
+    setActive(domIndex);
+    programmaticScroll=true;
+    slide.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+    // Only resets the flag here — actual reposition-after-settle is
+    // owned solely by the scroll-end timer below, so the two never race.
+    window.clearTimeout(goTo._t);
+    goTo._t=window.setTimeout(()=>{programmaticScroll=false},500);
   }
 
   // ---- scroll → detect nearest-to-center slide ----
@@ -726,6 +773,8 @@ const saasVideos=[
       });
       if(closest!==active)setActive(closest);
     });
+    clearTimeout(scrollEndTimer);
+    scrollEndTimer=setTimeout(maybeReposition,140);
   }
   track.addEventListener('scroll',onScroll,{passive:true});
 
@@ -733,13 +782,13 @@ const saasVideos=[
   track.addEventListener('click',e=>{
     const slide=e.target.closest('.sfc-slide');
     if(!slide)return;
-    const index=+slide.dataset.index;
-    if(index!==active){goTo(index);return}
+    const domIndex=+slide.dataset.index;
+    if(domIndex!==active){goTo(domIndex);return}
     const muteBtn=e.target.closest('.sfc-mute');
     if(muteBtn){toggleMute(muteBtn);return}
     if(e.target.closest('.sfc-open'))return; // let the link work
     if(e.target.closest('.sfc-play')||e.target.closest('.sfc-media')){
-      if(mountedIndex!==index)mountPlayer(index);
+      if(mountedIndex!==domIndex)mountPlayer(domIndex);
     }
   });
   track.addEventListener('keydown',e=>{
@@ -750,7 +799,7 @@ const saasVideos=[
   dotsEl.addEventListener('click',e=>{
     const dot=e.target.closest('.sfc-dot');
     if(!dot)return;
-    goTo(+dot.dataset.index);
+    goTo(domIndexForReal(+dot.dataset.real));
   });
   prevBtn.addEventListener('click',()=>goTo(active-1));
   nextBtn.addEventListener('click',()=>goTo(active+1));
@@ -767,8 +816,11 @@ const saasVideos=[
     if(e.key==='ArrowRight'){e.preventDefault();goTo(active+1)}
   });
 
-  // Center the first slide once layout has settled.
-  requestAnimationFrame(()=>goTo(0));
+  // Center the first real slide once layout has settled.
+  requestAnimationFrame(()=>{
+    const slide=track.children[active];
+    if(slide)slide.scrollIntoView({behavior:'auto',inline:'center',block:'nearest'});
+  });
 })();
 
 
