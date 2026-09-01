@@ -180,6 +180,55 @@ document.querySelectorAll('.btn-p,.btn-s,.nav-cta,.con-send').forEach(btn=>{
   })();
 })();
 
+/* ═══════════════════════════
+   COLLABORATIONS — ORBIT NODES
+   Renders the avatar nodes around the two rings. Angles are computed
+   here (evenly spaced per ring) rather than stored, so adding or
+   removing a collaborator from the admin dashboard never requires
+   recalculating everyone else's position by hand.
+═══════════════════════════ */
+(async function initCollaborations(){
+  const orbits=document.getElementById('coOrbits');
+  if(!orbits)return;
+
+  // Fallback used only if the CMS (Supabase) is unreachable — see js/projects.js.
+  // Exactly the collaborators that used to be hard-coded here.
+  const DEFAULT_COLLABS=[
+    {platform:'youtube',handle:'mjrmgames909',link:'https://www.youtube.com/@mjrmgames909',ring:1},
+    {platform:'youtube',handle:'AnasAction',link:'https://www.youtube.com/@AnasAction',ring:1},
+    {platform:'youtube',handle:'Abunoo7',link:'https://www.youtube.com/@Abunoo7',ring:1},
+    {platform:'youtube',handle:'POWR.Kmstka',link:'https://www.youtube.com/@POWR.Kmstka',ring:1},
+    {platform:'instagram',handle:'muaazmarwah',link:'https://www.instagram.com/muaazmarwah/',ring:2},
+    {platform:'instagram',handle:'h4hbm',link:'https://www.instagram.com/h4hbm/',ring:2},
+    {platform:'youtube',handle:'CaptainSanshiroX',link:'https://www.youtube.com/@CaptainSanshiroX',ring:2}
+  ];
+  const collabs=window.CMS?await window.CMS.loadCollaborations(DEFAULT_COLLABS):DEFAULT_COLLABS;
+
+  const RING_CONFIG={
+    1:{radius:'clamp(85px,20vw,155px)',small:false},
+    2:{radius:'clamp(135px,32vw,255px)',small:true}
+  };
+
+  [1,2].forEach(ringNum=>{
+    const nodes=collabs.filter(c=>Number(c.ring)===ringNum);
+    const cfg=RING_CONFIG[ringNum];
+    nodes.forEach((c,i)=>{
+      const angle=(360/nodes.length)*i;
+      const handleLabel=c.platform==='instagram'?`@${c.handle}`:c.handle;
+      const el=document.createElement('div');
+      el.className='co-node'+(cfg.small?' co-sm':'');
+      el.style.setProperty('--angle',`${angle}deg`);
+      el.style.setProperty('--radius',cfg.radius);
+      el.innerHTML=`
+        <a class="co-avatar-link" href="${c.link}" target="_blank" rel="noopener">
+          <img class="co-avatar" src="https://unavatar.io/${c.platform}/${c.handle}" alt="${c.handle}" loading="lazy">
+        </a>
+        <div class="co-tooltip">${handleLabel}</div>`;
+      orbits.appendChild(el);
+    });
+  });
+})();
+
 /* Gentle parallax on the orbit cluster — subtle, not distracting */
 const coWrap=document.getElementById('coWrap');
 document.addEventListener('mousemove',e=>{
@@ -221,7 +270,10 @@ async function fetchYTMeta(url){
    doesn't expose duration or category, so these are manually set;
    edit them freely to match your real videos.
 ═══════════════════════════ */
-const videos=[
+// Fallback used only if the CMS (Supabase) is unreachable — see js/projects.js.
+// This is the exact content that used to be hard-coded here, kept as a
+// safety net so the site never loses content if the database has a hiccup.
+const DEFAULT_VIDEOS=[
   {id:'NXQTS1J31Tg',category:'Featured',duration:'',year:'2026',featured:true},
   {id:'yw6jr3jXrEI',category:'Podcast',duration:'18:24',year:'2026'},
   {id:'PTnRYDBoS98',category:'Interview',duration:'24:10',year:'2026'},
@@ -232,7 +284,10 @@ const videos=[
   {id:'jAKU_YR0YDs',category:'Documentary',duration:'19:38',year:'2024'}
 ];
 
-(function initLongFormPlayer(){
+(async function initLongFormPlayer(){
+  // Loaded from Supabase when available, falling back to DEFAULT_VIDEOS
+  // above otherwise. Everything below is unchanged from before the CMS.
+  const videos=window.CMS?await window.CMS.loadLongForm(DEFAULT_VIDEOS):DEFAULT_VIDEOS;
   const list=document.getElementById('lf2List');
   const stage=document.getElementById('lf2Stage');
   const poster=document.getElementById('lf2Poster');
@@ -299,6 +354,7 @@ const videos=[
       if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
     }
 
+    if(v.title){titleEl.textContent=v.title;return} // custom title set via the admin dashboard
     fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
       titleEl.textContent=meta?meta.title:'Featured video';
     });
@@ -329,9 +385,10 @@ const videos=[
     </div>`).join('');
 
   videos.forEach((v,i)=>{
+    const t=document.getElementById(`lf2it-${i}`),sub=document.getElementById(`lf2is-${i}`);
+    if(v.title){if(t)t.textContent=v.title;if(sub)sub.textContent='YouTube';return}
     fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
       if(!meta)return;
-      const t=document.getElementById(`lf2it-${i}`),sub=document.getElementById(`lf2is-${i}`);
       if(t)t.textContent=meta.title;
       if(sub)sub.textContent=meta.author;
     });
@@ -402,14 +459,13 @@ const videos=[
    with your own SaaS/commercial YouTube video IDs when ready.
    category/duration/year are illustrative, same as Long Form.
 ═══════════════════════════ */
-const saasVideos=[
+// Fallback used only if the CMS (Supabase) is unreachable — see js/projects.js.
+const DEFAULT_SAAS_VIDEOS=[
   {id:'cXuI_S4f6BY',category:'Commercial',duration:'0:30',year:'2026'},
   {id:'iPB5hUqP3eU',category:'SaaS Ad',duration:'0:45',year:'2026'}
-  // Add more videos here as {id:'YOUTUBE_ID', category:'...', duration:'...', year:'...'} —
-  // the layout, playlist, and scroll behavior adapt automatically, no other changes needed.
 ];
 
-(function initSaasPlayer(){
+(async function initSaasPlayer(){
   const saasSection=document.getElementById('saasSection');
   const saasPlaylist=document.getElementById('saasPlaylist');
   const saasStage=document.getElementById('saasStage');
@@ -423,6 +479,7 @@ const saasVideos=[
   const saasAutoplayBtn=document.getElementById('saasAutoplay');
   const saasFullscreenBtn=document.getElementById('saasFullscreen');
   if(!saasPlaylist||!saasStage)return;
+  const saasVideos=window.CMS?await window.CMS.loadSaas(DEFAULT_SAAS_VIDEOS):DEFAULT_SAAS_VIDEOS;
 
   let saasCurrentVideo=0;
   let saasAutoplay=false;
@@ -474,6 +531,7 @@ const saasVideos=[
       if(activeItem)activeItem.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
     }
 
+    if(v.title){saasTitleEl.textContent=v.title;return}
     fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
       saasTitleEl.textContent=meta?meta.title:'Featured video';
     });
@@ -505,9 +563,10 @@ const saasVideos=[
     </div>`).join('');
 
   saasVideos.forEach((v,i)=>{
+    const t=document.getElementById(`saasit-${i}`),sub=document.getElementById(`saasis-${i}`);
+    if(v.title){if(t)t.textContent=v.title;if(sub)sub.textContent='YouTube';return}
     fetchYTMeta(`https://youtu.be/${v.id}`).then(meta=>{
       if(!meta)return;
-      const t=document.getElementById(`saasit-${i}`),sub=document.getElementById(`saasis-${i}`);
       if(t)t.textContent=meta.title;
       if(sub)sub.textContent=meta.author;
     });
@@ -579,7 +638,7 @@ const saasVideos=[
    not opened directly as a local file, to work in every browser.
    Replace the `id`/`date` values in SHORTS with your real clips.
 ═══════════════════════════ */
-(function initShortFormCarousel(){
+(async function initShortFormCarousel(){
   const track=document.getElementById('sfcTrack');
   const dotsEl=document.getElementById('sfcDots');
   const prevBtn=document.getElementById('sfcPrev');
@@ -587,9 +646,8 @@ const saasVideos=[
   const wrap=document.getElementById('sfcWrap');
   if(!track)return;
 
-  // Placeholder dates — YouTube's oEmbed API doesn't expose publish
-  // dates, so these are illustrative. Edit freely.
-  const SHORTS=[
+  // Fallback used only if the CMS (Supabase) is unreachable — see js/projects.js.
+  const DEFAULT_SHORTS=[
     {id:'RHbh1ggzc5w',date:'2026'},
     {id:'DpmTiegTgSg',date:'2026'},
     {id:'9UYD9wNuOrE',date:'2026'},
@@ -603,6 +661,7 @@ const saasVideos=[
     {id:'auPxAjLg-qE',date:'2026'},
     {id:'vU1waaMwUn8',date:'2026'}
   ];
+  const SHORTS=window.CMS?await window.CMS.loadShorts(DEFAULT_SHORTS):DEFAULT_SHORTS;
 
   let iframeEl=null;
   let mountedIndex=null; // DOM index (not real index) of the slide with a live player

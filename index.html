@@ -5,6 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Editedbyamine — Video Editor</title>
 <meta name="description" content="Editedbyamine — freelance video editor crafting cinematic long-form edits, short-form content, and motion graphics.">
+<link rel="canonical" href="https://aminevisuals-psi.vercel.app/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Editedbyamine">
+<meta property="og:title" content="Editedbyamine — Video Editor">
+<meta property="og:description" content="Freelance video editor crafting cinematic long-form edits, short-form content, and motion graphics.">
+<meta property="og:url" content="https://aminevisuals-psi.vercel.app/">
+<meta property="og:image" content="https://aminevisuals-psi.vercel.app/prv.png">
+<meta property="og:image:width" content="1536">
+<meta property="og:image:height" content="1024">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Editedbyamine — Video Editor">
+<meta name="twitter:description" content="Freelance video editor crafting cinematic long-form edits, short-form content, and motion graphics.">
+<meta name="twitter:image" content="https://aminevisuals-psi.vercel.app/prv.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Amine",
+  "alternateName": "Editedbyamine",
+  "jobTitle": "Video Editor",
+  "url": "https://aminevisuals-psi.vercel.app/",
+  "image": "https://aminevisuals-psi.vercel.app/prv.png",
+  "sameAs": [
+    "https://www.instagram.com/editedby.amine/",
+    "https://www.youtube.com/@Adamou_Amine_Mohammed_Al_Amine"
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
@@ -300,51 +333,11 @@
           <div class="co-center-role">Editor</div>
         </div>
 
-        <!-- Inner ring -->
-        <div class="co-node" style="--angle:0deg;--radius:clamp(85px,20vw,155px);">
-          <a class="co-avatar-link" href="https://www.youtube.com/@mjrmgames909" target="_blank" rel="noopener">
-            <img class="co-avatar" src="https://unavatar.io/youtube/mjrmgames909" alt="mjrmgames909" loading="lazy">
-          </a>
-          <div class="co-tooltip">mjrmgames909</div>
-        </div>
-        <div class="co-node" style="--angle:90deg;--radius:clamp(85px,20vw,155px);">
-          <a class="co-avatar-link" href="https://www.youtube.com/@AnasAction" target="_blank" rel="noopener">
-            <img class="co-avatar" src="https://unavatar.io/youtube/AnasAction" alt="AnasAction" loading="lazy">
-          </a>
-          <div class="co-tooltip">AnasAction</div>
-        </div>
-        <div class="co-node" style="--angle:180deg;--radius:clamp(85px,20vw,155px);">
-          <a class="co-avatar-link" href="https://www.youtube.com/@Abunoo7" target="_blank" rel="noopener">
-            <img class="co-avatar" src="https://unavatar.io/youtube/Abunoo7" alt="Abunoo7" loading="lazy">
-          </a>
-          <div class="co-tooltip">Abunoo7</div>
-        </div>
-        <div class="co-node" style="--angle:270deg;--radius:clamp(85px,20vw,155px);">
-          <a class="co-avatar-link" href="https://www.youtube.com/@POWR.Kmstka" target="_blank" rel="noopener">
-            <img class="co-avatar" src="https://unavatar.io/youtube/POWR.Kmstka" alt="POWR.Kmstka" loading="lazy">
-          </a>
-          <div class="co-tooltip">POWR.Kmstka</div>
-        </div>
-
-        <!-- Outer ring -->
-        <div class="co-node co-sm" style="--angle:45deg;--radius:clamp(135px,32vw,255px);">
-          <a class="co-avatar-link" href="https://www.instagram.com/muaazmarwah/" target="_blank" rel="noopener">
-            <img class="co-avatar" src="https://unavatar.io/instagram/muaazmarwah" alt="muaazmarwah" loading="lazy">
-          </a>
-          <div class="co-tooltip">@muaazmarwah</div>
-        </div>
-        <div class="co-node co-sm" style="--angle:165deg;--radius:clamp(135px,32vw,255px);">
-          <a class="co-avatar-link" href="https://www.instagram.com/h4hbm/" target="_blank" rel="noopener">
-            <img class="co-avatar" src="https://unavatar.io/instagram/h4hbm" alt="h4hbm" loading="lazy">
-          </a>
-          <div class="co-tooltip">@h4hbm</div>
-        </div>
-        <div class="co-node co-sm" style="--angle:285deg;--radius:clamp(135px,32vw,255px);">
-          <a class="co-avatar-link" href="https://www.youtube.com/@CaptainSanshiroX" target="_blank" rel="noopener">
-            <img class="co-avatar" src="https://unavatar.io/youtube/CaptainSanshiroX" alt="CaptainSanshiroX" loading="lazy">
-          </a>
-          <div class="co-tooltip">CaptainSanshiroX</div>
-        </div>
+        <!-- Nodes are rendered by initCollaborations() in js/main.js —
+             loaded from Supabase (or DEFAULT_COLLABS as a fallback),
+             with each ring's angles spaced evenly at render time so
+             adding/removing a collaborator never needs manual --angle
+             math. -->
       </div>
     </div>
   </div>
@@ -450,6 +443,7 @@
 
 <!-- EmailJS SDK — powers the contact form (see js/main.js) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="js/projects.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
