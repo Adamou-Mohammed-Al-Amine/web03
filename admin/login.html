@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Login — Editedbyamine</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="shortcut icon" type="image/png" href="../logo.png">
+<link rel="shortcut icon" type="image/png" href="/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="/admin/admin.css">
 </head>
 <body>
 
 <div class="login-wrap">
   <div class="login-card">
     <div class="login-brand">
-      <img src="../logo.png" alt="">
+      <img src="/logo.png" alt="">
       <span>Editedbyamine</span>
     </div>
     <h1>Admin Sign In</h1>
@@ -39,7 +39,7 @@
 </div>
 
 <script type="module">
-  import { supabase } from './js/supabase-client.js';
+  import { supabase } from '/admin/js/supabase-client.js';
 
   const form = document.getElementById('loginForm');
   const errorEl = document.getElementById('loginError');
@@ -47,7 +47,7 @@
 
   // Already signed in? Skip straight to the dashboard.
   supabase.auth.getSession().then(({ data }) => {
-    if (data.session) window.location.replace('./index.html');
+    if (data.session) window.location.replace('/admin/index.html');
   });
 
   form.addEventListener('submit', async (e) => {
@@ -71,7 +71,7 @@
       return;
     }
 
-    window.location.replace('./index.html');
+    window.location.replace('/admin/index.html');
   });
 </script>
 

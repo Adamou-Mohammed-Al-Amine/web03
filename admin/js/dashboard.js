@@ -5,11 +5,11 @@ import { supabase } from './supabase-client.js';
    ============================================================================ */
 const { data: sessionData } = await supabase.auth.getSession();
 if (!sessionData.session) {
-  window.location.replace('./login.html');
+  window.location.replace('/admin/login.html');
   throw new Error('redirecting to login'); // stop the rest of this module
 }
 supabase.auth.onAuthStateChange((event) => {
-  if (event === 'SIGNED_OUT') window.location.replace('./login.html');
+  if (event === 'SIGNED_OUT') window.location.replace('/admin/login.html');
 });
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
