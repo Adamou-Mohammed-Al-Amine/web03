@@ -6,6 +6,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 export const supabase = createClient(
-  'https://oixjigudwtretocgnmy.supabase.co',
+  'https://oixjigudwtretogcngmy.supabase.co',
   'sb_publishable_WgV6Id9JfuzFVsnPY70eEQ_1Gleh9EV'
 );

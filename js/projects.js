@@ -12,7 +12,7 @@
    less than it did before the CMS existed.
    ============================================================================ */
 (function(){
-  const SUPABASE_URL = 'https://oixjigudwtretocgnmy.supabase.co';
+  const SUPABASE_URL = 'https://oixjigudwtretogcngmy.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_WgV6Id9JfuzFVsnPY70eEQ_1Gleh9EV';
 
   function youtubeId(url){
